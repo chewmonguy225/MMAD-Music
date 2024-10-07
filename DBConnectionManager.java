@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class DBConnectionManager {
 
-	final private String driverClassName = "com.mysql.cj.jdbc.Driver";
+    final private String driverClassName = "com.mysql.cj.jdbc.Driver";
     final private String url = "jdbc:mysql://localhost:3306/music_share_db";
     final private String username = "root";
     final private String password = "dbrootpass123";
