@@ -22,13 +22,9 @@ public class SQLConnectionManager extends DBConnectionManager {
      * @throws SQLException if an error occurs while establishing the connection.
      */
     @Override
-    public void establishConnection() 
-                throws ClassNotFoundException, SQLException
+    public void establishConnection() throws ClassNotFoundException, SQLException
     {
-    	// Load driver class
         Class.forName(driverClassName);
-        
-        // Obtain a connection
         databaseConnection = DriverManager.getConnection(url, username, password);
     }   
     
@@ -40,15 +36,13 @@ public class SQLConnectionManager extends DBConnectionManager {
      * @throws SQLException if an error occurs while closing the connection.
      */
     @Override
-    public void closeConnection() 
-                throws SQLException
+    public void closeConnection() throws SQLException
     {
     	databaseConnection.close();
     }
 
     /**
      * @return Connection object
-     * PROBABLY OBSOLETE, connection object will be passed into other classes thru constructors in main
      */
     @Override
     public Connection getDatabaseConnection() {
