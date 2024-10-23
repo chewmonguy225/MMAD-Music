@@ -6,4 +6,12 @@ public class Song extends ReviewableItem{
         super(id, title, artist);
         this.trackNumber = trackNumber;
     }
+
+    public Album getAlbum(){
+        return this.album;
+    }
+
+    public int getTrackNumber(){
+        return this.trackNumber;
+    }
 }
