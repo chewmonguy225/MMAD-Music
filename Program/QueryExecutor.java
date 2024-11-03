@@ -22,14 +22,18 @@ public class QueryExecutor {
     * @param username The username to attempt login with.
     * @param password The password to attempt login with.
     * @return True if the login is successful, false otherwise.
-    * @throws SQLException If an error occurs during the login process.
     */
-    public boolean attemptLogin(String username, String password) throws SQLException
+    public boolean attemptLogin(String username, String password) 
     {
-        String query = String.format("SELECT * from users WHERE username=\"%s\" AND password=\"%s\";", username, password);
-        Statement statement = sqlConnection.createStatement();
-        int rowsReturned = statement.executeUpdate(query);
-        return rowsReturned == 1; 
+        try {
+            String query = String.format("SELECT * from users WHERE username=\"%s\" AND password=\"%s\";", username, password);
+            Statement statement = sqlConnection.createStatement();
+            int rowsReturned = statement.executeUpdate(query); 
+            return rowsReturned == 1;
+        } catch (SQLException ex) {
+            System.out.println("An error occurred trying to log you in. " + ex.getMessage());
+            return false;
+        }
     }
 
     /**
@@ -38,14 +42,19 @@ public class QueryExecutor {
     * @param username The desired username for the new account.
     * @param password The desired password for the new account.
     * @return True if the account is created successfully, false otherwise.
-    * @throws SQLException If an error occurs during the account creation process.
     */
-    public boolean createAccount(String username, String password) throws SQLException
+    public boolean createAccount(String username, String password)
     {
-        String query = String.format("INSERT INTO users (username, password) VALUES (\"%s\", \"%s\");", username, password);
-        Statement statement = sqlConnection.createStatement();
-        int rowsInserted = statement.executeUpdate(query);
-        return rowsInserted == 1; 
+        try {
+            String query = String.format("INSERT INTO users (username, password) VALUES (\"%s\", \"%s\");", username, password);
+            Statement statement = sqlConnection.createStatement();
+            int rowsInserted = statement.executeUpdate(query); 
+            return rowsInserted == 1;
+        } 
+        catch (SQLException ex) {
+            System.out.println("An error occurred trying to create your account. " + ex.getMessage());
+            return false;
+        } 
     }
 
     
