@@ -1,6 +1,7 @@
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 
 public class QueryExecutor {
@@ -26,11 +27,12 @@ public class QueryExecutor {
     public boolean attemptLogin(String username, String password) 
     {
         try {
-            String query = String.format("SELECT * from users WHERE username=\"%s\" AND password=\"%s\";", username, password);
-            Statement statement = sqlConnection.createStatement();
-            int rowsReturned = statement.executeUpdate(query); 
-            return rowsReturned == 1;
-        } catch (SQLException ex) {
+            String query = String.format("SELECT * from user WHERE username=\"%s\" AND password=\"%s\";", username, password);
+            PreparedStatement statement = sqlConnection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
+        } 
+        catch (SQLException ex) {
             System.out.println("An error occurred trying to log you in. " + ex.getMessage());
             return false;
         }
@@ -46,15 +48,45 @@ public class QueryExecutor {
     public boolean createAccount(String username, String password)
     {
         try {
-            String query = String.format("INSERT INTO users (username, password) VALUES (\"%s\", \"%s\");", username, password);
-            Statement statement = sqlConnection.createStatement();
-            int rowsInserted = statement.executeUpdate(query); 
-            return rowsInserted == 1;
+            String query = String.format("INSERT INTO user (username, password) VALUES (\"%s\", \"%s\");", username, password);
+            PreparedStatement statement = sqlConnection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery(); 
+            return resultSet.next();
         } 
         catch (SQLException ex) {
             System.out.println("An error occurred trying to create your account. " + ex.getMessage());
             return false;
         } 
+    }
+
+    /**
+    * Searches the user table for an account with the given username.
+    *
+    * @param username The username of the account we are looking for.
+    * @return True if the account is found successfully, false otherwise.
+    */
+    public boolean checkUserExists(String username)
+    {
+        try {
+            String query = String.format("SELECT * from user WHERE username=\"%s\";", username);
+            PreparedStatement statement = sqlConnection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
+        } 
+        catch (SQLException ex) {
+            System.out.println("An error occured trying to find the user. " + ex.getMessage());
+            return false;
+        }
+    }
+    
+    public boolean addFriend(String username, String friend_username)
+    {
+        try {
+            String query = String.format("INSERT INTO user_friend")
+        } 
+        catch (SQLException ex) {
+            // TODO: handle exception
+        }
     }
 
     
