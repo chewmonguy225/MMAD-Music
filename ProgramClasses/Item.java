@@ -1,10 +1,8 @@
-import java.util.*;
-public class Artist extends Item {
+public abstract class Item {
     private String id;
     private String name;
 
-    public Artist(String id, String name){
-        super(id, name);
+    public Item(String id, String name){
         this.id = id;
         this.name = name;
     }
@@ -13,7 +11,9 @@ public class Artist extends Item {
         return this.id;
     }
 
-    public String getName(){
+    public String getname(){
         return this.name;
     }
 }
+
+

@@ -1,12 +1,12 @@
-public class Album extends ReviewableItem {
-    private Song[] trackList;
+public class Album extends Item {
+    private String[] trackList;
 
-    public Album(String id, String title, Artist artist, Song[] trackList){
-        super(id, title, artist);
+    public Album(String id, String name, Artist artist, String[] trackList){
+        super(id, name);
         this.trackList = trackList;
     }
 
-    public Song[] getTracklist(){
+    public String[] getTracklist(){
         return this.trackList;
     }
 }

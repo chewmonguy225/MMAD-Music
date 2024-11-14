@@ -8,7 +8,7 @@ public abstract class DBConnectionManager {
     public void closeConnection() throws SQLException {}
 
     // @return the Connection object
-    public Connection getDatabaseConnection() 
+    public Connection getConnectionObject() 
     {
         return null;
     }

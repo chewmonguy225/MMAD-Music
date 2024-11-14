@@ -1,9 +1,11 @@
-public class Song extends ReviewableItem{
+public class Song extends Item{
     private Album album;
+    private Artist artist;
     private int trackNumber; //where the song appears in the album
 
-    public Song(String id, String title, Artist artist, Album album, int trackNumber){
-        super(id, title, artist);
+    public Song(String id, String name, Artist artist, Album album, int trackNumber){
+        super(id, name);
+        this.artist = artist;
         this.trackNumber = trackNumber;
     }
 
@@ -13,5 +15,9 @@ public class Song extends ReviewableItem{
 
     public int getTrackNumber(){
         return this.trackNumber;
+    }
+
+    public Artist getArtist(){
+        return this.artist;
     }
 }

@@ -45,7 +45,7 @@ public class SQLConnectionManager extends DBConnectionManager {
      * @return Connection object
      */
     @Override
-    public Connection getDatabaseConnection() {
+    public Connection getConnectionObject() {
         return databaseConnection;
     }
 }
