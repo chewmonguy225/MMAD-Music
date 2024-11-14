@@ -223,7 +223,7 @@ public class QueryExecutor {
     /**
     * Inserts a new artist in the artist table of the database.
     *
-    * @param name The name of the albartistum.
+    * @param name The name of the artist.
     * @return True if the artist was inserted succesfully, false otherwise.
     */
     public boolean addArtistToDB(String name)
