@@ -29,8 +29,9 @@ public class QueryExecutor {
     public boolean attemptLogin(String username, String password) 
     {
         try {
-            String query = String.format("SELECT * from user WHERE username=\"%s\" AND password=\"%s\";", username, password);
-            PreparedStatement statement = sqlConnection.prepareStatement(query);
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * from user WHERE username= ? AND password= ?;");
+            statement.setString(1, username);
+            statement.setString(2, password);
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } 
@@ -50,8 +51,9 @@ public class QueryExecutor {
     public boolean createAccount(String username, String password)
     {
         try {
-            String query = String.format("INSERT INTO user (username, password) VALUES (\"%s\", \"%s\");", username, password);
-            PreparedStatement statement = sqlConnection.prepareStatement(query);
+            PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO user (username, password) VALUES (?, ?);");
+            statement.setString(1, username);
+            statement.setString(2, password);
             int rowsAffected = statement.executeUpdate(); 
             return rowsAffected == 1;
         } 
@@ -70,8 +72,8 @@ public class QueryExecutor {
     public boolean checkUserExists(String username)
     {
         try {
-            String query = String.format("SELECT * from user WHERE username=\"%s\";", username);
-            PreparedStatement statement = sqlConnection.prepareStatement(query);
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * from user WHERE username= ?;");
+            statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } 
@@ -82,17 +84,40 @@ public class QueryExecutor {
 
     
     /**
+     * Searches the user_friend table to see if the friend has already been added.
+     * 
+     * @param username The user's username.
+     * @param friendUsername The friend's username.
+     * @return True if the friend has already been added, false otherwise.
+     */
+    public boolean checkAlreadyAFriend(String username, String friendUsername)
+    {
+        try {
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * from user_friend WHERE username= ? AND friend_username= ?;");
+            statement.setString(1, username);
+            statement.setString(2, friendUsername);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
+        } 
+        catch (SQLException ex) {
+            return false;
+        }
+    }
+
+
+    /**
     * Adds a new friend relationship into the database.
     *
     * @param username The username of the user that is logged in.
-    * @param friend_username The username of the friend to be added.
+    * @param friendUsername The username of the friend to be added.
     * @return True if the friend is added succesfully, false otherwise.
     */
-    public boolean addFriend(String username, String friend_username)
+    public boolean addFriend(String username, String friendUsername)
     {
         try {
-            String query = String.format("INSERT INTO user_friend (username, friend_username) VALUES (\"%s\", \"%s\");", username, friend_username);
-            PreparedStatement statement = sqlConnection.prepareStatement(query);
+            PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO user_friend (username, friend_username) VALUES (?, ?);");
+            statement.setString(1, username);
+            statement.setString(2, friendUsername);
             int rowsAffected = statement.executeUpdate();
             return rowsAffected == 1;
         } 
@@ -116,8 +141,10 @@ public class QueryExecutor {
             if(! checkSongInDB(name, artist, album)){
                 return -1;
             }
-            String query = String.format("SELECT id from song WHERE name=\"%s\" AND artist=\"%s\" AND album=\"%s\";", name, artist, album);
-            PreparedStatement statement = sqlConnection.prepareStatement(query);
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT id from song WHERE name= ? AND artist= ? AND album= ?;");
+            statement.setString(1, name);
+            statement.setString(2, artist);
+            statement.setString(3, album);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
             int songID = resultSet.getInt("id");
@@ -140,8 +167,10 @@ public class QueryExecutor {
     public boolean checkSongInDB(String name, String artist, String album)
     {
         try {
-            String query = String.format("SELECT * FROM song WHERE name=\"%s\" AND artist=\"%s\" AND album=\"%s\";", name, artist, album);
-            PreparedStatement statement = sqlConnection.prepareStatement(query);
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM song WHERE name= ? AND artist= ? AND album= ?;");
+            statement.setString(1, name);
+            statement.setString(2, artist);
+            statement.setString(3, album);
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } 
