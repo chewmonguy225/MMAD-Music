@@ -68,6 +68,14 @@ public class DBHandler {
     }
 
 
+    /**
+    * Adds a song into the database song table.
+    * First checks if the song is already in the database. If it is, just return true and do not execute and further queries.
+    *
+    * @param username The username of the user that is logged in.
+    * @param friend_username The username of the friend to be added.
+    * @return True if the friend is added succesfully, false otherwise.
+    */
     public boolean addSongToDB(String name, String artist, String album)
     {
         try {
