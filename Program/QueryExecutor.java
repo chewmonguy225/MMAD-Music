@@ -35,7 +35,6 @@ public class QueryExecutor {
             return resultSet.next();
         } 
         catch (SQLException ex) {
-            System.out.println("An error occurred trying to log you in. " + ex.getMessage());
             return false;
         }
     }
@@ -57,7 +56,6 @@ public class QueryExecutor {
             return rowsAffected == 1;
         } 
         catch (SQLException ex) {
-            System.out.println("An error occurred trying to create your account. " + ex.getMessage());
             return false;
         } 
     }
@@ -67,7 +65,7 @@ public class QueryExecutor {
     * Searches the user table for an account with the given username.
     *
     * @param username The username of the account we are looking for.
-    * @return True if the account is found, false otherwise.
+    * @return True if the account exists, false otherwise.
     */
     public boolean checkUserExists(String username)
     {
@@ -78,7 +76,6 @@ public class QueryExecutor {
             return resultSet.next();
         } 
         catch (SQLException ex) {
-            System.out.println("An error occured trying to find the user. " + ex.getMessage());
             return false;
         }
     }
@@ -100,7 +97,6 @@ public class QueryExecutor {
             return rowsAffected == 1;
         } 
         catch (SQLException ex) {
-            System.out.println("An error occured trying to add friend. " + ex.getMessage());
             return false;
         }
     }
@@ -123,7 +119,6 @@ public class QueryExecutor {
             return resultSet.next();
         } 
         catch (SQLException ex) {
-            System.out.println("An error occured trying to find the song in the database. " + ex.getMessage());
             return false;
         }
     }
@@ -145,7 +140,6 @@ public class QueryExecutor {
             return resultSet.next();
         } 
         catch (SQLException ex) {
-            System.out.println("An error occured trying to find the album in the database. " + ex.getMessage());
             return false;
         }
     }
@@ -166,7 +160,6 @@ public class QueryExecutor {
             return resultSet.next();
         } 
         catch (SQLException ex) {
-            System.out.println("An error occured trying to find the artist in the database. " + ex.getMessage());
             return false;
         }
     }
@@ -189,7 +182,6 @@ public class QueryExecutor {
             return rowsAffected == 1;
         } 
         catch (SQLException ex){
-            System.out.println("An error occured trying to add the song to the database. " + ex.getMessage());
             return false;
         }
     }
@@ -211,7 +203,6 @@ public class QueryExecutor {
             return rowsAffected == 1;
         } 
         catch (SQLException ex){
-            System.out.println("An error occured trying to add the album to the database. " + ex.getMessage());
             return false;
         }
     }
@@ -232,7 +223,6 @@ public class QueryExecutor {
             return rowsAffected == 1;
         } 
         catch (SQLException ex){
-            System.out.println("An error occured trying to add the artist to the database. " + ex.getMessage());
             return false;
         }
     }
