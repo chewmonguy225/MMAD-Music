@@ -3,9 +3,9 @@ import java.sql.SQLException;
 
 public class DBHandler {
     
-    SQLConnectionManager connectionManager = null;
-    Connection connection = null;
-    QueryExecutor queryExecutor = null;
+    private SQLConnectionManager connectionManager = null;
+    private Connection connection = null;
+    private QueryExecutor queryExecutor = null;
 
 
     /**
@@ -47,7 +47,7 @@ public class DBHandler {
     /**
     * Adds a new friend relationship into the database after confirming that the user exists.
     *
-    * @param username The username of the user that is logged in.
+    * @param name The username of the user that is logged in.
     * @param friend_username The username of the friend to be added.
     * @return True if the friend is added succesfully, false otherwise.
     */
@@ -70,11 +70,12 @@ public class DBHandler {
 
     /**
     * Adds a song into the database song table.
-    * First checks if the song is already in the database. If it is, just return true and do not execute and further queries.
+    * First checks if the song is already in the database. If it is, just return true and do not execute any further queries.
     *
-    * @param username The username of the user that is logged in.
-    * @param friend_username The username of the friend to be added.
-    * @return True if the friend is added succesfully, false otherwise.
+     * @param name The title/name of the song.
+    * @param artist The name of the song's artist.
+    * @param album The title/name of the album the song is in.
+    * @return True if the song is added succesfully (or was already in the db), false otherwise.
     */
     public boolean addSongToDB(String name, String artist, String album)
     {
@@ -84,6 +85,55 @@ public class DBHandler {
             }
             else {
                 queryExecutor.addSongToDB(name, artist, album);
+                return true;
+            }
+        } 
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+
+    /**
+    * Adds an album into the database album table.
+    * First checks if the album is already in the database. If it is, just return true and do not execute any further queries.
+    *
+    * @param name The title/name of the album.
+    * @param artist The name of the album's artist.
+    * @return True if the album is added succesfully (or was already in database), false otherwise.
+    */
+    public boolean addAlbumToDB(String name, String artist)
+    {
+        try {
+            if(queryExecutor.checkAlbumInDB(name, artist)){
+                return true; 
+            }
+            else {
+                queryExecutor.addAlbumToDB(name, artist);
+                return true;
+            }
+        } 
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+
+    /**
+    * Adds an artist into the database album table.
+    * First checks if the artist is already in the database. If it is, just return true and do not execute any further queries.
+    *
+    * @param name The name of the artist.
+    * @return True if the artist is added succesfully (or was already in database), false otherwise.
+    */
+    public boolean addArtistToDB(String name)
+    {
+        try {
+            if(queryExecutor.checkArtistInDB(name)){
+                return true; 
+            }
+            else {
+                queryExecutor.addArtistToDB(name);
                 return true;
             }
         } 
