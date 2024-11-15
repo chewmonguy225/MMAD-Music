@@ -182,4 +182,21 @@ public class DBHandler {
             return -1;
         }
     }
+
+
+    /**
+     * Calls the query executor clearPlaylist method to clear the user's playlist.
+     * 
+     * @param username The user's username. 
+     * @return True if the playlist was cleared. Return false if an error occured. 
+     */
+    public boolean clearPlaylist(String username)
+    {
+        try {
+            return queryExecutor.clearPlaylist(username);
+        } 
+        catch (Exception e) {
+            return false;
+        }
+    }
 }
