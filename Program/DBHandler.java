@@ -49,93 +49,151 @@ public class DBHandler {
     *
     * @param name The username of the user that is logged in.
     * @param friend_username The username of the friend to be added.
-    * @return True if the friend is added succesfully, false otherwise.
+    * @return 1 if the friend is added succesfully. Return 2 if the friend has already been added. Return 3 if the 'friend' does not exist. Return -1 if there is an error.
     */
-    public boolean addFriend(String username, String friendUsername)
+    public int addFriend(String username, String friendUsername)
     {
         try {
             if(queryExecutor.checkUserExists(friendUsername)){
-                return false;
+                return 3;
+            }
+            else if (queryExecutor.checkAlreadyAFriend(username, friendUsername)) {
+                return 2;
             }
             else {
                 queryExecutor.addFriend(username, friendUsername);
-                return true;
+                return 1;
             }
         } 
         catch (Exception e) {
-            return false;
+            return -1;
         }
     }
 
 
     /**
     * Adds a song into the database song table.
-    * First checks if the song is already in the database. If it is, just return true and do not execute any further queries.
+    * First checks if the song is already in the database to avoid duplicate entries.
     *
-     * @param name The title/name of the song.
+    * @param name The title/name of the song.
     * @param artist The name of the song's artist.
     * @param album The title/name of the album the song is in.
-    * @return True if the song is added succesfully (or was already in the db), false otherwise.
+    * @return 1 if the song is added succesfully. Return 2 if the song was already in database. Return -1 if there is an error.
     */
-    public boolean addSongToDB(String name, String artist, String album)
+    public int addSongToDB(String name, String artist, String album)
     {
         try {
-            if(queryExecutor.checkSongInDB(name, artist, album)){
-                return true; 
+            if(queryExecutor.checkSongInDB(name, artist, album)) {
+                return 2;
             }
             else {
                 queryExecutor.addSongToDB(name, artist, album);
-                return true;
+                return 1;
             }
         } 
         catch (Exception e) {
-            return false;
+            return -1;
         }
     }
 
 
     /**
     * Adds an album into the database album table.
-    * First checks if the album is already in the database. If it is, just return true and do not execute any further queries.
+    * First checks if the album is already in the database to avoid duplicate entries.
     *
     * @param name The title/name of the album.
     * @param artist The name of the album's artist.
-    * @return True if the album is added succesfully (or was already in database), false otherwise.
+    * @return 1 if the album is added succesfully. Return 2 if the album was already in database. Return -1 if there is an error.
     */
-    public boolean addAlbumToDB(String name, String artist)
+    public int addAlbumToDB(String name, String artist)
     {
         try {
             if(queryExecutor.checkAlbumInDB(name, artist)){
-                return true; 
+                return 2; 
             }
             else {
                 queryExecutor.addAlbumToDB(name, artist);
-                return true;
+                return 1;
             }
         } 
         catch (Exception e) {
-            return false;
+            return -1;
         }
     }
 
 
     /**
     * Adds an artist into the database album table.
-    * First checks if the artist is already in the database. If it is, just return true and do not execute any further queries.
+    * First checks if the artist is already in the database to avoid duplicate entries.
     *
     * @param name The name of the artist.
-    * @return True if the artist is added succesfully (or was already in database), false otherwise.
+    * @return 1 if the artist is added succesfully. Return 2 if the artist was already in database. Return -1 if there is an error.
     */
-    public boolean addArtistToDB(String name)
+    public int addArtistToDB(String name)
     {
         try {
             if(queryExecutor.checkArtistInDB(name)){
-                return true; 
+                return 2; 
             }
             else {
                 queryExecutor.addArtistToDB(name);
-                return true;
+                return 1;
             }
+        } 
+        catch (Exception e) {
+            return -1;
+        }
+    }
+
+
+    /**
+     * Adds a given song to the user's playlist.
+     * 
+     * @param username The user's username.
+     * @param name The name/title of the song.
+     * @param artist The name of the song's artist.
+     * @param album The name/title of the song's album.
+     * @return 1 if the song was added to the playlist succesfully. Return 2 if the song is already in the playlist. Return -1 if an error occured.
+     */
+    public int addSongToPlaylist(String username, String name, String artist, String album)
+    {
+        int songID;
+
+        try {
+            if(queryExecutor.checkSongInDB(name, artist, album)){
+                songID = queryExecutor.getSongID(name, artist, album);
+
+                if(queryExecutor.checkSongInPlaylist(username, songID)){
+                    return 2;
+                }
+                else {
+                    queryExecutor.addSongToPlaylist(username, songID);
+                    return 1;
+                }
+            }
+            else {
+                queryExecutor.addSongToDB(name, artist, album);
+                songID = queryExecutor.getSongID(name, artist, album);
+                queryExecutor.addSongToPlaylist(username, songID);
+                return 1;
+            }
+        } 
+        catch (Exception e) {
+            return -1;
+        }
+    }
+
+
+    /**
+     * Calls the query executor clearPlaylist method to clear the user's playlist.
+     * 
+     * @param username The user's username. 
+     * @return True if the playlist was cleared. Return false if an error occured. 
+     */
+    public boolean clearPlaylist(String username)
+    {
+        try {
+            return queryExecutor.clearPlaylist(username);
         } 
         catch (Exception e) {
             return false;
