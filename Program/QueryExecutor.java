@@ -335,10 +335,14 @@ public class QueryExecutor {
     public boolean removeSongFromPlaylist(String username, int songID)
     {
         try {
-            PreparedStatement statement = sqlConnection.prepareStatement("");
+            PreparedStatement statement = sqlConnection.prepareStatement("DELETE * FROM playlist_song WHERE username= ? AND song_id= ?;");
+            statement.setString(1, username);
+            statement.setInt(2, songID);
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected == 1;
         } 
-        catch (Exception e) {
-            // TODO: handle exception
+        catch (SQLException ex) {
+            return false;
         }
     }
 

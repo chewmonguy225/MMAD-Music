@@ -78,18 +78,15 @@ public class DBHandler {
     * @param name The title/name of the song.
     * @param artist The name of the song's artist.
     * @param album The title/name of the album the song is in.
-    * @return 1 if the song is added succesfully. Return 2 if the song was already in database. Return -1 if there is an error.
+    * @return The song id if the song was already in the database or was added succesfully. Return -1 if there is an error.
     */
     public int addSongToDB(String name, String artist, String album)
     {
         try {
-            if(queryExecutor.checkSongInDB(name, artist, album)) {
-                return 2;
-            }
-            else {
+            if(! queryExecutor.checkSongInDB(name, artist, album)) {
                 queryExecutor.addSongToDB(name, artist, album);
-                return 1;
             }
+            return queryExecutor.getSongID(name, artist, album);
         } 
         catch (Exception e) {
             return -1;
@@ -199,4 +196,25 @@ public class DBHandler {
             return false;
         }
     }
+
+    // DBHandler
+    //
+    // public bool deleteAccount(username, password)
+    // public bool createSongReview(username, review, song)
+    // public bool createAlbumReview(username, review, album)
+    // public bool createArtistReview(username, review, artist)
+    // public bool deleteReview(getReviewID)
+    // public String[] getReviews(username) - return String array of review ID's
+    // public ArrayList<String> getReviewInfo(reviewID) - return an ArrayList. Index 0: Description, Index 1: Rating, Index 2: Item ID  
+
+    // QueryExecutor only
+    //
+    // public int getReviewID(username, Item)
+    // public ArrayList<String> getSongInfo()
+    // public ArrayList<String> getAlbumInfo()
+    // public ArrayList<String> getArtistInfo()
+
+    // public ArrayList<String> getFriendsList()
+
+
 }
