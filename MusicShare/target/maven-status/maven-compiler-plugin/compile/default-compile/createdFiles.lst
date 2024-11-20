@@ -1,1 +1,13 @@
-Mickael/App.class
+MMAD\SpotifyClientCredentials.class
+MMAD\MusicAbstractAPI.class
+MMAD\Song.class
+MMAD\Album.class
+MMAD\Driver.class
+MMAD\Playlist.class
+MMAD\SpotifyAPIConnection.class
+MMAD\User.class
+MMAD\AbstractAPIQueryBuilder.class
+MMAD\Item.class
+MMAD\SpotifyAPIQueryBuilder.class
+MMAD\Artist.class
+MMAD\Login.class

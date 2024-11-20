@@ -5,7 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class SpotifyClientCredentials {
-    private String filePath = "src/main/java/MMAD/clientCredentials.txt";
+    private String filePath = "MusicShare\\src\\main\\java\\MMAD\\clientCredentials.txt";
     private static String clientID;
     private static String clientSecret;
 
