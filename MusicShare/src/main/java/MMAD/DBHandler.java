@@ -17,10 +17,10 @@ public class DBHandler {
     public DBHandler()
     {
         try {
-            connectionManager = new SQLConnectionManager();
+            this.connectionManager = new SQLConnectionManager();
             connectionManager.establishConnection();
-            connection = connectionManager.getConnectionObject();
-            queryExecutor = new QueryExecutor(connection);
+            this.connection = connectionManager.getConnectionObject();
+            this.queryExecutor = new QueryExecutor(connection);
         } 
         catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
@@ -85,12 +85,13 @@ public class DBHandler {
     public int addSongToDB(String name, String artist, String album, String sourceID)
     {
         try {
-            if(! queryExecutor.checkSongInDB(name, artist, album)) {
-                queryExecutor.addSongToDB(name, artist, album);
+            if(! queryExecutor.checkSongInDB(sourceID)) {
+                return queryExecutor.addSongToDB(name, artist, album, sourceID);
             }
-            return queryExecutor.getSongID(name, artist, album);
+            return queryExecutor.getSongID(sourceID);
         } 
         catch (Exception e) {
+            System.out.println(getMessage());
             return -1;
         }
     }

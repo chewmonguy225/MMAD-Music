@@ -123,6 +123,7 @@ public class QueryExecutor {
             return rowsAffected == 1;
         } 
         catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -131,25 +132,21 @@ public class QueryExecutor {
     /**
      * Returns a song's id in the database after confirming that it exists in the database.
      * 
-     * @param name The name/title of the song.
-     * @param artist The name of the song's artist.
-     * @param album The name of the song's album.
-     * @return The song's id in the database . Return -1 if the song is not in the database or an exception is caught.
+     * @param sourceID The song's ID given from the API source (Spotify)
+     * @return The song's source id if the song was inserted succesfully, -1 if there was an error.
      */
-    public int getSongID(String name, String artist, String album)
+    public int getSongID(String sourceID)
     {
         try {
-            if(! checkSongInDB(name, artist, album)){
+            if(! checkSongInDB(sourceID)){
                 return -1;
             }
-            PreparedStatement statement = sqlConnection.prepareStatement("SELECT id from song WHERE name= ? AND artist= ? AND album= ?;");
-            statement.setString(1, name);
-            statement.setString(2, artist);
-            statement.setString(3, album);
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT id from song WHERE sourceID= ?;");
+            statement.setString(1, sourceID);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
-            int songID = resultSet.getInt("id");
-            return songID;
+            int id = resultSet.getInt("id");
+            return id;
         } 
         catch (SQLException ex) {
             return -1;
@@ -160,18 +157,14 @@ public class QueryExecutor {
     /**
     * Checks if a song already exists in the database.
     *
-    * @param name The title/name of the song.
-    * @param artist The name of the song's artist.
-    * @param album The title/name of the album the song is in.
+    * @param sourceID The song's ID given from the API source (Spotify)
     * @return True if the song was found in the database, false otherwise.
     */
-    public boolean checkSongInDB(String name, String artist, String album)
+    public boolean checkSongInDB(String sourceID)
     {
         try {
-            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM song WHERE name= ? AND artist= ? AND album= ?;");
-            statement.setString(1, name);
-            statement.setString(2, artist);
-            statement.setString(3, album);
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM song WHERE source_id= ?;");
+            statement.setString(1, sourceID);
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } 
@@ -229,9 +222,10 @@ public class QueryExecutor {
     * @param name The title/name of the song.
     * @param artist The name of the song's artist.
     * @param album The title/name of the album the song is in.
-    * @return True if the song was inserted succesfully, false otherwise.
+    * @param sourceID The song's ID given from the API source (Spotify)
+    * @return The song's source id if the song was inserted succesfully, -1 if there was an error.
     */
-    public boolean addSongToDB(String name, String artist, String album)
+    public int addSongToDB(String name, String artist, String album, String sourceID)
     {
         try {
             PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO song (name, artist, album) VALUES (?, ?, ?);");
@@ -239,10 +233,16 @@ public class QueryExecutor {
             statement.setString(2, artist);
             statement.setString(3, album);
             int rowsAffected = statement.executeUpdate();
-            return rowsAffected == 1;
+
+            PreparedStatement statement2 = sqlConnection.prepareStatement("SELECT id FROM song WHERE source_id= ?;");
+            statement2.setString(1, sourceID);
+            ResultSet resultSet = statement2.executeQuery();
+            resultSet.next();
+            int id = resultSet.getInt("id");
+            return id;
         } 
         catch (SQLException ex){
-            return false;
+            return -1;
         }
     }
 
