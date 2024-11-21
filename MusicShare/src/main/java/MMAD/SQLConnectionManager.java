@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class SQLConnectionManager extends DBConnectionManager {
 
     final private String driverClassName = "com.mysql.cj.jdbc.Driver";
-    final private String url = "jdbc:mysql://localhost:3306/music_share_db";
+    final private String url = "jdbc:mysql://localhost:3306/music_share_db"; // AWS ENDPOINT: mmad-music.czm0mk46ipoz.us-east-2.rds.amazonaws.com
     final private String username = "root";
     final private String password = "dbrootpass123";
     private Connection databaseConnection = null;
