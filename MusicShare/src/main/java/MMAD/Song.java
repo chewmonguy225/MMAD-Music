@@ -1,5 +1,4 @@
 package MMAD;
-
 public class Song extends Item{
     private Album album;
     private Artist artist;

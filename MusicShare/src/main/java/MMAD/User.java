@@ -1,29 +1,21 @@
 package MMAD;
-
-import java.util.ArrayList;
-
+import java.util.*;
 public class User {
-    private Login loginCredential;
-    private User[] followingList;
-    private Item[] reviewedItemList;
-    private Playlist playlist;
+    private Login loginCredentials;
+    private ArrayList<User> followList;
+    private ArrayList<Review> reviews;
 
-    public User(Login loginCredentials){
-        //call accountHandler
+    public User (Login cred){
+        loginCredentials = cred;
+        //call database to validate/create user
     }
 
-    public Item[] getReviewedItems(){
-        return reviewedItemList;
-    }
+    public ArrayList<Item> getReviewedItems(){
+        ArrayList<Item> reviewedItems = null;
 
-    public Playlist getPlaylist(){
-        return playlist;
-    }
-
-    public Playlist makePlaylist(Playlist playlist, Playlist friendPlaylist){
-        Playlist mergedPlaylist =  new Playlist();
-        //Call PlaylistHandler
-
-        return mergedPlaylist;
+        for(int i = 0; i < reviews.size(); i++){
+            reviewedItems.add(reviews.get(i).getItem());
+        }
+        return reviewedItems;
     }
 }

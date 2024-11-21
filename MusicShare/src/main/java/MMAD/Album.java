@@ -1,5 +1,4 @@
 package MMAD;
-
 public class Album extends Item {
     private String[] trackList;
 

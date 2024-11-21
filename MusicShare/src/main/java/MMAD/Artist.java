@@ -1,5 +1,4 @@
 package MMAD;
-
 import java.util.*;
 public class Artist extends Item {
     private String id;

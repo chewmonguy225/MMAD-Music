@@ -1,5 +1,4 @@
 package MMAD;
-
 import java.util.*;
 
 public class Playlist {
@@ -7,10 +6,6 @@ public class Playlist {
 
     public Playlist (){
         this.musicList = new ArrayList<Song>();
-    }
-
-    public ArrayList<Song> getSongs(){
-        return musicList;
     }
 
     public void addFavoriteSong(Song song){
