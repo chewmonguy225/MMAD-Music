@@ -1,5 +1,4 @@
 package MMAD;
-import java.sql.SQLException;
 
 public class DBHandler {
     
@@ -13,7 +12,7 @@ public class DBHandler {
      */
     public DBHandler()
     {
-        this.queryExecutor = new QueryExecutor(); 
+        queryExecutor = new QueryExecutor(); 
     }
 
 
@@ -27,7 +26,7 @@ public class DBHandler {
     public int addFriend(String username, String friendUsername)
     {
         try {
-            if(queryExecutor.checkUserExists(friendUsername)){
+            if(! queryExecutor.checkUserExists(friendUsername)){
                 return 3;
             }
             else if (queryExecutor.checkAlreadyAFriend(username, friendUsername)) {
@@ -63,7 +62,7 @@ public class DBHandler {
             return queryExecutor.getSongID(sourceID);
         } 
         catch (Exception e) {
-            System.out.println(getMessage());
+            System.out.println(e.getMessage());
             return -1;
         }
     }
@@ -155,6 +154,7 @@ public class DBHandler {
         catch (Exception e) {
             return -1;
         }
+        return 0;
     }
 
 

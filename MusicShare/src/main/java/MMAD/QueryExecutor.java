@@ -254,11 +254,12 @@ public class QueryExecutor {
     public int addSongToDB(String name, String artist, String album, String sourceID)
     {
         try {
-            PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO song (name, artist, album) VALUES (?, ?, ?);");
+            PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO song (name, artist, album, source_id) VALUES (?, ?, ?, ?);");
             statement.setString(1, name);
             statement.setString(2, artist);
             statement.setString(3, album);
-            int rowsAffected = statement.executeUpdate();
+            statement.setString(4, sourceID);
+            //int rowsAffected = statement.executeUpdate();
 
             PreparedStatement statement2 = sqlConnection.prepareStatement("SELECT id FROM song WHERE source_id= ?;");
             statement2.setString(1, sourceID);
