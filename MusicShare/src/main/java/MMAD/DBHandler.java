@@ -1,47 +1,19 @@
 package MMAD;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DBHandler {
     
-    private SQLConnectionManager connectionManager = null;
-    private Connection connection = null;
-    private QueryExecutor queryExecutor = null;
+    private final QueryExecutor queryExecutor;
 
 
     /**
      * Constructor
      * 
-     * Establishes the database connection and initializes the instance variables.
+     * Initializes the QueryExecutor object
      */
     public DBHandler()
     {
-        try {
-            this.connectionManager = new SQLConnectionManager();
-            connectionManager.establishConnection();
-            this.connection = connectionManager.getConnectionObject();
-            this.queryExecutor = new QueryExecutor(connection);
-        } 
-        catch (ClassNotFoundException | SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    /**
-     * Closes the connection to the database.
-     * 
-     * @return True if connection was closed succesfully, false otherwise.
-     */
-    public boolean closeConnection()
-    {
-        try {
-            connectionManager.closeConnection();
-            return true;
-        } 
-        catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-            return false;
-        }
+        this.queryExecutor = new QueryExecutor(); 
     }
 
 

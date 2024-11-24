@@ -7,16 +7,42 @@ import java.sql.SQLException;
 
 public class QueryExecutor {
 
-
-    private Connection sqlConnection = null;
+    private DBConnectionManager connectionManager;
+    private Connection sqlConnection;
 
     /**
-    * Constructs a new QueryExecutor object using the provided SQL connection.
+    * Initializes the connectionManager and sqlConnection objects that allow query execution
+    *
     * @param sqlConnection The SQL connection to be used for executing queries.
     */
-    public QueryExecutor(Connection sqlConnection) // Connection object passed as param in main method
+    public QueryExecutor() // Connection object passed as param in main method
     {
-        this.sqlConnection = sqlConnection;
+        try {
+            connectionManager = new SQLConnectionManager();
+            connectionManager.establishConnection();
+            sqlConnection = connectionManager.getConnectionObject();
+        } 
+        catch (ClassNotFoundException | SQLException ex) {
+            System.out.println(ex.getMessage());
+        }  
+    }
+
+
+    /**
+     * Closes the connection to the database.
+     * 
+     * @return True if connection was closed succesfully, false otherwise.
+     */
+    public boolean closeConnection()
+    {
+        try {
+            connectionManager.closeConnection();
+            return true;
+        } 
+        catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return false;
+        }
     }
 
 
