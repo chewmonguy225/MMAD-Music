@@ -47,17 +47,15 @@ public class DBHandler {
     * Adds a song into the database song table.
     * First checks if the song is already in the database to avoid duplicate entries.
     *
-    * @param name The title/name of the song.
-    * @param artist The name of the song's artist.
-    * @param album The title/name of the album the song is in.
+    * @param song The song object to be added into the database
     * @param sourceID The song's ID given from the API source (Spotify)
     * @return The song id if the song was already in the database or was added succesfully. Return -1 if there is an error.
     */
-    public int addSongToDB(String name, String artist, String album, String sourceID)
+    public int addSongToDB(Song song, String sourceID)
     {
         try {
             if(! queryExecutor.checkSongInDB(sourceID)) {
-                return queryExecutor.addSongToDB(name, artist, album, sourceID);
+                return queryExecutor.addSongToDB(song, sourceID);
             }
             return queryExecutor.getSongID(sourceID);
         } 
@@ -102,14 +100,14 @@ public class DBHandler {
     * @param sourceID The artist's ID given from the API source (Spotify)
     * @return 1 if the artist is added succesfully. Return 2 if the artist was already in database. Return -1 if there is an error.
     */
-    public int addArtistToDB(String name, String sourceID)
+    public int addArtistToDB(Artist artist, String sourceID)
     {
         try {
             if(queryExecutor.checkArtistInDB(name)){
                 return 2; 
             }
             else {
-                queryExecutor.addArtistToDB(name);
+                queryExecutor.addArtistToDB(artist, sourceID);
                 return 1;
             }
         } 
@@ -123,38 +121,18 @@ public class DBHandler {
      * Adds a given song to the user's playlist.
      * 
      * @param username The user's username.
-     * @param name The name/title of the song.
-     * @param artist The name of the song's artist.
-     * @param album The name/title of the song's album.
-     * @return 1 if the song was added to the playlist succesfully. Return 2 if the song is already in the playlist. Return -1 if an error occured.
+     * @param songID The id of the song in the database
+     * @return 1 if the song was added to the playlist succesfully. Return -1 if an error occured.
      */
-    public int addSongToPlaylist(String username, String name, String artist, String album)
+    public int addSongToPlaylist(String username, int songID)
     {
-        int songID;
-
         try {
-            if(queryExecutor.checkSongInDB(name, artist, album)){
-                songID = queryExecutor.getSongID(name, artist, album);
-
-                if(queryExecutor.checkSongInPlaylist(username, songID)){
-                    return 2;
-                }
-                else {
-                    queryExecutor.addSongToPlaylist(username, songID);
-                    return 1;
-                }
-            }
-            else {
-                queryExecutor.addSongToDB(name, artist, album);
-                songID = queryExecutor.getSongID(name, artist, album);
-                queryExecutor.addSongToPlaylist(username, songID);
-                return 1;
-            }
-        } 
+            queryExecutor.addSongToPlaylist(username, songID);
+            return 1;
+        }
         catch (Exception e) {
             return -1;
         }
-        return 0;
     }
 
 

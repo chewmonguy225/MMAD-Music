@@ -12,7 +12,7 @@ public abstract class Item {
         return this.id;
     }
 
-    public String getname(){
+    public String getName(){
         return this.name;
     }
 }

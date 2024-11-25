@@ -156,41 +156,16 @@ public class QueryExecutor {
 
 
     /**
-     * Returns a song's id in the database after confirming that it exists in the database.
-     * 
-     * @param sourceID The song's ID given from the API source (Spotify)
-     * @return The song's source id if the song was inserted succesfully, -1 if there was an error.
-     */
-    public int getSongID(String sourceID)
-    {
-        try {
-            if(! checkSongInDB(sourceID)){
-                return -1;
-            }
-            PreparedStatement statement = sqlConnection.prepareStatement("SELECT id from song WHERE sourceID= ?;");
-            statement.setString(1, sourceID);
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            int id = resultSet.getInt("id");
-            return id;
-        } 
-        catch (SQLException ex) {
-            return -1;
-        }
-    }
-
-
-    /**
     * Checks if a song already exists in the database.
     *
-    * @param sourceID The song's ID given from the API source (Spotify)
+    * @param songID The song's id in the database.
     * @return True if the song was found in the database, false otherwise.
     */
-    public boolean checkSongInDB(String sourceID)
+    public boolean checkSongInDB(int songID)
     {
         try {
-            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM song WHERE source_id= ?;");
-            statement.setString(1, sourceID);
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM song WHERE id= ?;");
+            statement.setInt(1, songID);
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } 
@@ -245,21 +220,19 @@ public class QueryExecutor {
     /**
     * Inserts a new song in the song table of the database.
     *
-    * @param name The title/name of the song.
-    * @param artist The name of the song's artist.
-    * @param album The title/name of the album the song is in.
+    * @param song The song object to be added into the database
     * @param sourceID The song's ID given from the API source (Spotify)
-    * @return The song's source id if the song was inserted succesfully, -1 if there was an error.
+    * @return The song's database id if the song was inserted succesfully, -1 if there was an error.
     */
-    public int addSongToDB(String name, String artist, String album, String sourceID)
+    public int addSongToDB(Song song, String sourceID)
     {
         try {
-            PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO song (name, artist, album, source_id) VALUES (?, ?, ?, ?);");
-            statement.setString(1, name);
-            statement.setString(2, artist);
-            statement.setString(3, album);
-            statement.setString(4, sourceID);
-            //int rowsAffected = statement.executeUpdate();
+            PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO song (source_id, name, artist, album) VALUES (?, ?, ?, ?);");
+            statement.setString(1, sourceID);
+            statement.setString(2, song.getName());
+            statement.setString(3, song.getArtist().getName());
+            statement.setString(4, song.getAlbum().getName());
+            int rowsAffected = statement.executeUpdate();
 
             PreparedStatement statement2 = sqlConnection.prepareStatement("SELECT id FROM song WHERE source_id= ?;");
             statement2.setString(1, sourceID);
@@ -277,16 +250,17 @@ public class QueryExecutor {
     /**
     * Inserts a new album in the album table of the database.
     *
-    * @param name The title/name of the album.
-    * @param artist The name of the album's artist.
+    * @param album The album object to be added into the database
+    * @param sourceID The song's ID given from the API source (Spotify)
     * @return True if the album was inserted succesfully, false otherwise.
     */
-    public boolean addAlbumToDB(String name, String artist)
+    public boolean addAlbumToDB(Album album, String sourceID)
     {
         try {
-            PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO album (name, artist) VALUES (?, ?);");
-            statement.setString(1, name);
-            statement.setString(2, artist);
+            PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO album (source_id, name, artist) VALUES (?, ?, ?);");
+            statement.setString(1, sourceID);
+            statement.setString(2, album.getName());
+            statement.setString(3, album.getArtist().getName());
             int rowsAffected = statement.executeUpdate();
             return rowsAffected == 1;
         } 
@@ -299,14 +273,15 @@ public class QueryExecutor {
     /**
     * Inserts a new artist in the artist table of the database.
     *
-    * @param name The name of the artist.
+    * @param artist The artis to be added into the database.
     * @return True if the artist was inserted succesfully, false otherwise.
     */
-    public boolean addArtistToDB(String name)
+    public boolean addArtistToDB(Artist artist, String sourceID)
     {
         try {
-            PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO artist (name) VALUES (?);");
-            statement.setString(1, name);
+            PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO artist (source_id, name) VALUES (?, ?);");
+            statement.setString(1, sourceID);
+            statement.setString(2, artist.getName());
             int rowsAffected = statement.executeUpdate();
             return rowsAffected == 1;
         } 
@@ -343,7 +318,7 @@ public class QueryExecutor {
      * 
      * @param username The user's username.
      * @param SongID The database id of the song.
-     * @return
+     * @return True if the song is added to the playlist succesfully, false otherwise.
      */
     public boolean addSongToPlaylist(String username, int songID)
     {
@@ -360,6 +335,13 @@ public class QueryExecutor {
     }
 
 
+    /**
+     * Removes a song from the user's playlist
+     * 
+     * @param username The user's username
+     * @param songID The song's database id
+     * @return True if the song is removed succesfully, false otherwise.
+     */
     public boolean removeSongFromPlaylist(String username, int songID)
     {
         try {
