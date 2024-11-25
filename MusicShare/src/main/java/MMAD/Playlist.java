@@ -7,12 +7,21 @@ public class Playlist {
     public Playlist (){
         this.musicList = new ArrayList<Song>();
     }
+    public Playlist (ArrayList<Song> musicList){
+        this.musicList = musicList;
+    }
 
-    public void addFavoriteSong(Song song){
-        musicList.add(song);
+    public void addSong(Song song){
+        if(!musicList.contains(song))
+            musicList.add(song);
     }
     
     public void removeSong (Song song){
-        musicList.remove(song);
+        if(musicList.contains(song))
+            musicList.remove(song);
+    }
+
+    public ArrayList<Song> getPlaylist(){
+        return musicList;
     }
 }
