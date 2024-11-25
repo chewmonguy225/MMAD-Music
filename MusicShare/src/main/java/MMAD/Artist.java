@@ -9,12 +9,15 @@ public class Artist extends Item {
         super(id, sourceID, name);
     }
 
+    @Override
     public String getname(){
         return this.name;
     }
+    @Override
     public String getSourceID(){
         return this.sourceID;
     }
+    @Override
     public String getID(){
         return this.id;
     }

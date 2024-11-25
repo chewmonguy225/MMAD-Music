@@ -12,14 +12,17 @@ public class Song extends Item{
         this.artist = artist;
     }
 
-    public String getID(){
-        return this.id;
+    @Override
+    public String getname(){
+        return this.name;
     }
+    @Override
     public String getSourceID(){
         return this.sourceID;
     }
-    public String getname(){
-        return this.name;
+    @Override
+    public String getID(){
+        return this.id;
     }
 
     public Album getAlbum(){

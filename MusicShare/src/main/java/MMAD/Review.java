@@ -39,10 +39,17 @@ public class Review {
         return item;
     }
 
+    /**
+     * returns the item description
+     * @return
+     */
     public String getDescription(){
         return this.description;
     }
 
+    /**
+     * returns the item rating
+     */
     public int getRating(){
         return this.rating;
     }
