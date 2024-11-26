@@ -28,4 +28,8 @@ public class Album extends Item {
     public String getID(){
         return this.id;
     }
+
+    public Artist getArtist(){
+        return this.artist;
+    }
 }
