@@ -11,6 +11,8 @@ import java.util.ArrayList;
  *      5 combine playlist
  */
 public class PlaylistHandler {
+    private static PlaylistHandler ph = null;
+
     //first thing, query if the user has an existing playlist
     //if the user has a playlist, query to create a playlist object then continue.
     ArrayList<Song> musicList = new ArrayList<>();
@@ -22,39 +24,17 @@ public class PlaylistHandler {
     //both options will end up with a playlist object called playlist
     Playlist playlist = new Playlist();
     
-    /**
-     * create a playlistHandler to handle options 2 and 3
-     * @param option
-     * @param song
-     */
-    public PlaylistHandler(int option, Song song){
-        switch (option){
-            case 2:
-                addSong(song);
-                break;
-            case 3:
-                removeSong(song);
-                break;
-            default:
-                //invalid request;
-        }
+    private PlaylistHandler (){
+
     }
-    /**
-     * create a playlistHandler to handle option 3
-     */
-    public PlaylistHandler(int option){
-        //query the removal of all playlist info
-        switch (option){
-            case 1:
-                printPlaylist();
-                break;
-            case 3:
-                clearPlaylist();
-                break;
-            default:
-                //invalid request;
+
+    public static PlaylistHandler access(){
+        if (ph == null){
+            ph = new PlaylistHandler();
         }
+        return ph;
     }
+
 
     public void removeSong(Song song){
         playlist.removeSong(song);//removes song from playlist object if it exists in the playlist.
@@ -64,8 +44,10 @@ public class PlaylistHandler {
 
     public void addSong(Song song){
         playlist.addSong(song);//adds song to playlist if it is not already in the playlist
-
+        DBHandler dbh = new DBHandler();
+        int n = dbh.addSongToPlaylist("user1", ""+song.getID());
         //queries the addition of the song to playlist
+        //boolean addSongToPlaylist(String username, int songID)
     }
 
     public void printPlaylist(){
@@ -75,6 +57,7 @@ public class PlaylistHandler {
 
     public void clearPlaylist(){
         //query to remove all songs from playlist
+        
         playlist = new Playlist();//create empty playlist object
     }
     

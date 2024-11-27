@@ -51,6 +51,7 @@ public class DBHandler {
     * @param sourceID The song's ID given from the API source (Spotify)
     * @return The song id if the song was already in the database or was added succesfully. Return -1 if there is an error.
     */
+
     public int addSongToDB(Song song, String sourceID)
     {
         try {
@@ -63,6 +64,16 @@ public class DBHandler {
             System.out.println(e.getMessage());
             return -1;
         }
+    }
+
+    public boolean createUser(String username){
+
+        if(!queryExecutor.checkUserExists(username)){
+            queryExecutor.createAccount(username, "password");
+        }
+        
+        return true;
+
     }
 
 
@@ -124,7 +135,7 @@ public class DBHandler {
      * @param songID The id of the song in the database
      * @return 1 if the song was added to the playlist succesfully. Return -1 if an error occured.
      */
-    public int addSongToPlaylist(String username, int songID)
+    public int addSongToPlaylist(String username, String songID)
     {
         try {
             queryExecutor.addSongToPlaylist(username, songID);
