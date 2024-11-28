@@ -52,13 +52,13 @@ public class DBHandler {
     * @return The song id if the song was already in the database or was added succesfully. Return -1 if there is an error.
     */
 
-    public int addSongToDB(Song song, String sourceID)
+    public int addSongToDB(Song song)
     {
         try {
-            if(! queryExecutor.checkSongInDB(sourceID)) {
-                return queryExecutor.addSongToDB(song, sourceID);
+            if(! queryExecutor.checkSongInDB(Integer.parseInt(song.getID()))) {
+                return queryExecutor.addSongToDB(song, song.getSourceID());
             }
-            return queryExecutor.getSongID(sourceID);
+            return queryExecutor.getSongID(song.getSourceID());//returns Song id if already in DB
         } 
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -66,10 +66,10 @@ public class DBHandler {
         }
     }
 
-    public boolean createUser(String username){
+    public boolean createUser(String username, String password){
 
         if(!queryExecutor.checkUserExists(username)){
-            queryExecutor.createAccount(username, "password");
+            queryExecutor.createAccount(username, password);
         }
         
         return true;
@@ -86,14 +86,14 @@ public class DBHandler {
     * @param sourceID The album's ID given from the API source (Spotify)
     * @return 1 if the album is added succesfully. Return 2 if the album was already in database. Return -1 if there is an error.
     */
-    public int addAlbumToDB(String name, String artist, String sourceID)
+    public int addAlbumToDB(Album album)
     {
         try {
-            if(queryExecutor.checkAlbumInDB(name, artist)){
+            if(queryExecutor.checkAlbumInDB(album)){
                 return 2; 
             }
             else {
-                queryExecutor.addAlbumToDB(name, artist);
+                queryExecutor.addAlbumToDB(album);
                 return 1;
             }
         } 
@@ -111,14 +111,14 @@ public class DBHandler {
     * @param sourceID The artist's ID given from the API source (Spotify)
     * @return 1 if the artist is added succesfully. Return 2 if the artist was already in database. Return -1 if there is an error.
     */
-    public int addArtistToDB(Artist artist, String sourceID)
+    public int addArtistToDB(Artist artist)
     {
         try {
-            if(queryExecutor.checkArtistInDB(name)){
+            if(queryExecutor.checkArtistInDB(artist)){
                 return 2; 
             }
             else {
-                queryExecutor.addArtistToDB(artist, sourceID);
+                queryExecutor.addArtistToDB(artist);
                 return 1;
             }
         } 
@@ -127,7 +127,7 @@ public class DBHandler {
         }
     }
 
-
+    
     /**
      * Adds a given song to the user's playlist.
      * 
@@ -135,15 +135,21 @@ public class DBHandler {
      * @param songID The id of the song in the database
      * @return 1 if the song was added to the playlist succesfully. Return -1 if an error occured.
      */
-    public int addSongToPlaylist(String username, String songID)
+    public int addSongToPlaylist(String username, int songID)
     {
         try {
-            queryExecutor.addSongToPlaylist(username, songID);
-            return 1;
+            boolean f = queryExecutor.addSongToPlaylist(username, songID);
+            if (f)
+                return 1;
+            return -1;
         }
         catch (Exception e) {
             return -1;
         }
+    }
+
+    public int getSongID(Song song){
+        return queryExecutor.getSongID(song.getSourceID());
     }
 
 

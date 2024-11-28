@@ -10,6 +10,10 @@ public class User {
         //call database to validate/create user
     }
 
+    public Login getLogin(){
+        return loginCredentials;
+    }
+
     public ArrayList<Item> getReviewedItems(){
         ArrayList<Item> reviewedItems = null;
 

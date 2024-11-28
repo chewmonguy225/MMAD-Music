@@ -10,7 +10,7 @@ public class Artist extends Item {
     }
 
     @Override
-    public String getname(){
+    public String getName(){
         return this.name;
     }
     @Override

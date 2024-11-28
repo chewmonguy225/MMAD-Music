@@ -17,7 +17,7 @@ public class Album extends Item {
     }
     
     @Override
-    public String getname(){
+    public String getName(){
         return this.name;
     }
     @Override

@@ -20,7 +20,7 @@ public abstract class Item {
 
     public abstract String getSourceID();
 
-    public abstract String getname();
+    public abstract String getName();
 }
 
 

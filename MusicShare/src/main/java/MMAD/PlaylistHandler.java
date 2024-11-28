@@ -23,6 +23,8 @@ public class PlaylistHandler {
 
     //both options will end up with a playlist object called playlist
     Playlist playlist = new Playlist();
+
+    DBHandler dbh = new DBHandler();
     
     private PlaylistHandler (){
 
@@ -42,10 +44,12 @@ public class PlaylistHandler {
         //queries the removal of the song in the DB
     }
 
-    public void addSong(Song song){
+    public void addSong(Login login, Song song){
         playlist.addSong(song);//adds song to playlist if it is not already in the playlist
-        DBHandler dbh = new DBHandler();
-        int n = dbh.addSongToPlaylist("user1", ""+song.getID());
+        
+        int n = dbh.getSongID(song);//will be replaced with getSongID in DBHandler
+        int r = dbh.addSongToPlaylist(login.getUsername(), n);
+        System.out.println(r);
         //queries the addition of the song to playlist
         //boolean addSongToPlaylist(String username, int songID)
     }
@@ -55,10 +59,11 @@ public class PlaylistHandler {
         //send every song to display
     }
 
-    public void clearPlaylist(){
+    public void clearPlaylist(Login login){
         //query to remove all songs from playlist
-        
+        dbh.clearPlaylist(login.getUsername());
         playlist = new Playlist();//create empty playlist object
+        
     }
     
 }

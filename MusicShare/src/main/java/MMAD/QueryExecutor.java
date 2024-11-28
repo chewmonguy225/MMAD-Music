@@ -164,10 +164,15 @@ public class QueryExecutor {
     public boolean checkSongInDB(int songID)
     {
         try {
+            if(songID >= 0){
             PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM song WHERE id= ?;");
             statement.setInt(1, songID);
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
+            }
+            else{
+                return false;
+            }
         } 
         catch (SQLException ex) {
             return false;
@@ -182,12 +187,12 @@ public class QueryExecutor {
     * @param artist The name of the album's artist.
     * @return True if the album was found in the database, false otherwise.
     */
-    public boolean checkAlbumInDB(String name, String artist)
+    public boolean checkAlbumInDB(Album album)
     {
         try {
             PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM album WHERE name= ? AND artist= ?;");
-            statement.setString(1, name);
-            statement.setString(2, artist);
+            statement.setString(1, album.getName());
+            statement.setString(2, album.getArtist().getName());
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } 
@@ -203,11 +208,11 @@ public class QueryExecutor {
     * @param name The name of the artist.
     * @return True if the artist was found in the database, false otherwise.
     */
-    public boolean checkArtistInDB(String name)
+    public boolean checkArtistInDB(Artist artist)
     {
         try {
             PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM artist WHERE name= ?;");
-            statement.setString(1, name);
+            statement.setString(1, artist.getName());
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } 
@@ -246,6 +251,24 @@ public class QueryExecutor {
         }
     }
 
+    public int getSongID (String sourceID){
+        try{
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM song WHERE source_id=?;");
+            statement.setString(1, sourceID);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt("id");
+            } else{
+                return -1;
+            }
+            
+
+        } catch (SQLException e){
+            return -1;
+        }
+        
+    }
+
 
     /**
     * Inserts a new album in the album table of the database.
@@ -254,11 +277,11 @@ public class QueryExecutor {
     * @param sourceID The song's ID given from the API source (Spotify)
     * @return True if the album was inserted succesfully, false otherwise.
     */
-    public boolean addAlbumToDB(Album album, String sourceID)
+    public boolean addAlbumToDB(Album album)
     {
         try {
             PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO album (source_id, name, artist) VALUES (?, ?, ?);");
-            statement.setString(1, sourceID);
+            statement.setString(1, album.getSourceID());
             statement.setString(2, album.getName());
             statement.setString(3, album.getArtist().getName());
             int rowsAffected = statement.executeUpdate();
@@ -276,11 +299,11 @@ public class QueryExecutor {
     * @param artist The artis to be added into the database.
     * @return True if the artist was inserted succesfully, false otherwise.
     */
-    public boolean addArtistToDB(Artist artist, String sourceID)
+    public boolean addArtistToDB(Artist artist)
     {
         try {
             PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO artist (source_id, name) VALUES (?, ?);");
-            statement.setString(1, sourceID);
+            statement.setString(1, artist.getSourceID());
             statement.setString(2, artist.getName());
             int rowsAffected = statement.executeUpdate();
             return rowsAffected == 1;
@@ -323,7 +346,7 @@ public class QueryExecutor {
     public boolean addSongToPlaylist(String username, int songID)
     {
         try {
-            PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO playlist_song (username, songID) VALUES (?, ?);");
+            PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO playlist_song (username, song_id) VALUES (?, ?);");
             statement.setString(1, username);
             statement.setInt(2, songID);
             int rowsAffected = statement.executeUpdate();
@@ -345,7 +368,7 @@ public class QueryExecutor {
     public boolean removeSongFromPlaylist(String username, int songID)
     {
         try {
-            PreparedStatement statement = sqlConnection.prepareStatement("DELETE * FROM playlist_song WHERE username= ? AND song_id= ?;");
+            PreparedStatement statement = sqlConnection.prepareStatement("DELETE FROM playlist_song WHERE username= ? AND song_id= ?;");
             statement.setString(1, username);
             statement.setInt(2, songID);
             int rowsAffected = statement.executeUpdate();
@@ -366,12 +389,13 @@ public class QueryExecutor {
     public boolean clearPlaylist(String username)
     {
         try {
-            PreparedStatement statement = sqlConnection.prepareStatement("DELETE * FROM playlist_song WHERE username= ?;");
+            PreparedStatement statement = sqlConnection.prepareStatement("DELETE FROM playlist_song WHERE username= ?;");
             statement.setString(1, username);
-            statement.executeUpdate();
+            statement.executeUpdate();//something wrong with this statement
             return true;
         } 
         catch (SQLException ex) {
+            System.out.println(ex);
             return false;
         }
     }
