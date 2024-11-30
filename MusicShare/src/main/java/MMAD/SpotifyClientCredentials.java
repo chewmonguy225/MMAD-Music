@@ -23,6 +23,6 @@ public class SpotifyClientCredentials {
 
     public static String getClientSecret(){
         return clientSecret;
-    }
 
+    }
 }
