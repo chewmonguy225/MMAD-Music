@@ -7,7 +7,7 @@ public class Album extends Item {
         this.artist = artist;
     }
 
-    public Album(String id, String sourceID, String name, Artist artist){
+    public Album(int id, String sourceID, String name, Artist artist){
         super(id, sourceID, name);
         this.artist = artist;
     }
@@ -25,7 +25,7 @@ public class Album extends Item {
         return this.sourceID;
     }
     @Override
-    public String getID(){
+    public int getID(){
         return this.id;
     }
 

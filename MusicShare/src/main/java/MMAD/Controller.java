@@ -1,11 +1,28 @@
 package MMAD;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class Controller {
     private static Controller c;
+    private static UI ui = UI.access();
+    private static Display d = Display.access();
     private static ItemHandler ih = ItemHandler.access();
     private static PlaylistHandler ph = PlaylistHandler.access();
-    //private static UI ui = UI.access();
-    int ui;
+    private static ArrayList<String> menuList = populateMenus();
+    private static String currentMenu = "login or signup";
+
+    private static ArrayList<String> populateMenus(){
+        ArrayList<String> ar= new ArrayList();
+        ar.add("home");
+        ar.add("playlist");
+        ar.add("friends");
+        ar.add("review");
+        ar.add("song search");
+        ar.add("album search");
+        ar.add("artist search");
+        return ar;
+    }
 
     private Controller(){
     }
@@ -17,17 +34,132 @@ public class Controller {
         return c;
     }
 
-    public void routeMainMenu(){//maybe pass UI and display objects to get input
-        switch(ui){//ui.getInt() most likely
-            case 1:
-                break;
-            case 2:
-                break;
+    public void routeLogin(){
+        int option = -1;
+
+        while(option != 0){//0 input will exit system
+            switch(currentMenu){
+                case "login or signup":
+                    option = loginOrSignup();
+                    if(option == 1){
+                        currentMenu = "login";
+                    } else if(option == 2){
+                        currentMenu = "signup";
+                    }
+                    break;
+                case "login":
+                    option = login();
+                    if(option == 1){
+                        currentMenu = "home";
+                    }
+                    break;
+                case "signup":
+                    option = signup();
+                    if(option == 1)
+                        currentMenu = "home";
+                    break;
+                case "home":
+                    RouteHome();
+                    break;
+                default:
+                    d.error();
+                    option = 0;
+            }
         }
+        d.exit();
+    }
+
+    private static int loginOrSignup(){
+        d.loginOrSignup();
+        int userInputInt = ui.getInt();
+        
+        if(userInputInt == 1){
+            return 1;
+        } else if(userInputInt == 2){
+            return 2;
+        } else if(userInputInt == 0){
+            return 0;
+        }
+        return -1;
+    }
+
+    private static int login(){
+        d.loginUsername();
+        String username = ui.getString();
+        if(username.equals("0"))
+            return 0;
+        d.loginPassword();
+        String password = ui.getString();
+        if(password.equals("0"))
+            return 0;
+
+        if(username.equals("mik")&&password.equals("111")){//simulates username and password valid
+            return 1;
+        }
+        return -1; //simulates username or password invalid
+    }
+
+    private static int signup(){
+        d.loginUsername();
+        String username = ui.getString();
+        if(username.equals("0"))
+            return 0;
+        d.loginPassword();
+        String password = ui.getString();
+        if(password.equals("0"))
+            return 0;
+        
+        //if account handler ah.checkUsername == 1 then return 1 else display username already exists message and return -1;
+        return 1;
+    }
+
+    private static void RouteHome(){
+        int option = -1;
+        while(option <0 || option >6){
+            d.home();
+            option = ui.getInt();
+        }
+        currentMenu = menuList.get(option);
+        while(option != 0){//0 input will exit system
+            switch(currentMenu){
+                case "playlist":
+                    option = routePlaylist();
+                    if(option == -1){
+                        currentMenu = "home";
+                    }
+
+                    break;
+                case "friends":
+                    break;
+                case "review":
+                    break;
+                case "song search":
+                    break;
+                case "album search":
+                    break;
+                case "artist search":
+                    break;
+                default:
+                    RouteHome();
+            }
+        }
+        d.exit();
+
+    }
+
+    private static int routePlaylist(){
+        int option = ph.displayPlaylist(ui, d);
+
+        if (option == -1 || option == 0){
+            return option;
+        }
+
+
+        return 0;
     }
 
     public void routeSongMenu(){
-        switch(ui){
+        switch(ui.getInt()){
             case 0://previous page, if no previous page then page 1
                 break;
             case 1:
@@ -43,9 +175,11 @@ public class Controller {
         }  
     }
 
+
+
     public void songOptionMenu(Song song){
 
-        switch (ui){
+        switch (ui.getInt()){
             case 1://add song to playlist
                 break;
             case 2://remove song from playlist
@@ -64,7 +198,7 @@ public class Controller {
     public static void route1(Login login){
         Artist artist = new Artist("234234", "BLUR");
         Album album = new Album("123123", "album1", artist);
-        Song song = new Song("235", "12", "Song", artist, album);
+        Song song = new Song( "12", "Song", artist, album);
         ih.addSong(song);
         ih.addSong(song);
 

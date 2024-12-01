@@ -1,5 +1,7 @@
 package MMAD;
 
+import java.util.ArrayList;
+
 public class DBHandler {
     
     private final QueryExecutor queryExecutor;
@@ -55,10 +57,10 @@ public class DBHandler {
     public int addSongToDB(Song song)
     {
         try {
-            if(! queryExecutor.checkSongInDB(Integer.parseInt(song.getID()))) {
-                return queryExecutor.addSongToDB(song, song.getSourceID());
+            if(! queryExecutor.checkSongInDB(song)) {
+                return queryExecutor.addSongToDB(song);
             }
-            return queryExecutor.getSongID(song.getSourceID());//returns Song id if already in DB
+            return queryExecutor.getSongID(song);//returns Song id if already in DB
         } 
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -135,21 +137,21 @@ public class DBHandler {
      * @param songID The id of the song in the database
      * @return 1 if the song was added to the playlist succesfully. Return -1 if an error occured.
      */
-    public int addSongToPlaylist(String username, int songID)
+    public boolean addSongToPlaylist(Login login, Song song)
     {
         try {
-            boolean f = queryExecutor.addSongToPlaylist(username, songID);
+            boolean f = queryExecutor.addSongToPlaylist(login, song);
             if (f)
-                return 1;
-            return -1;
+                return true;
+            return false;
         }
         catch (Exception e) {
-            return -1;
+            return false;
         }
     }
 
     public int getSongID(Song song){
-        return queryExecutor.getSongID(song.getSourceID());
+        return queryExecutor.getSongID(song);
     }
 
 
@@ -159,10 +161,19 @@ public class DBHandler {
      * @param username The user's username. 
      * @return True if the playlist was cleared. Return false if an error occured. 
      */
-    public boolean clearPlaylist(String username)
+    public boolean clearPlaylist(Login login)
     {
         try {
-            return queryExecutor.clearPlaylist(username);
+            return queryExecutor.clearPlaylist(login);
+        } 
+        catch (Exception e) {
+            return false;
+        }
+    }
+    public ArrayList<Integer> getPlaylist(Login login)//this should return an integer arraylist of all the song IDs that are in a users playlist
+    {
+        try {
+            ArrayList<Integer> playlist = queryExecutor.getPlaylist(login);
         } 
         catch (Exception e) {
             return false;
