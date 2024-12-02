@@ -164,6 +164,8 @@ public class Controller {
         int option = ph.displayPlaylist(ui, d);
 
         return option;
+        
+        
     }
 
     public static int routeSongSearch(){
