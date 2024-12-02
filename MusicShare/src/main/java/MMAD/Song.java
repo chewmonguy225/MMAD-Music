@@ -6,14 +6,20 @@ public class Song extends Item{
     public Song(String sourceID, String name, Artist artist, Album album){
         super(sourceID, name);
         this.artist = artist;
+        this.album = album;
     }
-    public Song(String id,String sourceID, String name, Artist artist, Album album){
+    public Song(int id,String sourceID, String name, Artist artist, Album album){
         super(id, sourceID, name);
         this.artist = artist;
+        this.album = album;
+    }
+
+    public void setID(int id){
+        this.id = id;
     }
 
     @Override
-    public String getname(){
+    public String getName(){
         return this.name;
     }
     @Override
@@ -21,7 +27,7 @@ public class Song extends Item{
         return this.sourceID;
     }
     @Override
-    public String getID(){
+    public int getID(){
         return this.id;
     }
 

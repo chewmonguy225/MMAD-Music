@@ -1,26 +1,26 @@
 package MMAD;
 public abstract class Item {
-    protected String id;
+    protected int id;
     protected String sourceID;
     protected String name;
 
     public Item(String sourceID, String name){
         this.sourceID = sourceID;
-        this.id = null;
+        this.id = -1;
         this.name = name;
     }
 
-    public Item(String id, String sourceID, String name){
+    public Item(int id, String sourceID, String name){
         this.id = id;
         this.sourceID = sourceID;
         this.name = name;
     }
 
-    public abstract String getID();
+    public abstract int getID();
 
     public abstract String getSourceID();
 
-    public abstract String getname();
+    public abstract String getName();
 }
 
 

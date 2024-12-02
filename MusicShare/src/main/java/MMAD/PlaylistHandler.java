@@ -11,6 +11,8 @@ import java.util.ArrayList;
  *      5 combine playlist
  */
 public class PlaylistHandler {
+    private static PlaylistHandler ph = null;
+
     //first thing, query if the user has an existing playlist
     //if the user has a playlist, query to create a playlist object then continue.
     ArrayList<Song> musicList = new ArrayList<>();
@@ -21,40 +23,20 @@ public class PlaylistHandler {
 
     //both options will end up with a playlist object called playlist
     Playlist playlist = new Playlist();
+
+    DBHandler dbh = new DBHandler();
     
-    /**
-     * create a playlistHandler to handle options 2 and 3
-     * @param option
-     * @param song
-     */
-    public PlaylistHandler(int option, Song song){
-        switch (option){
-            case 2:
-                addSong(song);
-                break;
-            case 3:
-                removeSong(song);
-                break;
-            default:
-                //invalid request;
-        }
+    private PlaylistHandler (){
+
     }
-    /**
-     * create a playlistHandler to handle option 3
-     */
-    public PlaylistHandler(int option){
-        //query the removal of all playlist info
-        switch (option){
-            case 1:
-                printPlaylist();
-                break;
-            case 3:
-                clearPlaylist();
-                break;
-            default:
-                //invalid request;
+
+    public static PlaylistHandler access(){
+        if (ph == null){
+            ph = new PlaylistHandler();
         }
+        return ph;
     }
+
 
     public void removeSong(Song song){
         playlist.removeSong(song);//removes song from playlist object if it exists in the playlist.
@@ -62,20 +44,54 @@ public class PlaylistHandler {
         //queries the removal of the song in the DB
     }
 
-    public void addSong(Song song){
+    public boolean addSong(Login login, Song song){
         playlist.addSong(song);//adds song to playlist if it is not already in the playlist
-
-        //queries the addition of the song to playlist
+        
+        int n = dbh.getSongID(song);//gets the songs DB id
+        song.setID(n);// makes sure that the song object has the correct DB id set
+        if(n == -1)
+            return false;//song does not exist in DB yet
+        return dbh.addSongToPlaylist(login, song);//adds the song to the playlist
     }
 
-    public void printPlaylist(){
-        ArrayList<Song> musicList = playlist.getPlaylist();
-        //send every song to display
+    public int displayPlaylist(UI ui, Display d){
+        /** Do at top of handler
+         * call database hander dbh.getPlaylist to retrieve an arraylist of song IDs
+         * call item handler ih.createSongFromID for each song id in arraylist
+         */
+
+
+        //call display d.displauPlaylist(Playlist playlist, int page)
+
+        int option = -1;
+        int page = 0;
+        while(option <0 || option >7){//if 6 then prev, if 7 then next
+            if(option == 7)
+                page +=5;
+            if (option == 6)
+                page -= 5;
+
+            //displays the next (5) songs in playlist as long as there is at least one more song to print
+            if(page >= 0 && playlist.getPlaylist().size() > page){
+                d.displayPlaylist(playlist, page);
+                option = ui.getInt();
+            } else {//if on the first page and user select previous, then will go home
+                return -1;
+            }
+
+            //user chose to exit the system
+            if (option == 0)
+                return option;
+            
+        }
+        return option;
     }
 
-    public void clearPlaylist(){
+    public void clearPlaylist(Login login){
         //query to remove all songs from playlist
+        dbh.clearPlaylist(login);
         playlist = new Playlist();//create empty playlist object
+        
     }
     
 }

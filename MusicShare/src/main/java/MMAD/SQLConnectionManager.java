@@ -18,7 +18,7 @@ public class SQLConnectionManager extends DBConnectionManager {
         driverClassName = "com.mysql.cj.jdbc.Driver";
         url = "jdbc:mysql://localhost:3306/music_share_db"; // AWS ENDPOINT: mmad-music.czm0mk46ipoz.us-east-2.rds.amazonaws.com
         username = "root";
-        password = "dbrootpass123";
+        password = "#USTi&tuge1uSt30*51_";
 
         Class.forName(driverClassName);
         databaseConnection = DriverManager.getConnection(url, username, password);

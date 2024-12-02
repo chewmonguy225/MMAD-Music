@@ -1,5 +1,7 @@
 package MMAD;
 
+import java.util.ArrayList;
+
 public class DBHandler {
     
     private final QueryExecutor queryExecutor;
@@ -51,18 +53,38 @@ public class DBHandler {
     * @param sourceID The song's ID given from the API source (Spotify)
     * @return The song id if the song was already in the database or was added succesfully. Return -1 if there is an error.
     */
-    public int addSongToDB(Song song, String sourceID)
+
+    public int addSongToDB(Song song)
     {
         try {
-            if(! queryExecutor.checkSongInDB(sourceID)) {
-                return queryExecutor.addSongToDB(song, sourceID);
+            if(! queryExecutor.checkSongInDB(song)) {
+                return queryExecutor.addSongToDB(song);
             }
-            return queryExecutor.getSongID(sourceID);
+            return queryExecutor.getSongID(song);//returns Song id if already in DB
         } 
         catch (Exception e) {
             System.out.println(e.getMessage());
             return -1;
         }
+    }
+
+    public boolean createUser(Login login){
+
+        if(!queryExecutor.checkUserExists(login.getUsername())){
+            return queryExecutor.createAccount(login);
+        }
+        
+        return false;
+
+    }
+
+    public boolean attemptLogin(Login login){
+
+        if(queryExecutor.checkUserExists(login.getUsername())){
+            return queryExecutor.attemptLogin(login);
+        }
+        return false;
+
     }
 
 
@@ -75,14 +97,14 @@ public class DBHandler {
     * @param sourceID The album's ID given from the API source (Spotify)
     * @return 1 if the album is added succesfully. Return 2 if the album was already in database. Return -1 if there is an error.
     */
-    public int addAlbumToDB(String name, String artist, String sourceID)
+    public int addAlbumToDB(Album album)
     {
         try {
-            if(queryExecutor.checkAlbumInDB(name, artist)){
+            if(queryExecutor.checkAlbumInDB(album)){
                 return 2; 
             }
             else {
-                queryExecutor.addAlbumToDB(name, artist);
+                queryExecutor.addAlbumToDB(album);
                 return 1;
             }
         } 
@@ -100,14 +122,14 @@ public class DBHandler {
     * @param sourceID The artist's ID given from the API source (Spotify)
     * @return 1 if the artist is added succesfully. Return 2 if the artist was already in database. Return -1 if there is an error.
     */
-    public int addArtistToDB(Artist artist, String sourceID)
+    public int addArtistToDB(Artist artist)
     {
         try {
-            if(queryExecutor.checkArtistInDB(name)){
+            if(queryExecutor.checkArtistInDB(artist)){
                 return 2; 
             }
             else {
-                queryExecutor.addArtistToDB(artist, sourceID);
+                queryExecutor.addArtistToDB(artist);
                 return 1;
             }
         } 
@@ -116,7 +138,7 @@ public class DBHandler {
         }
     }
 
-
+    
     /**
      * Adds a given song to the user's playlist.
      * 
@@ -124,15 +146,21 @@ public class DBHandler {
      * @param songID The id of the song in the database
      * @return 1 if the song was added to the playlist succesfully. Return -1 if an error occured.
      */
-    public int addSongToPlaylist(String username, int songID)
+    public boolean addSongToPlaylist(Login login, Song song)
     {
         try {
-            queryExecutor.addSongToPlaylist(username, songID);
-            return 1;
+            boolean f = queryExecutor.addSongToPlaylist(login, song);
+            if (f)
+                return true;
+            return false;
         }
         catch (Exception e) {
-            return -1;
+            return false;
         }
+    }
+
+    public int getSongID(Song song){
+        return queryExecutor.getSongID(song);
     }
 
 
@@ -142,10 +170,20 @@ public class DBHandler {
      * @param username The user's username. 
      * @return True if the playlist was cleared. Return false if an error occured. 
      */
-    public boolean clearPlaylist(String username)
+    public boolean clearPlaylist(Login login)
     {
         try {
-            return queryExecutor.clearPlaylist(username);
+            return queryExecutor.clearPlaylist(login);
+        } 
+        catch (Exception e) {
+            return false;
+        }
+    }
+    
+    public ArrayList<Integer> getPlaylist(Login login)//this should return an integer arraylist of all the song IDs that are in a users playlist
+    {
+        try {
+            ArrayList<Integer> playlist = queryExecutor.getPlaylist(login);
         } 
         catch (Exception e) {
             return false;
