@@ -68,13 +68,22 @@ public class DBHandler {
         }
     }
 
-    public boolean createUser(String username, String password){
+    public boolean createUser(Login login){
 
-        if(!queryExecutor.checkUserExists(username)){
-            queryExecutor.createAccount(username, password);
+        if(!queryExecutor.checkUserExists(login.getUsername())){
+            return queryExecutor.createAccount(login);
         }
         
-        return true;
+        return false;
+
+    }
+
+    public boolean attemptLogin(Login login){
+
+        if(queryExecutor.checkUserExists(login.getUsername())){
+            return queryExecutor.attemptLogin(login);
+        }
+        return false;
 
     }
 

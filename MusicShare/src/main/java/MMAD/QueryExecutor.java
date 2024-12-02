@@ -54,12 +54,12 @@ public class QueryExecutor {
     * @param password The password to attempt login with.
     * @return True if the login is successful, false otherwise.
     */
-    public boolean attemptLogin(String username, String password) 
+    public boolean attemptLogin(Login login) 
     {
         try {
             PreparedStatement statement = sqlConnection.prepareStatement("SELECT * from user WHERE username= ? AND password= ?;");
-            statement.setString(1, username);
-            statement.setString(2, password);
+            statement.setString(1, login.getUsername());
+            statement.setString(2, login.getPassword());
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } 
@@ -76,12 +76,12 @@ public class QueryExecutor {
     * @param password The desired password for the new account.
     * @return True if the account is created successfully, false otherwise.
     */
-    public boolean createAccount(String username, String password)
+    public boolean createAccount(Login login)
     {
         try {
             PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO user (username, password) VALUES (?, ?);");
-            statement.setString(1, username);
-            statement.setString(2, password);
+            statement.setString(1, login.getUsername());
+            statement.setString(2, login.getPassword());
             int rowsAffected = statement.executeUpdate(); 
             return rowsAffected == 1;
         } 

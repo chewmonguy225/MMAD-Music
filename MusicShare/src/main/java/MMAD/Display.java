@@ -19,6 +19,9 @@ public class Display {
     private static void nextScreen(){
         System.out.println("_________________________________________________________________________________________\nEnter 0 to exit system.\n");
     }
+    private static void split(){
+        System.out.println("_________________________________________________________________________________________\n");
+    }
     public void error(){
         System.out.println("_________________________________________________________________________________________\nThere was an Unexpected Error. Please restart the system\n");
     }
@@ -39,11 +42,31 @@ public class Display {
         System.out.print("Please enter your Password: ");
     }
 
+    public void invalidLogin(){
+        split();
+        System.out.println("Username or Password is incorrect\n\nPlease try again:");
+    }
+
+    public void successfulLogin(String username){
+        split();
+        System.out.println("Welcome back "+ username);
+    }
+
+    public void successfulSignup(){
+        split();
+        System.out.println("Welcome to MMAD-Music");
+    }
+
+    public void unsuccessfulSignup(){
+        split();
+        System.out.println("User with that username already exists, Please try again using a different Username");
+    }
+
 
     public void home(){
         nextScreen();
         System.out.println("Please enter a number: 0-6");
-        System.out.println("1: Playlist\n2: Friends\n3: Reviews\n4: Search Song\n5: Search Album\n6: Search Artist");
+        System.out.println("1: Playlist\n2: Friends\n3: Reviews\n4: Search Song\n5: Search Album\n6: Search Artist\n");
     }
 
     public void displayPlaylist(Playlist playlist, int page){

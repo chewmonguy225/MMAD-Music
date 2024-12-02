@@ -16,4 +16,8 @@ public class Login {
     public String getPassword(){
         return password;
     }
+
+    public boolean attemptLogin(DBHandler dbh){
+        return dbh.attemptLogin(this);
+    }
 }

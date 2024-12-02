@@ -7,6 +7,7 @@ public class Controller {
     private static Controller c;
     private static UI ui = UI.access();
     private static Display d = Display.access();
+    private static AccountHandler ah = AccountHandler.access();
     private static ItemHandler ih = ItemHandler.access();
     private static PlaylistHandler ph = PlaylistHandler.access();
     private static ArrayList<String> menuList = populateMenus();
@@ -94,10 +95,15 @@ public class Controller {
         if(password.equals("0"))
             return 0;
 
-        if(username.equals("mik")&&password.equals("111")){//simulates username and password valid
+        if(ah.loginAttempt(username, password))
+        {   
+            d.successfulLogin(username);
             return 1;
+        } else {
+            d.invalidLogin();
+            return -1; //simulates username or password invalid
         }
-        return -1; //simulates username or password invalid
+        
     }
 
     private static int signup(){
@@ -109,9 +115,14 @@ public class Controller {
         String password = ui.getString();
         if(password.equals("0"))
             return 0;
-        
-        //if account handler ah.checkUsername == 1 then return 1 else display username already exists message and return -1;
-        return 1;
+
+        if(ah.createAccount(username, password)){
+            d.successfulSignup();
+            return 1;
+        } else {
+            d.unsuccessfulSignup();
+            return -1;
+        }
     }
 
     private static void RouteHome(){
@@ -209,7 +220,7 @@ public class Controller {
         DBHandler dbh = new DBHandler();
         Login login = new Login("John", "123123");
         User user = new User(login);
-        dbh.createUser(user.getLogin().getUsername(), user.getLogin().getPassword());
+        //dbh.createUser(user.getLogin().getUsername(), user.getLogin().getPassword());
         route1(user.getLogin());
     }
 }
