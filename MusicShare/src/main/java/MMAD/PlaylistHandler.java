@@ -84,7 +84,14 @@ public class PlaylistHandler {
                 return option;
             
         }
-        return option;
+
+        if (option == 0 || option == -1){
+            return option;
+        }
+        else {
+            //this will call a display function asking if the user would like to remove the song from playlist.
+            return option + page;
+        }
     }
 
     public void clearPlaylist(Login login){

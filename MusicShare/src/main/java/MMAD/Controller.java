@@ -125,7 +125,7 @@ public class Controller {
         }
     }
 
-    private static void RouteHome(){
+    private static void RouteHome(){//routes all requests from home page
         int option = -1;
         while(option < 0 || option >6){
             d.home();
@@ -160,11 +160,20 @@ public class Controller {
         d.exit();
     }
 
-    private static int routePlaylist(){
+    private static int routePlaylist(){//routes all playlist requests
         int option = ph.displayPlaylist(ui, d);
 
         return option;
+        
+        
     }
+
+    public static int routeSongSearch(){
+        return -1;
+    }
+
+
+    //--------------------------------------------------------------------------------------
 
     public void routeSongMenu(){
         switch(ui.getInt()){
