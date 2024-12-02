@@ -60,13 +60,14 @@ public class Controller {
                     break;
                 case "home":
                     RouteHome();
+                    currentMenu = "exit";
                     break;
                 default:
-                    d.error();
                     option = 0;
             }
         }
-        d.exit();
+        if(!currentMenu.equals("exit"))
+            d.exit();
     }
 
     private static int loginOrSignup(){
@@ -115,7 +116,7 @@ public class Controller {
 
     private static void RouteHome(){
         int option = -1;
-        while(option <0 || option >6){
+        while(option < 0 || option >6){
             d.home();
             option = ui.getInt();
         }
@@ -140,22 +141,18 @@ public class Controller {
                 case "artist search":
                     break;
                 default:
-                    RouteHome();
+                    if(option !=0){
+                        RouteHome();
+                    }
             }
         }
         d.exit();
-
     }
 
     private static int routePlaylist(){
         int option = ph.displayPlaylist(ui, d);
 
-        if (option == -1 || option == 0){
-            return option;
-        }
-
-
-        return 0;
+        return option;
     }
 
     public void routeSongMenu(){

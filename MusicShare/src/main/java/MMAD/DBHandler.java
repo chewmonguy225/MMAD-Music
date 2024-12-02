@@ -170,6 +170,7 @@ public class DBHandler {
             return false;
         }
     }
+    
     public ArrayList<Integer> getPlaylist(Login login)//this should return an integer arraylist of all the song IDs that are in a users playlist
     {
         try {
