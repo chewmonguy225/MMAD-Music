@@ -87,8 +87,26 @@ public class DBHandler {
 
     }
 
+    public ArrayList<String> getSong(int id){
+        return queryExecutor.getSong(id);
+    }
+
     public boolean deleteUser(Login login){
         return queryExecutor.deleteUser(login);
+    }
+
+    public boolean removeSongFromPlaylist(Login login, Song song){
+        try {
+            if(queryExecutor.checkSongInPlaylist(login, song)) {
+                return queryExecutor.removeSongFromPlaylist(login, song);//returns true if successful, false if not
+            }
+            return true;//returns true if the song is already removed
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        
     }
 
 

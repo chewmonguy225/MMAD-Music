@@ -219,10 +219,10 @@ public class Controller {
         Artist artist = new Artist("234234", "BLUR");
         Album album = new Album("123123", "album1", artist);
         Song song = new Song( "12", "Song", artist, album);
-        ih.addSong(song);
-        ih.addSong(song);
+        ih.addSongToDB(song);
+        ih.addSongToDB(song);
 
-        ph.addSong(login, song);
+        ph.addSongToPlaylist(login, song);
         ph.clearPlaylist(login);
     }
 
