@@ -453,9 +453,74 @@ public class QueryExecutor {
 
 
     /**
+     * Returns a string array list containing artist information
+     * 
+     * @param id The artist's id in the database
+     * 
+     * @return A string array list containing the following info in each index:
+     *          0: artistId 1: source_id 2: artistName 
+     *          Returns empty array list if error occurs
+     */
+    public ArrayList<String> getArtist(int id) {
+        try {
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM artist WHERE id= ?");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<String> artistInfo = new ArrayList<>();
+
+            if(resultSet.next()){
+                artistInfo.add(id+"");
+                artistInfo.add(resultSet.getString("source_id"));
+                artistInfo.add(resultSet.getString("name"));
+            }
+            return artistInfo;
+        } 
+        catch (SQLException ex) {
+            return new ArrayList<String>();
+        }
+    }
+
+
+    /**
+     * Returns a string array list containing album information
+     * 
+     * @param id The album's id in the database
+     * 
+     * @return A string array list containing the following info in each index:
+     *          0: albumId 1: source_id 2: albumName 3: artistName 4: artistId 5: artistSrcId
+     *          Returns empty array list if error occurs
+     */
+    public ArrayList<String> getAlbum(int id) {
+        try {
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM album WHERE id= ?");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<String> albumInfo = new ArrayList<>();
+
+            if(resultSet.next()){
+                albumInfo.add(id+"");
+                albumInfo.add(resultSet.getString("source_id"));
+                albumInfo.add(resultSet.getString("name"));
+            }
+            statement = sqlConnection.prepareStatement("SELECT * FROM artist WHERE name= ?;");
+            statement.setString(1, albumInfo.get(3));
+            resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                albumInfo.add(resultSet.getString("id"));
+                albumInfo.add(resultSet.getString("source_id"));
+            }
+            return albumInfo;
+        } 
+        catch (SQLException ex) {
+            return new ArrayList<String>();
+        }
+    }
+
+
+    /**
      * Removes a song from the user's playlist
      * 
-     * @param username The user's username
+     * @param login The user's login object
      * @param songID The song's database id
      * @return True if the song is removed succesfully, false otherwise.
      */
