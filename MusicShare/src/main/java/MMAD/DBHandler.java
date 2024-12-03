@@ -87,6 +87,10 @@ public class DBHandler {
 
     }
 
+    public boolean deleteUser(Login login){
+        return queryExecutor.deleteUser(login);
+    }
+
 
     /**
     * Adds an album into the database album table.
@@ -183,16 +187,15 @@ public class DBHandler {
     public ArrayList<Integer> getPlaylist(Login login)//this should return an integer arraylist of all the song IDs that are in a users playlist
     {
         try {
-            ArrayList<Integer> playlist = queryExecutor.getPlaylist(login);
+            return queryExecutor.getPlaylist(login);
         } 
         catch (Exception e) {
-            return false;
+            return new ArrayList<Integer>();
         }
     }
 
     // DBHandler
     //
-    // public bool deleteAccount(username, password)
     // public bool createSongReview(username, review, song)
     // public bool createAlbumReview(username, review, album)
     // public bool createArtistReview(username, review, artist)
@@ -203,7 +206,6 @@ public class DBHandler {
     // QueryExecutor only
     //
     // public int getReviewID(username, Item)
-    // public ArrayList<String> getSongInfo()
     // public ArrayList<String> getAlbumInfo()
     // public ArrayList<String> getArtistInfo()
 
