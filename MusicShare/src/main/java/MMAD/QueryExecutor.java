@@ -390,7 +390,7 @@ public class QueryExecutor {
     public ArrayList<Integer> getPlaylist(Login login)
     {
         try {
-            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM playlist_song WHERE username= ?");
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM playlist_song WHERE username= ?;");
             statement.setString(1, login.getUsername());
             ResultSet resultSet = statement.executeQuery();
             ArrayList<Integer> songIDs = new ArrayList<>();
@@ -417,7 +417,7 @@ public class QueryExecutor {
      */
     public ArrayList<String> getSong(int id){
         try {
-            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM song WHERE id= ?");
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM song WHERE id= ?;");
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             ArrayList<String> songInfo = new ArrayList<>();
@@ -453,9 +453,74 @@ public class QueryExecutor {
 
 
     /**
+     * Returns a string array list containing artist information
+     * 
+     * @param id The artist's id in the database
+     * 
+     * @return A string array list containing the following info in each index:
+     *          0: artistId 1: source_id 2: artistName 
+     *          Returns empty array list if error occurs
+     */
+    public ArrayList<String> getArtist(int id) {
+        try {
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM artist WHERE id= ?;");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<String> artistInfo = new ArrayList<>();
+
+            if(resultSet.next()){
+                artistInfo.add(id+"");
+                artistInfo.add(resultSet.getString("source_id"));
+                artistInfo.add(resultSet.getString("name"));
+            }
+            return artistInfo;
+        } 
+        catch (SQLException ex) {
+            return new ArrayList<String>();
+        }
+    }
+
+
+    /**
+     * Returns a string array list containing album information
+     * 
+     * @param id The album's id in the database
+     * 
+     * @return A string array list containing the following info in each index:
+     *          0: albumId 1: source_id 2: albumName 3: artistName 4: artistId 5: artistSrcId
+     *          Returns empty array list if error occurs
+     */
+    public ArrayList<String> getAlbum(int id) {
+        try {
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM album WHERE id= ?;");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<String> albumInfo = new ArrayList<>();
+
+            if(resultSet.next()){
+                albumInfo.add(id+"");
+                albumInfo.add(resultSet.getString("source_id"));
+                albumInfo.add(resultSet.getString("name"));
+            }
+            statement = sqlConnection.prepareStatement("SELECT * FROM artist WHERE name= ?;");
+            statement.setString(1, albumInfo.get(3));
+            resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                albumInfo.add(resultSet.getString("id"));
+                albumInfo.add(resultSet.getString("source_id"));
+            }
+            return albumInfo;
+        } 
+        catch (SQLException ex) {
+            return new ArrayList<String>();
+        }
+    }
+
+
+    /**
      * Removes a song from the user's playlist
      * 
-     * @param username The user's username
+     * @param login The user's login object
      * @param songID The song's database id
      * @return True if the song is removed succesfully, false otherwise.
      */
@@ -477,7 +542,7 @@ public class QueryExecutor {
     /**
      * Deletes all songs from the user's playlist.
      * 
-     * @param username The user's username.
+     * @param login The user's login object.
      * @return True is the playlist was cleared succesfully, false if an error occurs.
      */
     public boolean clearPlaylist(Login login)
@@ -493,6 +558,70 @@ public class QueryExecutor {
             return false;
         }
     }
+
+
+    /**
+     * Creates a new review in the database
+     * 
+     * @param login The user's login object.
+     * @param review The review object to be added.
+     * @return True if successful, false otherwise.
+     */
+    public boolean createReview(Login login, Review review){
+        try {
+            //get the item type
+            String itemType;
+            if(review.getItem() instanceof Song){
+                itemType = "s";
+            } else if(review.getItem() instanceof Artist){
+                itemType = "ar";
+            } else {
+                itemType = "al";
+            }
+
+            PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO review (id, text, rating) VALUES (?,?,?);");
+            String reviewID = login.getUsername() + itemType + review.getItem().getID();
+            statement.setString(1, reviewID);
+            statement.setString(2, review.getDescription());
+            statement.setInt(3, review.getRating());
+            statement.executeUpdate();
+            return true;
+        } 
+        catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return false;
+        }
+    }
+
+
+    /**
+     * Returns an array list of all song ids in the shared playlist
+     * 
+     * @param login1 The first login object
+     * @param login2 The second login object
+     * 
+     * @return An integer array list of all song ids in the shared playlist. An empty array list if there were no songs or an error occurred.
+     */
+    public ArrayList<Integer> getSharedPlaylist(Login login1, Login login2){
+        try {
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT ps1.song_id FROM playlist_song ps1 INNER JOIN playlist_song ps2 ON ps1.song_id = ps2.song_id WHERE ps1.username= ? AND ps2.username= ?;");
+            statement.setString(1, login1.getUsername());
+            statement.setString(1, login2.getPassword());
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<Integer> songIDs = new ArrayList<>();
+
+            while(resultSet.next()){
+                songIDs.add(resultSet.getInt("id"));
+            }
+            return songIDs;
+        } 
+        catch (SQLException ex) {
+            return new ArrayList<Integer>();
+        }
+    }
+
+
+    //public ArrayList<String> getReview()
 
     
 }

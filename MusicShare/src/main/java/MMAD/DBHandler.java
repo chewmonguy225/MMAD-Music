@@ -53,7 +53,6 @@ public class DBHandler {
     * @param sourceID The song's ID given from the API source (Spotify)
     * @return The song id if the song was already in the database or was added succesfully. Return -1 if there is an error.
     */
-
     public int addSongToDB(Song song)
     {
         try {
@@ -68,6 +67,13 @@ public class DBHandler {
         }
     }
 
+
+    /**
+     * Creates a new user in the database
+     * 
+     * @param login The login object to be entered into the database
+     * @return True if the user was created succesfully, false if an error occured.
+     */
     public boolean createUser(Login login){
 
         if(!queryExecutor.checkUserExists(login.getUsername())){
@@ -75,9 +81,26 @@ public class DBHandler {
         }
         
         return false;
-
     }
 
+
+    /**
+     * Queries the database to delete an account
+     * 
+     * @param login The user's login object
+     * @return True if the account was deleted succesfully. False if an error occurred.
+     */
+    public boolean deleteUser(Login login){
+        return queryExecutor.deleteUser(login);
+    }
+
+
+    /**
+     * Attempts to log a user in by querying the database user table
+     * 
+     * @param login The login object to be logged in
+     * @return True if log in was successful, false if an error occurred.
+     */
     public boolean attemptLogin(Login login){
 
         if(queryExecutor.checkUserExists(login.getUsername())){
@@ -87,14 +110,57 @@ public class DBHandler {
 
     }
 
+
+    /**
+     * Returns an array list containing song information
+     * 
+     * @param id The song's id in the database
+     * 
+     * @return A string array list containing the following info in each index:
+     *          0: songId 1: source_id 2: songName 3: artistName 4: albumName 5: artistId 6: artistSrcId 7: albumId 8: albumSrcId 
+     *          Returns empty array list if error occurs
+     */
     public ArrayList<String> getSong(int id){
         return queryExecutor.getSong(id);
     }
 
-    public boolean deleteUser(Login login){
-        return queryExecutor.deleteUser(login);
+
+
+    /**
+     * Returns a string array list containing artist information
+     * 
+     * @param id The artist's id in the database
+     * 
+     * @return A string array list containing the following info in each index:
+     *          0: artistId 1: source_id 2: artistName 
+     *          Returns empty array list if error occurs
+     */
+    public ArrayList<String> getArtist(int id){
+        return queryExecutor.getArtist(id);
     }
 
+
+    /**
+     * Returns a string array list containing album information
+     * 
+     * @param id The album's id in the database
+     * 
+     * @return A string array list containing the following info in each index:
+     *          0: albumId 1: source_id 2: albumName 3: artistName 4: artistId 5: artistSrcId
+     *          Returns empty array list if error occurs
+     */
+    public ArrayList<String> getAlbum(int id){
+        return queryExecutor.getAlbum(id);
+    }
+
+
+    /**
+     * Removes a song from the user's playlist
+     * 
+     * @param login The user's login object
+     * @param songID The song's database id
+     * @return True if the song is removed succesfully, false otherwise.
+     */
     public boolean removeSongFromPlaylist(Login login, Song song){
         try {
             if(queryExecutor.checkSongInPlaylist(login, song)) {
@@ -200,30 +266,52 @@ public class DBHandler {
         }
     }
     
+
+    /**
+     * Returns an array list of all song ids in the user's playlist
+     * 
+     * @param login The login object for the user
+     * 
+     * @return An integer array list of all song ids in the user's playlist. An empty array list if there were no songs or an error occurred.
+     */
     public ArrayList<Integer> getPlaylist(Login login)//this should return an integer arraylist of all the song IDs that are in a users playlist
     {
-        try {
-            return queryExecutor.getPlaylist(login);
-        } 
-        catch (Exception e) {
-            return new ArrayList<Integer>();
-        }
+        return queryExecutor.getPlaylist(login);
     }
 
+
+    /**
+     * Creates a new review in the database
+     * 
+     * @param login The user's login object.
+     * @param review The review object to be added.
+     * @return True if successful, false otherwise.
+     */
+    public boolean createReview(Login login, Review review){
+        return queryExecutor.createReview(login, review);
+    }
+
+
+    /**
+     * Returns an array list of all song ids in the shared playlist
+     * 
+     * @param login1 The first login object
+     * @param login2 The second login object
+     * 
+     * @return An integer array list of all song ids in the shared playlist. An empty array list if there were no songs or an error occurred.
+     */
+    public ArrayList<Integer> getSharedPlaylist(Login login1, Login login2){
+        return queryExecutor.getSharedPlaylist(login1, login2);
+    }
+
+
     // DBHandler
-    //
-    // public bool createSongReview(username, review, song)
-    // public bool createAlbumReview(username, review, album)
-    // public bool createArtistReview(username, review, artist)
     // public bool deleteReview(getReviewID)
     // public String[] getReviews(username) - return String array of review ID's
     // public ArrayList<String> getReviewInfo(reviewID) - return an ArrayList. Index 0: Description, Index 1: Rating, Index 2: Item ID  
 
     // QueryExecutor only
-    //
     // public int getReviewID(username, Item)
-    // public ArrayList<String> getAlbumInfo()
-    // public ArrayList<String> getArtistInfo()
 
     // public ArrayList<String> getFriendsList()
 
