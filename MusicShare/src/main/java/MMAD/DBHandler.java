@@ -87,6 +87,10 @@ public class DBHandler {
 
     }
 
+    public ArrayList<String> getSong(int id){
+        return queryExecutor.getSong(id);
+    }
+
     public boolean deleteUser(Login login){
         return queryExecutor.deleteUser(login);
     }
