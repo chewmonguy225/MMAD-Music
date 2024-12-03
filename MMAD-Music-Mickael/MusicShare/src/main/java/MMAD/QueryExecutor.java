@@ -110,6 +110,26 @@ public class QueryExecutor {
         }
     }
 
+
+    /**
+     * Queries the database to delete an account
+     * 
+     * @param login The user's login object
+     * @return True if the account was deleted succesfully. False if an error occurred.
+     */
+    public boolean deleteUser(Login login){
+        try {
+            PreparedStatement statement = sqlConnection.prepareStatement("DELETE * FROM user WHERE username= ? AND password= ?;");
+            statement.setString(1, login.getUsername());
+            statement.setString(2, login.getPassword());
+            statement.executeUpdate();
+            return true;
+        } 
+        catch (SQLException ex) {
+            return false;
+        }
+    }
+
     
     /**
      * Searches the user_friend table to see if the friend has already been added.
@@ -358,23 +378,79 @@ public class QueryExecutor {
         }
     }
 
-    public ArrayList<Integer> getPlaylist(Login login)//This should create an arraylist of all the song IDs in the user's playlist and return the list
+
+
+    /**
+     * Returns an array list of all song ids in the user's playlist
+     * 
+     * @param login The login object for the user
+     * 
+     * @return An integer array list of all song ids in the user's playlist. An empty array list if there were no songs or an error occurred.
+     */
+    public ArrayList<Integer> getPlaylist(Login login)
     {
         try {
             PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM playlist_song WHERE username= ?");
             statement.setString(1, login.getUsername());
             ResultSet resultSet = statement.executeQuery();
-            if(resultSet.next()){
+            ArrayList<Integer> songIDs = new ArrayList<>();
 
-                return resultSet.getInt("id");
-            } else{
-                return -1;
+            while(resultSet.next()){
+                songIDs.add(resultSet.getInt("id"));
             }
+            return songIDs;
         } 
         catch (SQLException ex) {
-            return false;
+            return new ArrayList<Integer>();
         }
     }
+
+
+    /**
+     * Returns an array list containing song information
+     * 
+     * @param id The song's id in the database
+     * 
+     * @return A string array list containing the following info in each index:
+     *          0: songId 1: source_id 2: songName 3: artistName 4: albumName 5: artistId 6: artistSrcId 7: albumId 8: albumSrcId 
+     *          Returns empty array list if error occurs
+     */
+    public ArrayList<String> getSong(int id){
+        try {
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM song WHERE id= ?");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<String> songInfo = new ArrayList<>();
+
+            if(resultSet.next()){
+                songInfo.add(id+"");
+                songInfo.add(resultSet.getString("source_id"));
+                songInfo.add(resultSet.getString("name"));
+                songInfo.add(resultSet.getString("artist"));
+                songInfo.add(resultSet.getString("album"));
+            }
+            statement = sqlConnection.prepareStatement("SELECT * FROM artist WHERE name= ?;");
+            statement.setString(1, songInfo.get(3));
+            resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                songInfo.add(resultSet.getInt("id")+"");
+                songInfo.add(resultSet.getString("source_id"));
+            }
+            statement = sqlConnection.prepareStatement("SELECT * FROM album WHERE name= ?;");
+            statement.setString(1, songInfo.get(4));
+            resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                songInfo.add(resultSet.getInt("id")+"");
+                songInfo.add(resultSet.getString("source_id"));
+            }
+
+            return songInfo;
+        } 
+        catch (SQLException ex) {
+            return new ArrayList<String>();
+        }
+    }
+
 
     /**
      * Removes a song from the user's playlist
