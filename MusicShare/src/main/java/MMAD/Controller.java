@@ -104,8 +104,6 @@ public class Controller {
             return -1; //simulates username or password invalid
         }
         
-
-        
     }
 
     private static int signup(){
