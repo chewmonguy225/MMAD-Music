@@ -59,10 +59,11 @@ public class ItemHandler {
         d.displaySongs(results, currentPage, totalPages);
         int option = ui.getInt();
 
-        boolean selected = false;
-        while (!selected) {
+
+        Song selectedSong = null;
+        while (selectedSong == null) {
             if (option >= 1 && option <= 5) {
-                selected = true;
+                selectedSong = results.get((currentPage * items);
             } else if (option == 6 && currentPage != 1) {
                 currentPage--;
                 d.displaySongs(results, currentPage, totalPages);
@@ -71,14 +72,10 @@ public class ItemHandler {
                 d.displaySongs(results, currentPage, totalPages);
             } else if (option == 7 && currentPage == 1) {
                 option = -1;
-                selected = true;
+                selected = true; 
             }
         }
         return option;
-    }
-
-    public Item selectItem(ArrayList<Item> theItems, int option) {
-        return theItems.get(option - 1);
     }
 
 }
