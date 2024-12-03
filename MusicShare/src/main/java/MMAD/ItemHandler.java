@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class ItemHandler {
     private static ItemHandler ih;
-    private static AbstractAPIQueryBuilder api = AbstractAPIQueryBuilder.access();
+    private static SpotifyAPIQueryBuilder api = SpotifyAPIQueryBuilder.access();
     DBHandler dbh = new DBHandler();
     private final int itemsPerPage = 5;
 
@@ -47,6 +47,12 @@ public class ItemHandler {
     }
 
     public Song createSongFromID(int id) {
+
+        ArrayList<String> songInfo = dbh.getSong(id);
+        Artist artist = new Artist(Integer.parseInt(songInfo.get(5)), songInfo.get(6), songInfo.get(3));
+        Album album = new Album(Integer.parseInt(songInfo.get(7)), songInfo.get(8), songInfo.get(4), artist);
+        Song song = new Song(id, songInfo.get(1), songInfo.get(2), artist, album);
+        return song;
         // use song id to get all other song information.
         // calls the dbhandler to retrieve each piece of song info in order to create
         // and return a song object
@@ -74,6 +80,10 @@ public class ItemHandler {
                 selected = true;
             }
         }
+
+        
+        //song object
+        //addsongToDB(song)
         return option;
     }
 

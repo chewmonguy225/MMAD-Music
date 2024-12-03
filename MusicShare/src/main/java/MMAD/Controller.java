@@ -142,7 +142,8 @@ public class Controller {
                     }
 
                     break;
-                case "friends":
+                case "friends"://new menu asks to view current friends or add new friend
+                    //unrelated -- add a account menu that allows user to change password or delete account
                     break;
                 case "review":
                     break;

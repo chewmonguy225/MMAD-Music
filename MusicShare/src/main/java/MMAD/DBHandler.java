@@ -181,9 +181,7 @@ public class DBHandler {
         }
     }
 
-    public int getSongID(Song song){
-        return queryExecutor.getSongID(song);
-    }
+    
 
 
     /**
