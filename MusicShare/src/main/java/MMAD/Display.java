@@ -94,6 +94,7 @@ public class Display {
         }
         if(currentPage == 1){
             System.out.println("[" + 6 + "] Next page" );
+            System.out.println("[" + 7 + "] Go Home" );
         }else if(currentPage == totalPages){
             System.out.println("[" + 7 + "] Previous page" );
         }else{
