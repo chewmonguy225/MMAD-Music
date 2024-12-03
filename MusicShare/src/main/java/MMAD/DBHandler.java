@@ -268,31 +268,52 @@ public class DBHandler {
         }
     }
     
+
+    /**
+     * Returns an array list of all song ids in the user's playlist
+     * 
+     * @param login The login object for the user
+     * 
+     * @return An integer array list of all song ids in the user's playlist. An empty array list if there were no songs or an error occurred.
+     */
     public ArrayList<Integer> getPlaylist(Login login)//this should return an integer arraylist of all the song IDs that are in a users playlist
     {
-        try {
-            return queryExecutor.getPlaylist(login);
-        } 
-        catch (Exception e) {
-            return new ArrayList<Integer>();
-        }
+        return queryExecutor.getPlaylist(login);
+    }
+
+
+    /**
+     * Creates a new review in the database
+     * 
+     * @param login The user's login object.
+     * @param review The review object to be added.
+     * @return True if successful, false otherwise.
+     */
+    public boolean createReview(Login login, Review review){
+        return queryExecutor.createReview(login, review);
+    }
+
+
+    /**
+     * Returns an array list of all song ids in the shared playlist
+     * 
+     * @param login1 The first login object
+     * @param login2 The second login object
+     * 
+     * @return An integer array list of all song ids in the shared playlist. An empty array list if there were no songs or an error occurred.
+     */
+    public ArrayList<Integer> getSharedPlaylist(Login login1, Login login2){
+        return queryExecutor.getSharedPlaylist(login1, login2);
     }
 
 
     // DBHandler
-    //
-    // public bool createSongReview(username, review, song)
-    // public bool createAlbumReview(username, review, album)
-    // public bool createArtistReview(username, review, artist)
     // public bool deleteReview(getReviewID)
     // public String[] getReviews(username) - return String array of review ID's
     // public ArrayList<String> getReviewInfo(reviewID) - return an ArrayList. Index 0: Description, Index 1: Rating, Index 2: Item ID  
 
     // QueryExecutor only
-    //
     // public int getReviewID(username, Item)
-    // public ArrayList<String> getAlbumInfo()
-    // public ArrayList<String> getArtistInfo()
 
     // public ArrayList<String> getFriendsList()
 
