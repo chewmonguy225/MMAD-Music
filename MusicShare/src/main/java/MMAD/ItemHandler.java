@@ -56,6 +56,9 @@ public class ItemHandler {
         // use song id to get all other song information.
         // calls the dbhandler to retrieve each piece of song info in order to create
         // and return a song object
+        
+        //Song theSong = new Song(null, null, null, null);
+        //return theSong;
     }
 
     public int searchSong(String songTitle, UI ui, Display d) {
@@ -65,30 +68,24 @@ public class ItemHandler {
         d.displaySongs(results, currentPage, totalPages);
         int option = ui.getInt();
 
-        boolean selected = false;
-        while (!selected) {
+        Song selectedSong = null;
+        while (selectedSong == null && option != -1) {
             if (option >= 1 && option <= 5) {
-                selected = true;
-            } else if (option == 6 && currentPage != 1) {
-                currentPage--;
-                d.displaySongs(results, currentPage, totalPages);
-            } else if (option == 7 && currentPage != totalPages) {
+                selectedSong = results.get((currentPage * itemsPerPage) + (option - 1));
+            }else if (option == 6 && currentPage != totalPages) {
                 currentPage++;
                 d.displaySongs(results, currentPage, totalPages);
+                option = ui.getInt();
+        } else if (option == 7 && currentPage != 1) {
+                currentPage--;
+                d.displaySongs(results, currentPage, totalPages);
+                option = ui.getInt();
             } else if (option == 7 && currentPage == 1) {
-                option = -1;
-                selected = true;
+                option = -1; 
             }
         }
-
-        
-        //song object
-        //addsongToDB(song)
+        addSongToDB(selectedSong);
         return option;
-    }
-
-    public Item selectItem(ArrayList<Item> theItems, int option) {
-        return theItems.get(option - 1);
     }
 
 }

@@ -87,10 +87,9 @@ public class Display {
 
     public void displaySongs(ArrayList<Song> theSongs, int currentPage, int totalPages){
         nextScreen();
-        int i = 1;
-        for(Song song : theSongs){
-            System.out.println("[" + i + "] " + song.name + " by " + song.artist);
-            i++;
+        int startIndex = ((currentPage - 1) * 5);
+        for(int i = 0; i < 5; i++){
+            System.out.println("[" + (i+1) + "] " + theSongs.get(startIndex + i).name + " by " + theSongs.get(startIndex + i).getArtist().getName());
         }
         if(currentPage == 1){
             System.out.println("[" + 6 + "] Next page" );
