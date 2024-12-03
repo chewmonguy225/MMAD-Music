@@ -56,11 +56,6 @@ public class ItemHandler {
 
     public int searchSong(String songTitle, UI ui, Display d) {
         ArrayList<Song> results = api.searchSong(songTitle);
-        int i = 1;
-        for(Song song : results){
-            System.out.println( i + " "  + song.name + " " + song.getArtist().getName());
-            i++;
-        }
         int totalPages = (int) Math.ceil((double) results.size() / itemsPerPage);
         int currentPage = 1;
         d.displaySongs(results, currentPage, totalPages);

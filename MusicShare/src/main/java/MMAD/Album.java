@@ -7,6 +7,11 @@ public class Album extends Item {
         this.artist = artist;
     }
 
+    public Album(int id, String sourceID, String name, Artist artist){
+        super(id, sourceID, name);
+        this.artist = artist;
+    }
+
     public Artist artist(){
         return this.artist;
     }
