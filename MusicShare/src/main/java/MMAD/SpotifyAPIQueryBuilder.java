@@ -9,12 +9,22 @@ import se.michaelthelin.spotify.model_objects.specification.*;
 import se.michaelthelin.spotify.requests.data.search.simplified.*;
 
 public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
+  private static SpotifyAPIQueryBuilder api;
   SpotifyAPIConnection theApiConnection = new SpotifyAPIConnection();
+  private static int limit = 25;
+
+  public static SpotifyAPIQueryBuilder access(){
+    if (api == null){
+      api = new SpotifyAPIQueryBuilder();
+    }
+    return api;
+  }
+
 
   public ArrayList<Album> searchAlbum(String albumTitle) {
     ArrayList<Album> Albums = new ArrayList<>();
     SearchAlbumsRequest searchAlbumsRequest = theApiConnection.getConnection().searchAlbums(albumTitle)
-        .limit(5)
+        .limit(limit)
         .build();
     try {
       Paging<AlbumSimplified> albumSimplifiedPaging = searchAlbumsRequest.execute();
@@ -33,7 +43,7 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
   public ArrayList<Song> searchSong(String songTitle) {
     ArrayList<Song> Songs = new ArrayList<>();
     SearchTracksRequest searchTracksRequest = theApiConnection.getConnection().searchTracks(songTitle)
-        .limit(5)
+        .limit(limit)
         .build();
     try {
       final Paging<Track> trackPaging = searchTracksRequest.execute();
@@ -51,7 +61,7 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
   public ArrayList<Artist> searchArtist(String artistName) {
     ArrayList<Artist> Artists = new ArrayList<>();
     SearchArtistsRequest searchArtistsRequest = theApiConnection.getConnection().searchArtists(artistName)
-        .limit(5)
+        .limit(limit)
         .build();
 
     try {
@@ -68,43 +78,6 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
     }
 
     return Artists;
-  }
-
-  public ArrayList<Album> searchAlbum(String albumTitle, int limit) {
-    ArrayList<Album> Albums = new ArrayList<>();
-    SearchAlbumsRequest searchAlbumsRequest = theApiConnection.getConnection().searchAlbums(albumTitle)
-        .limit(limit)
-        .build();
-    try {
-      Paging<AlbumSimplified> albumSimplifiedPaging = searchAlbumsRequest.execute();
-      AlbumSimplified[] spotifyAlbums = albumSimplifiedPaging.getItems();
-      for (AlbumSimplified theAlbum : spotifyAlbums) {
-        Album localAlbum = convertAlbum(theAlbum);
-        Albums.add(localAlbum);
-      }
-    } catch (IOException | SpotifyWebApiException | ParseException e) {
-      // System.out.println("Error: " + e.getMessage());
-    }
-
-    return Albums;
-  }
-
-  public ArrayList<Song> searchSong(String songTitle, int limit) {
-    ArrayList<Song> Songs = new ArrayList<>();
-    SearchTracksRequest searchTracksRequest = theApiConnection.getConnection().searchTracks(songTitle)
-        .limit(5)
-        .build();
-    try {
-      final Paging<Track> trackPaging = searchTracksRequest.execute();
-      Track[] spotifySongs = trackPaging.getItems();
-      for (Track theSong : spotifySongs) {
-        Song localSong = convertTrack(theSong);
-        Songs.add(localSong);
-      }
-    } catch (IOException | SpotifyWebApiException | ParseException e) {
-      // System.out.println("Error: " + e.getMessage());
-    }
-    return Songs;
   }
 
   private Album convertAlbum(AlbumSimplified spotifyAlbum) {

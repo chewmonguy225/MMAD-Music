@@ -84,5 +84,22 @@ public class Display {
         }
 
     }
+
+    public void displaySongs(ArrayList<Song> theSongs, int currentPage, int totalPages){
+        nextScreen();
+        int i = 1;
+        for(Song song : theSongs){
+            System.out.println("[" + i + "] " + song.name + " by " + song.artist);
+            i++;
+        }
+        if(currentPage == 1){
+            System.out.println("[" + 6 + "] Next page" );
+        }else if(currentPage == totalPages){
+            System.out.println("[" + 7 + "] Previous page" );
+        }else{
+            System.out.println("[" + 6 + "] Next page" );
+            System.out.println("[" + 7 + "] Previous page" );
+        }
+    }
 }
 

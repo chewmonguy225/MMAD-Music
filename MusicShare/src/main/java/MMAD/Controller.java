@@ -12,6 +12,7 @@ public class Controller {
     private static PlaylistHandler ph = PlaylistHandler.access();
     private static ArrayList<String> menuList = populateMenus();
     private static String currentMenu = "login or signup";
+    private static 
 
     private static ArrayList<String> populateMenus(){
         ArrayList<String> ar= new ArrayList();
@@ -169,7 +170,9 @@ public class Controller {
     }
 
     public static int routeSongSearch(){
-        return -1;
+        int option = ih.searchSong(currentMenu, ui, d);
+        
+        return option;
     }
 
 
