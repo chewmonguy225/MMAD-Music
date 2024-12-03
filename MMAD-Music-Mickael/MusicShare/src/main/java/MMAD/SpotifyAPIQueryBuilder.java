@@ -12,7 +12,11 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
   SpotifyAPIConnection theApiConnection = new SpotifyAPIConnection();
 
   public ArrayList<Album> searchAlbum(String albumTitle) {
+<<<<<<< Updated upstream:MMAD-Music-Mickael/MusicShare/src/main/java/MMAD/SpotifyAPIQueryBuilder.java
     ArrayList<ArrayList<String>> Albums = new ArrayList<>();
+=======
+    ArrayList<Album> Albums = new ArrayList<>();
+>>>>>>> Stashed changes:MusicShare/src/main/java/MMAD/SpotifyAPIQueryBuilder.java
     SearchAlbumsRequest searchAlbumsRequest = theApiConnection.getConnection().searchAlbums(albumTitle)
         .limit(5)
         .build();
@@ -20,19 +24,22 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
       Paging<AlbumSimplified> albumSimplifiedPaging = searchAlbumsRequest.execute();
       AlbumSimplified[] spotifyAlbums = albumSimplifiedPaging.getItems();
       for (AlbumSimplified theAlbum : spotifyAlbums) {
-        ArrayList<String> albumInfo = new ArrayList<>();
-        albumInfo.add(theAlbum.getName());
-        albumInfo.add(theAlbum.getArtists()[0].getName());
+        Album localAlbum = convertAlbum(theAlbum);
+        Albums.add(localAlbum);
       }
     } catch (IOException | SpotifyWebApiException | ParseException e) {
-      //System.out.println("Error: " + e.getMessage());
+      return new ArrayList<Album>();
     }
 
     return Albums;
   }
 
   public ArrayList<Song> searchSong(String songTitle) {
+<<<<<<< Updated upstream:MMAD-Music-Mickael/MusicShare/src/main/java/MMAD/SpotifyAPIQueryBuilder.java
     ArrayList<ArrayList<String>> Songs = new ArrayList<>();
+=======
+    ArrayList<Song> Songs = new ArrayList<>();
+>>>>>>> Stashed changes:MusicShare/src/main/java/MMAD/SpotifyAPIQueryBuilder.java
     SearchTracksRequest searchTracksRequest = theApiConnection.getConnection().searchTracks(songTitle)
         .limit(5)
         .build();
@@ -40,21 +47,22 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
       final Paging<Track> trackPaging = searchTracksRequest.execute();
       Track[] spotifySongs = trackPaging.getItems();
       for (Track theSong : spotifySongs) {
-        ArrayList<String> songInfo = new ArrayList<>();
-        songInfo.add(theSong.getName());
-        songInfo.add(theSong.getArtists()[0].getName());
-        songInfo.add(theSong.getAlbum().getName());
-        songInfo.add(Integer.toString(theSong.getTrackNumber()));
-        Songs.add(songInfo);
+        Song localSong = convertTrack(theSong);
+        Songs.add(localSong);
       }
     } catch (IOException | SpotifyWebApiException | ParseException e) {
-      //System.out.println("Error: " + e.getMessage());
+      return new ArrayList<Song>();
     }
     return Songs;
   }
 
+<<<<<<< Updated upstream:MMAD-Music-Mickael/MusicShare/src/main/java/MMAD/SpotifyAPIQueryBuilder.java
   public ArrayList<Album> searchArtist(String artistName) {
     ArrayList<ArrayList<String>> Artists = new ArrayList<>();
+=======
+  public ArrayList<Artist> searchArtist(String artistName) {
+    ArrayList<Artist> Artists = new ArrayList<>();
+>>>>>>> Stashed changes:MusicShare/src/main/java/MMAD/SpotifyAPIQueryBuilder.java
     SearchArtistsRequest searchArtistsRequest = theApiConnection.getConnection().searchArtists(artistName)
         .limit(5)
         .build();
@@ -64,19 +72,19 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
           .execute();
       se.michaelthelin.spotify.model_objects.specification.Artist[] spotifyArtists = artistPaging.getItems();
       for (se.michaelthelin.spotify.model_objects.specification.Artist artist : spotifyArtists) {
-        ArrayList<String> artistInfo = new ArrayList<>();
-        artistInfo.add(artist.getName());
+        Artist localArtist = convertArtist(artist);
+        Artists.add(localArtist);
       }
       System.out.println("Total: " + artistPaging.getTotal());
     } catch (IOException | SpotifyWebApiException | ParseException e) {
-      //System.out.println("Error: " + e.getMessage());
+      return new ArrayList<Artist>();
     }
 
     return Artists;
   }
 
-  public ArrayList<ArrayList<String>> searchAlbum(String albumTitle, int limit) {
-    ArrayList<ArrayList<String>> Albums = new ArrayList<>();
+  public ArrayList<Album> searchAlbum(String albumTitle, int limit) {
+    ArrayList<Album> Albums = new ArrayList<>();
     SearchAlbumsRequest searchAlbumsRequest = theApiConnection.getConnection().searchAlbums(albumTitle)
         .limit(limit)
         .build();
@@ -84,59 +92,54 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
       Paging<AlbumSimplified> albumSimplifiedPaging = searchAlbumsRequest.execute();
       AlbumSimplified[] spotifyAlbums = albumSimplifiedPaging.getItems();
       for (AlbumSimplified theAlbum : spotifyAlbums) {
-        ArrayList<String> albumInfo = new ArrayList<>();
-        albumInfo.add(theAlbum.getName());
-        albumInfo.add(theAlbum.getArtists()[0].getName());
+        Album localAlbum = convertAlbum(theAlbum);
+        Albums.add(localAlbum);
       }
     } catch (IOException | SpotifyWebApiException | ParseException e) {
-      //System.out.println("Error: " + e.getMessage());
+      // System.out.println("Error: " + e.getMessage());
     }
 
     return Albums;
   }
 
-  public ArrayList<ArrayList<String>> searchSong(String songTitle, int limit) {
-    ArrayList<ArrayList<String>> Songs = new ArrayList<>();
+  public ArrayList<Song> searchSong(String songTitle, int limit) {
+    ArrayList<Song> Songs = new ArrayList<>();
     SearchTracksRequest searchTracksRequest = theApiConnection.getConnection().searchTracks(songTitle)
-        .limit(limit)
+        .limit(5)
         .build();
     try {
       final Paging<Track> trackPaging = searchTracksRequest.execute();
       Track[] spotifySongs = trackPaging.getItems();
       for (Track theSong : spotifySongs) {
-        ArrayList<String> songInfo = new ArrayList<>();
-        songInfo.add(theSong.getName());
-        songInfo.add(theSong.getArtists()[0].getName());
-        songInfo.add(theSong.getAlbum().getName());
-        songInfo.add(Integer.toString(theSong.getTrackNumber()));
-        Songs.add(songInfo);
+        Song localSong = convertTrack(theSong)
+        Songs.add(localSong);
       }
     } catch (IOException | SpotifyWebApiException | ParseException e) {
-      //System.out.println("Error: " + e.getMessage());
+      // System.out.println("Error: " + e.getMessage());
     }
     return Songs;
   }
 
-  public ArrayList<ArrayList<String>> searchArtist(String artistName, int limit) {
-    ArrayList<ArrayList<String>> Artists = new ArrayList<>();
-    SearchArtistsRequest searchArtistsRequest = theApiConnection.getConnection().searchArtists(artistName)
-        .limit(limit)
-        .build();
-
-    try {
-      final Paging<se.michaelthelin.spotify.model_objects.specification.Artist> artistPaging = searchArtistsRequest
-          .execute();
-      se.michaelthelin.spotify.model_objects.specification.Artist[] spotifyArtists = artistPaging.getItems();
-      for (se.michaelthelin.spotify.model_objects.specification.Artist artist : spotifyArtists) {
-        ArrayList<String> artistInfo = new ArrayList<>();
-        artistInfo.add(artist.getName());
-      }
-      System.out.println("Total: " + artistPaging.getTotal());
-    } catch (IOException | SpotifyWebApiException | ParseException e) {
-      //System.out.println("Error: " + e.getMessage());
-    }
-
-    return Artists;
+  private Album convertAlbum(AlbumSimplified spotifyAlbum) {
+    Artist theArtist = convertArtist(spotifyAlbum.getArtists()[0]);
+    Album localAlbum = new Album(spotifyAlbum.getId(), spotifyAlbum.getName(), theArtist);
+    return localAlbum;
   }
 
+  private Song convertTrack(se.michaelthelin.spotify.model_objects.specification.Track spotifyTrack) {
+    Artist theArtist = convertArtist(spotifyTrack.getArtists()[0]);
+    Album theAlbum = convertAlbum(spotifyTrack.getAlbum());
+    Song localSong = new Song(spotifyTrack.getId(), spotifyTrack.getName(), theArtist, theAlbum);
+    return localSong;
+  }
+
+  private Artist convertArtist(se.michaelthelin.spotify.model_objects.specification.Artist spotifyArtist) {
+    Artist localArtist = new Artist(spotifyArtist.getId(), spotifyArtist.getName());
+    return localArtist;
+  }
+
+  private Artist convertArtist(se.michaelthelin.spotify.model_objects.specification.ArtistSimplified spotifyArtist) {
+    Artist localArtist = new Artist(spotifyArtist.getId(), spotifyArtist.getName());
+    return localArtist;
+  }
 }

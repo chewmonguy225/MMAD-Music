@@ -12,6 +12,7 @@ public class Controller {
     private static PlaylistHandler ph = PlaylistHandler.access();
     private static ArrayList<String> menuList = populateMenus();
     private static String currentMenu = "login or signup";
+    private static AbstractAPIQueryBuilder api = AbstractAPIQueryBuilder.access();
 
     private static ArrayList<String> populateMenus(){
         ArrayList<String> ar= new ArrayList();
@@ -146,6 +147,10 @@ public class Controller {
                 case "review":
                     break;
                 case "song search":
+                    option = routeSongSearch();
+                    if(option == -1){
+                        currentMenu = "home";
+                    }
                     break;
                 case "album search":
                     break;
@@ -169,6 +174,9 @@ public class Controller {
     }
 
     public static int routeSongSearch(){
+        d.searchSongName();
+        String searchTitle = ui.getString();
+        ih.searchSong(searchTitle);
         return -1;
     }
 

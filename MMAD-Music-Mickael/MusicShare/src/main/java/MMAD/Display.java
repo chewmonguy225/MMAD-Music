@@ -84,5 +84,10 @@ public class Display {
         }
 
     }
+
+    public void searchSongName(){
+        nextScreen();
+        System.out.println("Please enter song title to search: ");
+    }
 }
 
