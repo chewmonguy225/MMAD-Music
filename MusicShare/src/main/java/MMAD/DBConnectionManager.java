@@ -10,7 +10,9 @@ public abstract class DBConnectionManager {
     protected String username;
     protected  String password;
     
-    public void establishConnection() throws ClassNotFoundException, SQLException {}
+    public void establishConnection() throws ClassNotFoundException, SQLException {
+        
+    }
 
     public void closeConnection() throws SQLException {}
 
