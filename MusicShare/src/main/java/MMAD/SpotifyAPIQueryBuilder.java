@@ -1,7 +1,7 @@
 package MMAD;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 
 import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -42,10 +42,10 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
         Song localSong = convertTrack(theSong);
         Songs.add(localSong);
       }
+      return Songs;
     } catch (IOException | SpotifyWebApiException | ParseException e) {
       return new ArrayList<Song>();
     }
-    return Songs;
   }
 
   public ArrayList<Artist> searchArtist(String artistName) {

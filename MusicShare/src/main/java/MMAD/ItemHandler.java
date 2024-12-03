@@ -17,15 +17,30 @@ public class ItemHandler {
         }
         return ih;
     }
-    public void addSong(Song song){
+
+    /**
+     * adds song, album and artist to the DB for the song object
+     * @param song
+     */
+    public void addSongToDB(Song song){
+        addAlbumToDB(song.getAlbum());
         dbh.addSongToDB(song);
     }
 
-    public void addAlbum(Album album){
+    /**
+     * adds the album and the artist to the DB for the album object
+     * @param album
+     */
+    public void addAlbumToDB(Album album){
+        addArtistToDB(album.getArtist());
         dbh.addAlbumToDB(album);
     }
 
-    public void addArtist(Artist artist){
+    /**
+     * adds the artist to the DB
+     * @param artist
+     */
+    public void addArtistToDB(Artist artist){
         dbh.addArtistToDB(artist);
     }
 
@@ -35,20 +50,6 @@ public class ItemHandler {
     }
 
      public int searchSong(String songTitle, UI ui, Display d){
-        ArrayList<Song> results = api.searchSong(songTitle);
-        d.displaySongs();
-        int option = ui.getInt();
-        if(option == 0){
-            return option;
-        }else if(option > 7){
-            return -1;
-        }
-        
-        return option;
-
-    }
-    
-    public int searchSong(String songTitle, UI ui, Display d){
         ArrayList<Song> results = api.searchSong(songTitle);
         d.displaySongs();
         int option = ui.getInt();

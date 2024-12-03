@@ -25,6 +25,7 @@ public class PlaylistHandler {
     Playlist playlist = new Playlist();
 
     DBHandler dbh = new DBHandler();
+    ItemHandler ih = ItemHandler.access();
     
     private PlaylistHandler (){
 
@@ -38,19 +39,22 @@ public class PlaylistHandler {
     }
 
 
-    public void removeSong(Song song){
+    public void removeSongFromPlaylist(Login login, Song song){
         playlist.removeSong(song);//removes song from playlist object if it exists in the playlist.
         
         //queries the removal of the song in the DB
     }
 
-    public boolean addSong(Login login, Song song){
+    public boolean addSongToPlaylist(Login login, Song song){
         playlist.addSong(song);//adds song to playlist if it is not already in the playlist
         
         int n = dbh.getSongID(song);//gets the songs DB id
+
+        if(n == -1)//song does not exist in DB yet
+            ih.addSongToDB(song);//adds song to the DB
+            
         song.setID(n);// makes sure that the song object has the correct DB id set
-        if(n == -1)
-            return false;//song does not exist in DB yet
+
         return dbh.addSongToPlaylist(login, song);//adds the song to the playlist
     }
 

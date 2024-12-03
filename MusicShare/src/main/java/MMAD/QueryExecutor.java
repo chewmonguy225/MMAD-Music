@@ -342,12 +342,12 @@ public class QueryExecutor {
     * @param songID The song's id in the database. 
     * @return True if the song was found in the playlist, false otherwise.
     */
-    public boolean checkSongInPlaylist(String username, int songID)
+    public boolean checkSongInPlaylist(Login login, Song song)
     {
         try {
             PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM playlist_song WHERE username= ? AND songID= ?;");
-            statement.setString(1, username);
-            statement.setInt(2, songID);
+            statement.setString(1, login.getUsername());
+            statement.setInt(2, song.getID());
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } 
