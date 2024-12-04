@@ -85,7 +85,7 @@ public class Display {
 
     }
 
-    public void displaySongs(ArrayList<Song> theSongs, int currentPage, int totalPages){
+    public void displaySongSearchResult(ArrayList<Song> theSongs, int currentPage, int totalPages){
         nextScreen();
         int startIndex = ((currentPage - 1) * 5);
         for(int i = 0; i < 5; i++){
@@ -101,5 +101,61 @@ public class Display {
             System.out.println("[" + 7 + "] Previous page" );
         }
     }
+
+    public void displayAlbumSearchResult(ArrayList<Album> theAlbums, int currentPage, int totalPages){
+        nextScreen();
+        int startIndex = ((currentPage - 1) * 5);
+        for(int i = 0; i < 5; i++){
+            System.out.println("[" + (i+1) + "] " + theAlbums.get(startIndex + i).name + " by " + theAlbums.get(startIndex + i).getArtist().getName());
+        }
+        if(currentPage == 1){
+            System.out.println("[" + 6 + "] Next page" );
+            System.out.println("[" + 7 + "] Go Home" );
+        }else if(currentPage == totalPages){
+            System.out.println("[" + 7 + "] Previous page" );
+        }else{
+            System.out.println("[" + 6 + "] Next page" );
+            System.out.println("[" + 7 + "] Previous page" );
+        }
+    }
+
+    public void displayArtistSearchResult(ArrayList<Artist> theArtists, int currentPage, int totalPages){
+        nextScreen();
+        int startIndex = ((currentPage - 1) * 5);
+        for(int i = 0; i < 5; i++){
+            System.out.println("[" + (i+1) + "] " + theArtists.get(startIndex + i).name);
+        }
+        if(currentPage == 1){
+            System.out.println("[" + 6 + "] Next page" );
+            System.out.println("[" + 7 + "] Go Home" );
+        }else if(currentPage == totalPages){
+            System.out.println("[" + 7 + "] Previous page" );
+        }else{
+            System.out.println("[" + 6 + "] Next page" );
+            System.out.println("[" + 7 + "] Previous page" );
+        }
+    }
+
+    public void searchPrompt(){
+        System.out.print("Search: ");
+    }
+
+    public void songOptionMenu(){
+        System.out.println("[1] Add song to playlist");
+        System.out.println("[2] Remove song from playlist");
+        System.out.println("[3] Write Review");
+        System.out.println("[4] Delete Review");
+        System.out.println("[5] Search different song");
+    }
+
+    public void reviewPrompt(){
+        System.out.print("Description: ");
+    }
+
+    public void ratingPrompt(){
+        System.out.print("Rating: ");
+    }
 }
 
+
+    
