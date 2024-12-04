@@ -11,7 +11,7 @@ import se.michaelthelin.spotify.requests.data.search.simplified.*;
 public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
   private static SpotifyAPIQueryBuilder api;
   SpotifyAPIConnection theApiConnection = new SpotifyAPIConnection();
-  private static int limit = 25;
+  private static int intialLimit = 25;
 
   public static SpotifyAPIQueryBuilder access(){
     if (api == null){
@@ -24,7 +24,7 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
   public ArrayList<Album> searchAlbum(String albumTitle) {
     ArrayList<Album> Albums = new ArrayList<>();
     SearchAlbumsRequest searchAlbumsRequest = theApiConnection.getConnection().searchAlbums(albumTitle)
-        .limit(limit)
+        .limit(intialLimit)
         .build();
     try {
       Paging<AlbumSimplified> albumSimplifiedPaging = searchAlbumsRequest.execute();
@@ -43,7 +43,7 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
   public ArrayList<Song> searchSong(String songTitle) {
     ArrayList<Song> Songs = new ArrayList<>();
     SearchTracksRequest searchTracksRequest = theApiConnection.getConnection().searchTracks(songTitle)
-        .limit(limit)
+        .limit(intialLimit)
         .build();
     try {
       final Paging<Track> trackPaging = searchTracksRequest.execute();
@@ -61,7 +61,7 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
   public ArrayList<Artist> searchArtist(String artistName) {
     ArrayList<Artist> Artists = new ArrayList<>();
     SearchArtistsRequest searchArtistsRequest = theApiConnection.getConnection().searchArtists(artistName)
-        .limit(limit)
+        .limit(intialLimit)
         .build();
 
     try {

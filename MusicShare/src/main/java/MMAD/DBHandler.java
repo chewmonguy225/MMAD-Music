@@ -21,21 +21,21 @@ public class DBHandler {
     /**
     * Adds a new friend relationship into the database after confirming that the user exists.
     *
-    * @param name The username of the user that is logged in.
-    * @param friend_username The username of the friend to be added.
+    * @param login1 The user's login object.
+    * @param login2 The friend's login object.
     * @return 1 if the friend is added succesfully. Return 2 if the friend has already been added. Return 3 if the 'friend' does not exist. Return -1 if there is an error.
     */
-    public int addFriend(String username, String friendUsername)
+    public int addFriend(Login login1, Login login2)
     {
         try {
-            if(! queryExecutor.checkUserExists(friendUsername)){
+            if(! queryExecutor.checkUserExists(login2.getUsername())){
                 return 3;
             }
-            else if (queryExecutor.checkAlreadyAFriend(username, friendUsername)) {
+            else if (queryExecutor.checkAlreadyAFriend(login1.getUsername(), login2.getUsername())) {
                 return 2;
             }
             else {
-                queryExecutor.addFriend(username, friendUsername);
+                queryExecutor.addFriend(login1.getUsername(), login2.getUsername());
                 return 1;
             }
         } 
@@ -293,6 +293,32 @@ public class DBHandler {
 
 
     /**
+     * Returns a string array list containing review information
+     * 
+     * @param login The user's login object.
+     * @param review The review object to be retrieved
+     * 
+     * @return A string array list containing the following info in each index:
+     *          0: reviewId 1: description 2: rating
+     *          Returns empty array list if error occurs
+     */
+    public ArrayList<String> getReview(Login login, Review review){
+        return queryExecutor.getReview(login, review);
+    }
+
+
+    /**
+     * Returns an array list containing all the review id's of all a user's reviews
+     * 
+     * @param login The user's login object.
+     * @return an array list containing all the review id's of all a user's reviews
+     */
+    public ArrayList<String> getUserReviews(Login login){
+        return queryExecutor.getUserReviews(login);
+    }
+
+
+    /**
      * Returns an array list of all song ids in the shared playlist
      * 
      * @param login1 The first login object
@@ -307,7 +333,6 @@ public class DBHandler {
 
     // DBHandler
     // public bool deleteReview(getReviewID)
-    // public String[] getReviews(username) - return String array of review ID's
     // public ArrayList<String> getReviewInfo(reviewID) - return an ArrayList. Index 0: Description, Index 1: Rating, Index 2: Item ID  
 
     // QueryExecutor only

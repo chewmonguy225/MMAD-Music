@@ -140,5 +140,27 @@ public class Display {
         nextScreen();
         System.out.println("Please enter 0-2\n1: Change Password\n2: Delete Account");
     }
+    public void searchPrompt(){
+        System.out.print("Search: ");
+    }
+
+    public void songOptionMenu(){
+        System.out.println("[1] Add song to playlist");
+        System.out.println("[2] Remove song from playlist");
+        System.out.println("[3] Write Review");
+        System.out.println("[4] Delete Review");
+        System.out.println("[5] Search different song");
+    }
+
+    public void reviewPrompt(){
+        System.out.print("Description: ");
+    }
+
+    public void ratingPrompt(){
+        System.out.print("Rating: ");
+    }
+    
 }
 
+
+    
