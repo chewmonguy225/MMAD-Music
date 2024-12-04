@@ -297,14 +297,13 @@ public class DBHandler {
     /**
      * Returns a string array list containing review information
      * 
-     * @param login The user's login object.
-     * @param review The review object to be retrieved
+     * @param id The review's db id
      * 
      * @return A string array list containing the following info in each index:
-     *          0: reviewId 1: description 2: rating
+     *          0: reviewId 1: description 2: rating 3: 
      *          Returns empty array list if error occurs
      */
-    public ArrayList<String> getReview(Login login, Review review){
+    public ArrayList<String> getReview(String id){
         return queryExecutor.getReview(login, review);
     }
 

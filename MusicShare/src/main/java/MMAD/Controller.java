@@ -1,7 +1,6 @@
 package MMAD;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Controller {
     private static Controller c;
@@ -12,7 +11,6 @@ public class Controller {
     private static PlaylistHandler ph = PlaylistHandler.access();
     private static ArrayList<String> menuList = populateMenus();
     private static String currentMenu = "login or signup";
-    private static 
 
     private static ArrayList<String> populateMenus(){
         ArrayList<String> ar= new ArrayList();
