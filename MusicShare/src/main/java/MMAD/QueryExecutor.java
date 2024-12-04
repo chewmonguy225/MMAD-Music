@@ -64,6 +64,7 @@ public class QueryExecutor {
             return resultSet.next();
         } 
         catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -86,6 +87,7 @@ public class QueryExecutor {
             return rowsAffected == 1;
         } 
         catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             return false;
         } 
     }
@@ -106,6 +108,7 @@ public class QueryExecutor {
             return resultSet.next();
         } 
         catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -126,6 +129,7 @@ public class QueryExecutor {
             return true;
         } 
         catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -148,6 +152,7 @@ public class QueryExecutor {
             return resultSet.next();
         } 
         catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -196,6 +201,7 @@ public class QueryExecutor {
             }
         } 
         catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -218,6 +224,7 @@ public class QueryExecutor {
             return resultSet.next();
         } 
         catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -238,6 +245,7 @@ public class QueryExecutor {
             return resultSet.next();
         } 
         catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -268,6 +276,7 @@ public class QueryExecutor {
             return id;
         } 
         catch (SQLException ex){
+            System.out.println(ex.getMessage());
             return -1;
         }
     }
@@ -284,7 +293,8 @@ public class QueryExecutor {
             }
             
 
-        } catch (SQLException e){
+        } catch (SQLException ex){
+            System.out.println(ex.getMessage());
             return -1;
         }
         
@@ -309,6 +319,7 @@ public class QueryExecutor {
             return rowsAffected == 1;
         } 
         catch (SQLException ex){
+            System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -330,6 +341,7 @@ public class QueryExecutor {
             return rowsAffected == 1;
         } 
         catch (SQLException ex){
+            System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -352,6 +364,7 @@ public class QueryExecutor {
             return resultSet.next();
         } 
         catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -374,6 +387,7 @@ public class QueryExecutor {
             return rowsAffected == 1;
         } 
         catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -401,6 +415,7 @@ public class QueryExecutor {
             return songIDs;
         } 
         catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             return new ArrayList<Integer>();
         }
     }
@@ -447,6 +462,7 @@ public class QueryExecutor {
             return songInfo;
         } 
         catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             return new ArrayList<String>();
         }
     }
@@ -476,6 +492,7 @@ public class QueryExecutor {
             return artistInfo;
         } 
         catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             return new ArrayList<String>();
         }
     }
@@ -512,6 +529,7 @@ public class QueryExecutor {
             return albumInfo;
         } 
         catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             return new ArrayList<String>();
         }
     }
@@ -534,6 +552,7 @@ public class QueryExecutor {
             return rowsAffected == 1;
         } 
         catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -554,7 +573,7 @@ public class QueryExecutor {
             return true;
         } 
         catch (SQLException ex) {
-            System.out.println(ex);
+            System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -590,6 +609,71 @@ public class QueryExecutor {
         catch (SQLException ex) {
             System.out.println(ex.getMessage());
             return false;
+        }
+    }
+
+
+    /**
+     * Returns an array list containing all the review id's of all a user's reviews
+     * 
+     * @param login The user's login object.
+     * @return an array list containing all the review id's of all a user's reviews
+     */
+    public ArrayList<String> getUserReviews(Login login){
+        try {
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM review WHERE id LIKE ?;");
+            statement.setString(1, login.getUsername());
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<String> reviewIDs = new ArrayList<>();
+
+            while(resultSet.next()){
+                reviewIDs.add(resultSet.getString("id"));
+            }
+            return reviewIDs;
+        } 
+        catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return new ArrayList<String>();
+        }
+    }
+
+
+    /**
+     * Returns a string array list containing review information
+     * 
+     * @param login The user's login object.
+     * @param review The review object to be retrieved
+     * 
+     * @return A string array list containing the following info in each index:
+     *          0: reviewId 1: description 2: rating
+     *          Returns empty array list if error occurs
+     */
+    public ArrayList<String> getReview(Login login, Review review){
+        try {
+            String itemType;
+            if(review.getItem() instanceof Song){
+                itemType = "s";
+            } else if(review.getItem() instanceof Artist){
+                itemType = "ar";
+            } else {
+                itemType = "al";
+            }
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM review WHERE id= ?;");
+            String reviewID = login.getUsername() + itemType + review.getItem().getID();
+            statement.setString(1, reviewID);
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<String> reviewInfo = new ArrayList<>();
+
+            if(resultSet.next()){
+                reviewInfo.add(reviewID);
+                reviewInfo.add(resultSet.getString("text"));
+                reviewInfo.add(resultSet.getInt("rating")+"");
+            }
+            return reviewInfo;
+        } 
+        catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return new ArrayList<String>();
         }
     }
 
