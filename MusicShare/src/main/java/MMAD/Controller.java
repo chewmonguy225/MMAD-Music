@@ -12,7 +12,6 @@ public class Controller {
     private static PlaylistHandler ph = PlaylistHandler.access();
     private static ArrayList<String> menuList = populateMenus();
     private static String currentMenu = "login or signup";
-    private static 
 
     private static ArrayList<String> populateMenus(){
         ArrayList<String> ar= new ArrayList();
@@ -50,13 +49,13 @@ public class Controller {
                     }
                     break;
                 case "login":
-                    option = login();
+                    option = ah.login(ui, d);
                     if(option == 1){
                         currentMenu = "home";
                     }
                     break;
                 case "signup":
-                    option = signup();
+                    option = ah.signup(ui, d);
                     if(option == 1)
                         currentMenu = "home";
                     break;
@@ -86,7 +85,7 @@ public class Controller {
         return -1;
     }
 
-    private static int login(){
+    /*private static int login(){
         d.loginUsername();
         String username = ui.getString();
         if(username.equals("0"))
@@ -105,9 +104,9 @@ public class Controller {
             return -1; //simulates username or password invalid
         }
         
-    }
+    }*/
 
-    private static int signup(){
+    /*private static int signup(){
         d.loginUsername();
         String username = ui.getString();
         if(username.equals("0"))
@@ -124,7 +123,7 @@ public class Controller {
             d.unsuccessfulSignup();
             return -1;
         }
-    }
+    }*/
 
     private static void RouteHome(){//routes all requests from home page
         int option = -1;
@@ -153,6 +152,9 @@ public class Controller {
                     break;
                 case "artist search":
                     break;
+                    case "account":
+                    option = accountSettings();
+                    break;
                 default:
                     if(option !=0){
                         RouteHome();
@@ -162,6 +164,20 @@ public class Controller {
         d.exit();
     }
 
+    private static int accountSettings(){
+        d.accountSettings();
+        int option = ui.getInt();
+        if(option == 0)
+            return 0;
+        if (option == 1){
+            return ah.changePassword(ui, d);//need to change logic to allow reprompting of new password.
+        }
+            
+        if(option == 2){
+            ah.deleteAccount();
+        }
+        return -1;
+    }
     private static int routePlaylist(){//routes all playlist requests
         int option = ph.displayPlaylist(ui, d);
 

@@ -135,5 +135,10 @@ public class Display {
             System.out.println("[" + 7 + "] Previous page" );
         }
     }
+
+    public void accountSettings(){
+        nextScreen();
+        System.out.println("Please enter 0-2\n1: Change Password\n2: Delete Account");
+    }
 }
 
