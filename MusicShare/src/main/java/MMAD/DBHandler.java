@@ -297,14 +297,13 @@ public class DBHandler {
     /**
      * Returns a string array list containing review information
      * 
-     * @param login The user's login object.
-     * @param review The review object to be retrieved
+     * @param id The review's db id
      * 
      * @return A string array list containing the following info in each index:
-     *          0: reviewId 1: description 2: rating
+     *          0: reviewId 1: description 2: rating 3: 
      *          Returns empty array list if error occurs
      */
-    public ArrayList<String> getReview(Login login, Review review){
+    public ArrayList<String> getReview(String id){
         return queryExecutor.getReview(login, review);
     }
 
@@ -333,14 +332,21 @@ public class DBHandler {
     }
 
 
+    /**
+     * Returns the usernames of all a user's friends
+     * 
+     * @param login The user's login object.
+     * @return a string array list containing all the usernames of friends
+     */
+    public ArrayList<String> getFriendsList(Login login){
+        return queryExecutor.getFriendsList(login);
+    }
+
+
     // DBHandler
     // public bool deleteReview(getReviewID)
     // public ArrayList<String> getReviewInfo(reviewID) - return an ArrayList. Index 0: Description, Index 1: Rating, Index 2: Item ID  
 
     // QueryExecutor only
     // public int getReviewID(username, Item)
-
-    // public ArrayList<String> getFriendsList()
-
-
 }

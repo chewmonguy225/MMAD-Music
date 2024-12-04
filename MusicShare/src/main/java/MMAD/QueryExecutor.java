@@ -705,6 +705,31 @@ public class QueryExecutor {
     }
 
 
+    /**
+     * Returns the usernames of all a user's friends
+     * 
+     * @param login The user's login object.
+     * @return a string array list containing all the usernames of friends
+     */
+    public ArrayList<String> getFriendsList(Login login){
+        try {
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM user_friend WHERE username= ?;");
+            statement.setString(1, login.getUsername());
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<String> friendUsernames = new ArrayList<>();
+
+            while(resultSet.next()){
+                friendUsernames.add(resultSet.getString("friend_username"));
+            }
+            return friendUsernames;
+        } 
+        catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return new ArrayList<String>();
+        }
+    }
+
+
     //public ArrayList<String> getReview()
 
     

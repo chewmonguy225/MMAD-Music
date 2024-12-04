@@ -1,7 +1,6 @@
 package MMAD;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Controller {
     private static Controller c;
