@@ -7,7 +7,7 @@ public class ReviewHandler {
 
     }
 
-    public ReviewHandler access(){
+    public static ReviewHandler access(){
         if(rh == null){
             rh = new ReviewHandler();
         }
