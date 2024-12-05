@@ -307,11 +307,11 @@ public class DBHandler {
      * @param id The review's db id
      * 
      * @return A string array list containing the following info in each index:
-     *          0: reviewId 1: description 2: rating 3: 
+     *          0: reviewId 1: description 2: rating 3: itemType(s,ar,al) 4: itemID
      *          Returns empty array list if error occurs
      */
     public ArrayList<String> getReview(String id){
-        return queryExecutor.getReview(login, review);
+        return queryExecutor.getReview(id);
     }
 
 

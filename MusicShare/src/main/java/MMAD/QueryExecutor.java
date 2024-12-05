@@ -643,7 +643,7 @@ public class QueryExecutor {
      * @param id The id of the review.
      * 
      * @return A string array list containing the following info in each index:
-     *          0: reviewId 1: description 2: rating
+     *          0: reviewId 1: description 2: rating 3: itemType(s,ar,al) 4: itemId
      *          Returns empty array list if error occurs
      */
     public ArrayList<String> getReview(String id){
@@ -657,6 +657,8 @@ public class QueryExecutor {
                 reviewInfo.add(id);
                 reviewInfo.add(resultSet.getString("text"));
                 reviewInfo.add(resultSet.getInt("rating")+"");
+                //reviewInfo.add(item type)
+                //reviewInfo.add(item id)
             }
             return reviewInfo;
         } 
