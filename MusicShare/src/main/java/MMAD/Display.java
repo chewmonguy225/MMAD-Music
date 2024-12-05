@@ -156,6 +156,16 @@ public class Display {
         System.out.println("[5] Search different song");
     }
 
+    public void songOptionMenu(){
+        nextScreen();
+        System.out.println("Please enter a number 0-5:\n");
+        System.out.println("[1] Add song to playlist");
+        System.out.println("[2] Remove song from playlist");
+        System.out.println("[3] Write Review");
+        System.out.println("[4] Delete Review");
+        System.out.println("[5] Search different song");
+    }
+
     public void reviewPrompt(){
         System.out.print("Description: ");
     }

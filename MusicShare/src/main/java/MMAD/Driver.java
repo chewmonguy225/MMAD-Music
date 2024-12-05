@@ -68,6 +68,12 @@ public class Driver {
         default:// exit to main menu
     }
 }
+public static int routeAlbumSearch(){
+  d.searchPrompt();
+  String albumTitle = ui.getString();
+  int option = ih.searchAlbum(albumTitle, ui, d);
+albumOptionMenu(ih.getSelectedAlbum());
+}
 
   
 }

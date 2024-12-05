@@ -2,7 +2,8 @@ package MMAD;
 
 public class ReviewHandler {
     private static ReviewHandler rh = null;
-    private static QueryExecutor qe = QueryExecutor.access();
+    private QueryExecutor qe = new QueryExecutor();
+    private static AccountHandler ah = AccountHandler.access();
 
     private ReviewHandler(){
 

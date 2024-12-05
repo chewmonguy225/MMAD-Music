@@ -3,7 +3,7 @@ package MMAD;
 import java.util.ArrayList;
 
 public class DBHandler {
-    
+    private static DBHandler dbHandler;
     private final QueryExecutor queryExecutor;
 
 
@@ -12,10 +12,17 @@ public class DBHandler {
      * 
      * Initializes the QueryExecutor object
      */
-    public DBHandler()
+    private DBHandler()
     {
         queryExecutor = new QueryExecutor(); 
     }
+
+    public static DBHandler access() {
+        if (dbHandler == null) {
+            dbHandler = new DBHandler();
+        }
+        return dbHandler;
+    }    
 
 
     /**
@@ -132,8 +139,6 @@ public class DBHandler {
     public ArrayList<String> getSong(int id){
         return queryExecutor.getSong(id);
     }
-
-
 
     /**
      * Returns a string array list containing artist information
@@ -255,8 +260,6 @@ public class DBHandler {
             return false;
         }
     }
-
-    
 
 
     /**
