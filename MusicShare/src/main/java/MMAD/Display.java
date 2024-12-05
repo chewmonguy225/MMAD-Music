@@ -156,6 +156,14 @@ public class Display {
         System.out.println("[5] Search different song");
     }
 
+    public void albumOptionMenu(){
+        nextScreen();
+        System.out.println("Please enter a number 0-3:\n");
+        System.out.println("[1] Write Review");
+        System.out.println("[2] Delete Review");
+        System.out.println("[3] Search different album");
+    }
+
     public void reviewPrompt(){
         System.out.print("Description: ");
     }

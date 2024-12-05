@@ -6,7 +6,7 @@ import se.michaelthelin.spotify.requests.authorization.client_credentials.Client
 
 
 public class SpotifyAPIConnection extends MusicAbstractAPI {
-    SpotifyClientCredentials thCredentials = new SpotifyClientCredentials();
+    SpotifyClientCredentials theCredentials = new SpotifyClientCredentials();
     private String clientID = SpotifyClientCredentials.getClientID();
     private String clientSecret = SpotifyClientCredentials.getClientSecret();
     private SpotifyApi connection;

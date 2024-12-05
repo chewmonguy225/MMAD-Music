@@ -86,7 +86,7 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
     return localAlbum;
   }
 
-  private Song convertTrack(se.michaelthelin.spotify.model_objects.specification.Track spotifyTrack) {
+  private Song convertTrack(Track spotifyTrack) {
     Artist theArtist = convertArtist(spotifyTrack.getArtists()[0]);
     Album theAlbum = convertAlbum(spotifyTrack.getAlbum());
     Song localSong = new Song(spotifyTrack.getId(), spotifyTrack.getName(), theArtist, theAlbum);
@@ -98,7 +98,7 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
     return localArtist;
   }
 
-  private Artist convertArtist(se.michaelthelin.spotify.model_objects.specification.ArtistSimplified spotifyArtist) {
+  private Artist convertArtist(ArtistSimplified spotifyArtist) {
     Artist localArtist = new Artist(spotifyArtist.getId(), spotifyArtist.getName());
     return localArtist;
   }

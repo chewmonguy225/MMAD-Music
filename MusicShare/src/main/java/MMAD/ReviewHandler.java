@@ -2,6 +2,8 @@ package MMAD;
 
 public class ReviewHandler {
     private static ReviewHandler rh = null;
+    private QueryExecutor qe = new QueryExecutor();
+    private static AccountHandler ah = AccountHandler.access();
 
     private ReviewHandler(){
 
@@ -19,8 +21,7 @@ public class ReviewHandler {
 
         //Use the following condition to find the item in the DB
         if(item instanceof Song){
-            //search for song with item.getID()
-            //if song exists, save review object "r" in the DB
+            qe.createReview(ah.getCurrentUser(), r);
         }else if(item instanceof Album){
             //search if album then will record in the DB as an album object
         }else if (item instanceof Artist){
@@ -28,5 +29,9 @@ public class ReviewHandler {
         } else {
             //error
         }
+    }
+
+    public void deleteReview(Login login, Review review){
+        
     }
 }

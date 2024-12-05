@@ -24,7 +24,7 @@ public class PlaylistHandler {
     //both options will end up with a playlist object called playlist
     Playlist playlist = new Playlist();
 
-    DBHandler dbh = new DBHandler();
+    DBHandler dbh = DBHandler.access();
     ItemHandler ih = ItemHandler.access();
     
     private PlaylistHandler (){

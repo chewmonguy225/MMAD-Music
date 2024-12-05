@@ -12,7 +12,7 @@ public class Driver {
   private static Driver dr = new Driver();
 
   public static void main(String[] args) {
-    // SpotifyAPIQueryBuilder thQueryBuilder = new SpotifyAPIQueryBuilder();
+    SpotifyAPIQueryBuilder thQueryBuilder = new SpotifyAPIQueryBuilder();
     // Scanner scan = new Scanner(System.in);
     // System.out.print("Search: ");
     // String songTitle = scan.nextLine();

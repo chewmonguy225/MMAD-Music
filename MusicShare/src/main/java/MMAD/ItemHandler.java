@@ -1,14 +1,14 @@
 package MMAD;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ItemHandler {
     private static ItemHandler ih;
     private static SpotifyAPIQueryBuilder api = SpotifyAPIQueryBuilder.access();
-    private static DBHandler dbh = new DBHandler();
+    DBHandler dbh = DBHandler.access();
     private final int itemsPerPage = 5;
     private Song selectedSong;
+    private Album selectedAlbum;
 
 
     private ItemHandler() {
@@ -101,29 +101,32 @@ public class ItemHandler {
 
         d.displayAlbumSearchResult(results, currentPage, totalPages);
         int option = ui.getInt();
- 
-        Album selected = null;
-        while (selected == null && option != -1) {
-            if (option >= 1 && option <= 5) {
-                selected = results.get((currentPage * itemsPerPage) + (option - 1));
-            } else if (option == 6 && currentPage != totalPages) {
-                currentPage++;
-                d.displayAlbumSearchResult(results, currentPage, totalPages);
-                option = ui.getInt();
-            } else if (option == 7 && currentPage != 1) {
+        
+        selectedAlbum = null;
+        while (selectedAlbum == null && option != -1) {
+            if(option == 0){
+                return option;
+            }else if (option >= 1 && option <= 5) {
+                selectedAlbum = results.get(((currentPage-1) * itemsPerPage) + (option - 1));
+            } else if (option == 6 && currentPage != 1) {
                 currentPage--;
                 d.displayAlbumSearchResult(results, currentPage, totalPages);
                 option = ui.getInt();
-            } else if (option == 7 && currentPage == 1) {
+            } else if (option == 7 && currentPage != totalPages) {
+                currentPage++;
+                d.displayAlbumSearchResult(results, currentPage, totalPages);
+                option = ui.getInt();
+            } else if (option == 6 && currentPage == 1) {
                 option = -1;
             }
         }
-        addAlbumToDB(selected);
+        if (option != -1)
+            addAlbumToDB(selectedAlbum);
         return option;
     }
 
-    public int searchArtist(String artist, UI ui, Display d) {
-        ArrayList<Artist> results = api.searchArtist(artist);
+    public int searchArtist(String artistName, UI ui, Display d) {
+        ArrayList<Artist> results = api.searchArtist(artistName);
 
         int totalPages = (int) Math.ceil((double) results.size() / itemsPerPage);
         int currentPage = 1;
@@ -143,7 +146,7 @@ public class ItemHandler {
                 currentPage--;
                 d.displayArtistSearchResult(results, currentPage, totalPages);
                 option = ui.getInt();
-            } else if (option == 7 && currentPage == 1) {
+            } else if (option == 6 && currentPage == 1) {
                 option = -1;
             }
         }
@@ -153,5 +156,8 @@ public class ItemHandler {
 
     public Song getSelectedSong(){
         return selectedSong;
+    }
+    public Album getSelectedAlbum(){
+        return selectedAlbum;
     }
 }
