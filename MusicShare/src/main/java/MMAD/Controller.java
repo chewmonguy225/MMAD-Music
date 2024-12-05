@@ -174,7 +174,11 @@ public class Controller {
         if(option == 0)
             return 0;
         if (option == 1){
-            return ah.changePassword(ui, d);//need to change logic to allow reprompting of new password.
+            int result = -1;
+            do{
+                result =  ah.changePassword(ui, d);//need to change logic to allow reprompting of new password.
+            }while(result == -1);
+            return result;
         }
             
         if(option == 2){
