@@ -15,7 +15,7 @@ public class Controller {
     private static String currentMenu = "login or signup";
 
     private static ArrayList<String> populateMenus() {
-        ArrayList<String> ar = new ArrayList();
+        ArrayList<String> ar = new ArrayList<String>();
         ar.add("home");
         ar.add("playlist");
         ar.add("friends");
