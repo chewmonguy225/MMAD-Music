@@ -124,6 +124,7 @@ public class Controller {
                     if (option == 2)
                         currentMenu = "login or signup";
                         c.routeLogin();
+                        currentMenu = "exit";
                     break;
                 case "logout":
                     option = logout();
@@ -131,12 +132,11 @@ public class Controller {
                     c.routeLogin();
                     break;
                 default:
-                    if (option != 0) {
-                        RouteHome();
-                    }
+                    option =0;
             }
         }
-        d.exit();
+        if(option == 0)
+            d.exit();
     }
     private static int logout(){
         return ah.logout();
