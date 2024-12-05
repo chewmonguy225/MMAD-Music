@@ -49,37 +49,25 @@ public class Driver {
     routeSongSearch();
   }
 
-  public static int routeSongSearch() {
-    d.searchPrompt();
-    String songTitle = ui.getString();
-    int option = ih.searchSong(songTitle, ui, d);
-    dr.songOptionMenu(ih.getSelectedSong());
-    return option;
-  }
-
-  public void songOptionMenu(Song song) {
-    d.songOptionMenu();
+  public void albumOptionMenu(Album album) {
+    d.albumOptionMenu();
     switch (ui.getInt()) {
-      case 1:// add song to playlist
-        ph.addSongToPlaylist(null, song);
-        break;
-      case 2:// remove song from playlist
-        ph.removeSongFromPlaylist(null, song);
-        break;
-      case 3:// write review
-        d.reviewPrompt();
-        String description = ui.getString();
-        d.ratingPrompt();
-        int rating = ui.getInt();
-        rh.createReview(null, song, description, rating);
-        break;
-      case 4:// delete review
-        //rh.deleteReview();
-        break;
-      case 5:// previous page (routeSongMenu)
-        routeSongSearch();
-        break;
-      default:// exit to main menu
+        case 1:// write review
+            d.reviewPrompt();
+            String description = ui.getString();
+            d.ratingPrompt();
+            int rating = ui.getInt();
+            rh.createReview(null, album, description, rating);
+            break;
+        case 2:// delete review
+            //rh.deleteReview();
+            break;
+        case 3:// previous page (routeSongMenu)
+            routeAlbumSearch();
+            break;
+        default:// exit to main menu
     }
-  }
+}
+
+  
 }
