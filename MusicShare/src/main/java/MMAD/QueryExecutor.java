@@ -122,9 +122,8 @@ public class QueryExecutor {
      */
     public boolean deleteUser(Login login){
         try {
-            PreparedStatement statement = sqlConnection.prepareStatement("DELETE * FROM user WHERE username= ? AND password= ?;");
+            PreparedStatement statement = sqlConnection.prepareStatement("DELETE FROM user WHERE username= ?;");
             statement.setString(1, login.getUsername());
-            statement.setString(2, login.getPassword());
             statement.executeUpdate();
             return true;
         } 

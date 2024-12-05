@@ -80,6 +80,11 @@ public class AccountHandler {
         return -1;
     }
 
+    public int logout(){
+        currentUser = null;
+        return 1;
+    }
+
     public boolean deleteAccount(){
         if(currentUser != null)
             return dbh.deleteUser(currentUser);
