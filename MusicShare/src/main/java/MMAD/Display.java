@@ -87,6 +87,7 @@ public class Display {
 
     public void displaySongSearchResult(ArrayList<Song> theSongs, int currentPage, int totalPages){
         nextScreen();
+        System.out.println("Please enter a number 0-7:\n");
         int startIndex = ((currentPage - 1) * 5);
         for(int i = 0; i < 5; i++){
             System.out.println("[" + (i+1) + "] " + theSongs.get(startIndex + i).name + " by " + theSongs.get(startIndex + i).getArtist().getName());
@@ -136,11 +137,18 @@ public class Display {
         }
     }
 
+    public void accountSettings(){
+        nextScreen();
+        System.out.println("Please enter 0-2\n1: Change Password\n2: Delete Account");
+    }
     public void searchPrompt(){
+        split();
         System.out.print("Search: ");
     }
 
     public void songOptionMenu(){
+        nextScreen();
+        System.out.println("Please enter a number 0-5:\n");
         System.out.println("[1] Add song to playlist");
         System.out.println("[2] Remove song from playlist");
         System.out.println("[3] Write Review");
@@ -155,6 +163,7 @@ public class Display {
     public void ratingPrompt(){
         System.out.print("Rating: ");
     }
+    
 }
 
 

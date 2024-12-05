@@ -12,9 +12,9 @@ public class Controller {
     private static ReviewHandler rh = ReviewHandler.access();
     private static ArrayList<String> menuList = populateMenus();
     private static String currentMenu = "login or signup";
-    
-    private static ArrayList<String> populateMenus() {
-        ArrayList<String> ar = new ArrayList();
+
+    private static ArrayList<String> populateMenus(){
+        ArrayList<String> ar= new ArrayList();
         ar.add("home");
         ar.add("playlist");
         ar.add("friends");
@@ -22,7 +22,7 @@ public class Controller {
         ar.add("song search");
         ar.add("album search");
         ar.add("artist search");
-        return ar
+        return ar;
     }
 
     private Controller() {
@@ -49,14 +49,14 @@ public class Controller {
                     }
                     break;
                 case "login":
-                    option = login();
-                    if (option == 1) {
+                    option = ah.login(ui, d);
+                    if(option == 1){
                         currentMenu = "home";
                     }
                     break;
                 case "signup":
-                    option = signup();
-                    if (option == 1)
+                    option = ah.signup(ui, d);
+                    if(option == 1)
                         currentMenu = "home";
                     break;
                 case "home":
@@ -85,7 +85,7 @@ public class Controller {
         return -1;
     }
 
-    private static int login() {
+    /*private static int login(){
         d.loginUsername();
         String username = ui.getString();
         if (username.equals("0"))
@@ -102,10 +102,10 @@ public class Controller {
             d.invalidLogin();
             return -1; // simulates username or password invalid
         }
+        
+    }*/
 
-    }
-
-    private static int signup() {
+    /*private static int signup(){
         d.loginUsername();
         String username = ui.getString();
         if (username.equals("0"))
@@ -122,7 +122,7 @@ public class Controller {
             d.unsuccessfulSignup();
             return -1;
         }
-    }
+    }*/
 
     private static void RouteHome() {// routes all requests from home page
         int option = -1;
@@ -140,19 +140,24 @@ public class Controller {
                     }
 
                     break;
-                case "friends":
+                case "friends"://new menu asks to view current friends or add new friend
+                    //unrelated -- add a account menu that allows user to change password or delete account
                     break;
                 case "review":
                     break;
                 case "song search":
                     option = routeSongSearch();
-                    if (option == -1) {
-                        currentMenu = "home";
+                    if (option == 0) {
+                        currentMenu = "exit";
                     }
+                    currentMenu = "home";
                     break;
                 case "album search":
                     break;
                 case "artist search":
+                    break;
+                    case "account":
+                    option = accountSettings();
                     break;
                 default:
                     if (option != 0) {
@@ -163,7 +168,21 @@ public class Controller {
         d.exit();
     }
 
-    private static int routePlaylist() {// routes all playlist requests
+    private static int accountSettings(){
+        d.accountSettings();
+        int option = ui.getInt();
+        if(option == 0)
+            return 0;
+        if (option == 1){
+            return ah.changePassword(ui, d);//need to change logic to allow reprompting of new password.
+        }
+            
+        if(option == 2){
+            ah.deleteAccount();
+        }
+        return -1;
+    }
+    private static int routePlaylist(){//routes all playlist requests
         int option = ph.displayPlaylist(ui, d);
 
         return option;
@@ -174,8 +193,40 @@ public class Controller {
         d.searchPrompt();
         String songTitle = ui.getString();
         int option = ih.searchSong(songTitle, ui, d);
-        c.songOptionMenu(ih.getSelectedSong());
-        return option;
+        if(option == 0 || option == -1){
+            return option;
+        }
+        return c.songOptionMenu(ih.getSelectedSong());
+    }
+
+    public int songOptionMenu(Song song) {
+        d.songOptionMenu();
+        switch (ui.getInt()) {
+            case 0:
+                return 0;
+            case 1:// add song to playlist
+                ph.addSongToPlaylist(ah.getCurrentUser(), song);
+                break;
+            case 2:// remove song from playlist
+                ph.removeSongFromPlaylist(ah.getCurrentUser(), song);
+                break;
+            case 3:// write review
+                d.reviewPrompt();
+                String description = ui.getString();
+                d.ratingPrompt();
+                int rating = ui.getInt();
+                rh.createReview(ah.getCurrentUser(), song, description, rating);
+                break;
+            case 4:// delete review
+                //rh.deleteReview();
+                break;
+            case 5:// previous page (routeSongMenu)
+                routeSongSearch();
+                break;
+            default:// exit to main menu
+                return -1;
+        }
+        return 1;
     }
 
     // --------------------------------------------------------------------------------------
@@ -197,31 +248,7 @@ public class Controller {
         }
     }
 
-    public void songOptionMenu(Song song) {
-        d.songOptionMenu();
-        switch (ui.getInt()) {
-            case 1:// add song to playlist
-                ph.addSongToPlaylist(null, song);
-                break;
-            case 2:// remove song from playlist
-                ph.removeSongFromPlaylist(null, song);
-                break;
-            case 3:// write review
-                d.reviewPrompt();
-                String description = ui.getString();
-                d.ratingPrompt();
-                int rating = ui.getInt();
-                rh.createReview(null, song, description, rating);
-                break;
-            case 4:// delete review
-                rh.deleteReview();
-                break;
-            case 5:// previous page (routeSongMenu)
-                routeSongSearch();
-                break;
-            default:// exit to main menu
-        }
-    }
+    
 
     public static void route1(Login login) {
         Artist artist = new Artist("234234", "BLUR");
