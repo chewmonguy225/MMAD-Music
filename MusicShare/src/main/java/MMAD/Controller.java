@@ -1,7 +1,6 @@
 package MMAD;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Controller {
     private static Controller c;
@@ -14,8 +13,8 @@ public class Controller {
     private static ArrayList<String> menuList = populateMenus();
     private static String currentMenu = "login or signup";
 
-    private static ArrayList<String> populateMenus() {
-        ArrayList<String> ar = new ArrayList<String>();
+    private static ArrayList<String> populateMenus(){
+        ArrayList<String> ar= new ArrayList();
         ar.add("home");
         ar.add("playlist");
         ar.add("friends");
@@ -52,14 +51,14 @@ public class Controller {
                     }
                     break;
                 case "login":
-                    option = login();
-                    if (option == 1) {
+                    option = ah.login(ui, d);
+                    if(option == 1){
                         currentMenu = "home";
                     }
                     break;
                 case "signup":
-                    option = signup();
-                    if (option == 1)
+                    option = ah.signup(ui, d);
+                    if(option == 1)
                         currentMenu = "home";
                     break;
                 case "home":
@@ -104,21 +103,19 @@ public class Controller {
                     }
 
                     break;
-                case "friends":
+                case "friends"://new menu asks to view current friends or add new friend
+                    //unrelated -- add a account menu that allows user to change password or delete account
                     break;
                 case "review":
                     break;
                 case "song search":
                     option = routeSongSearch();
-                    if (option == -1) {
-                        currentMenu = "home";
+                    if (option == 0) {
+                        currentMenu = "exit";
                     }
+                    currentMenu = "home";
                     break;
                 case "album search":
-                    option = routeAlbumSearch();
-                    if (option == -1) {
-                        currentMenu = "home";
-                    }
                     break;
                 case "artist search":
                     break;
@@ -175,33 +172,29 @@ public class Controller {
         d.searchPrompt();
         String songTitle = ui.getString();
         int option = ih.searchSong(songTitle, ui, d);
-        c.songOptionMenu(ih.getSelectedSong());
-        return option;
+        if(option == 0 || option == -1){
+            return option;
+        }
+        return c.songOptionMenu(ih.getSelectedSong());
     }
 
-    public static int routeAlbumSearch(){
-        d.searchPrompt();
-        String albumTitle = ui.getString();
-        int option = ih.searchAlbum(albumTitle, ui, d);
-        c.albumOptionMenu(ih.getSelectedAlbum());
-        return option;
-    }
-
-    public void songOptionMenu(Song song) {
+    public int songOptionMenu(Song song) {
         d.songOptionMenu();
         switch (ui.getInt()) {
+            case 0:
+                return 0;
             case 1:// add song to playlist
-                ph.addSongToPlaylist(null, song);
+                ph.addSongToPlaylist(ah.getCurrentUser(), song);
                 break;
             case 2:// remove song from playlist
-                ph.removeSongFromPlaylist(null, song);
+                ph.removeSongFromPlaylist(ah.getCurrentUser(), song);
                 break;
             case 3:// write review
                 d.reviewPrompt();
                 String description = ui.getString();
                 d.ratingPrompt();
                 int rating = ui.getInt();
-                rh.createReview(null, song, description, rating);
+                rh.createReview(ah.getCurrentUser(), song, description, rating);
                 break;
             case 4:// delete review
                 //rh.deleteReview();
@@ -210,27 +203,9 @@ public class Controller {
                 routeSongSearch();
                 break;
             default:// exit to main menu
+                return -1;
         }
-    }
-
-    public void albumOptionMenu(Album album) {
-        d.albumOptionMenu();
-        switch (ui.getInt()) {
-            case 1:// write review
-                d.reviewPrompt();
-                String description = ui.getString();
-                d.ratingPrompt();
-                int rating = ui.getInt();
-                rh.createReview(null, album, description, rating);
-                break;
-            case 2:// delete review
-                //rh.deleteReview();
-                break;
-            case 3:// previous page (routeSongMenu)
-                routeAlbumSearch();
-                break;
-            default:// exit to main menu
-        }
+        return 1;
     }
 
     // --------------------------------------------------------------------------------------
@@ -252,6 +227,8 @@ public class Controller {
         }
     }
 
+    
+
     public static void route1(Login login) {
         Artist artist = new Artist("234234", "BLUR");
         Album album = new Album("123123", "album1", artist);
@@ -264,7 +241,7 @@ public class Controller {
     }
 
     public static void main(String[] args) {
-        final DBHandler dbh = DBHandler.access();
+        DBHandler dbh = DBHandler.access();
         Login login = new Login("John", "123123");
         User user = new User(login);
         // dbh.createUser(user.getLogin().getUsername(), user.getLogin().getPassword());
