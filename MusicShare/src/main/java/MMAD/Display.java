@@ -66,7 +66,7 @@ public class Display {
     public void home(){
         nextScreen();
         System.out.println("Please enter a number: 0-6");
-        System.out.println("1: Playlist\n2: Friends\n3: Reviews\n4: Search Song\n5: Search Album\n6: Search Artist\n");
+        System.out.println("1: Playlist\n2: Friends\n3: Reviews\n4: Search Song\n5: Search Album\n6: Search Artist\n7: Account Settings\n8: Logout");
     }
 
     public void displayPlaylist(Playlist playlist, int page){
