@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class ItemHandler {
     private static ItemHandler ih;
     private static SpotifyAPIQueryBuilder api = SpotifyAPIQueryBuilder.access();
-    DBHandler dbh = new DBHandler();
+    private static DBHandler dbh = new DBHandler();
     private final int itemsPerPage = 5;
     private Song selectedSong;
 
@@ -75,20 +75,22 @@ public class ItemHandler {
             }
             if (option >= 1 && option <= 5) {
                 selectedSong = results.get(((currentPage-1) * itemsPerPage) + (option - 1));
-            } else if (option == 6 && currentPage != totalPages) {
-                currentPage++;
-                d.displaySongSearchResult(results, currentPage, totalPages);
-                option = ui.getInt();
-            } else if (option == 7 && currentPage != 1) {
+            } else if (option == 6 && currentPage != 1) {
                 currentPage--;
                 d.displaySongSearchResult(results, currentPage, totalPages);
                 option = ui.getInt();
-            } else if (option == 7 && currentPage == 1) {
+            } else if (option == 7 && currentPage != totalPages) {
+                currentPage++;
+                d.displaySongSearchResult(results, currentPage, totalPages);
+                option = ui.getInt();
+            } else if (option == 6 && currentPage == 1) {
                 option = -1;
             }
         }
-        addSongToDB(selectedSong);
+        if (option != -1)
+            addSongToDB(selectedSong);
         return option;
+        
     }
 
     public int searchAlbum(String albumTitle, UI ui, Display d) {
