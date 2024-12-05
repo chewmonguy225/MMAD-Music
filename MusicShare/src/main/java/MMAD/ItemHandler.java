@@ -67,11 +67,14 @@ public class ItemHandler {
 
         d.displaySongSearchResult(results, currentPage, totalPages);
         int option = ui.getInt();
- 
+        
         selectedSong = null;
         while (selectedSong == null && option != -1) {
+            if(option == 0){
+                return option;
+            }
             if (option >= 1 && option <= 5) {
-                selectedSong = results.get((currentPage * itemsPerPage) + (option - 1));
+                selectedSong = results.get(((currentPage-1) * itemsPerPage) + (option - 1));
             } else if (option == 6 && currentPage != totalPages) {
                 currentPage++;
                 d.displaySongSearchResult(results, currentPage, totalPages);

@@ -2,7 +2,7 @@ package MMAD;
 
 public class AccountHandler {
     private static AccountHandler ah;
-    DBHandler dbh = new DBHandler();
+    private static DBHandler dbh = new DBHandler();
     Login currentUser;
 
     private AccountHandler(){
@@ -16,6 +16,10 @@ public class AccountHandler {
         return ah;
     }
 
+    public Login getCurrentUser(){
+        return currentUser;
+    }
+
     public int login(UI ui, Display d){
         d.loginUsername();
         String username = ui.getString();
@@ -26,7 +30,7 @@ public class AccountHandler {
         if(password.equals("0"))
             return 0;
 
-        if(ah.loginAttempt(username, password))
+        if(loginAttempt(username, password))
         {   
             d.successfulLogin(username);
             currentUser = new Login(username, password);
@@ -34,8 +38,7 @@ public class AccountHandler {
         } else {
             d.invalidLogin();
             return -1; //simulates username or password invalid
-        }
-        
+        }   
     }
 
     public int signup(UI ui, Display d){
@@ -64,7 +67,7 @@ public class AccountHandler {
         return dbh.createUser(login);
     }
 
-    public boolean loginAttempt(String username, String password){
+    private static boolean loginAttempt(String username, String password){
         Login login = new Login(username, password);
         return login.attemptLogin(dbh);
     }

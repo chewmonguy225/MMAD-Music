@@ -67,6 +67,15 @@ public class DBHandler {
         }
     }
 
+    public int getSongID(Song song){
+        try{
+            return queryExecutor.getSongID(song);
+        }
+        catch(Exception e){
+            return -1;
+        }
+    }
+
 
     /**
      * Creates a new user in the database

@@ -23,7 +23,7 @@ public class Controller {
         ar.add("song search");
         ar.add("album search");
         ar.add("artist search");
-        return ar
+        return ar;
     }
 
     private Controller() {
@@ -148,9 +148,10 @@ public class Controller {
                     break;
                 case "song search":
                     option = routeSongSearch();
-                    if (option == -1) {
-                        currentMenu = "home";
+                    if (option == 0) {
+                        currentMenu = "exit";
                     }
+                    currentMenu = "home";
                     break;
                 case "album search":
                     break;
@@ -193,34 +194,40 @@ public class Controller {
         d.searchPrompt();
         String songTitle = ui.getString();
         int option = ih.searchSong(songTitle, ui, d);
-        c.songOptionMenu(ih.getSelectedSong());
-        return option;
+        if(option == 0 || option == -1){
+            return option;
+        }
+        return c.songOptionMenu(ih.getSelectedSong());
     }
 
-    public void songOptionMenu(Song song) {
+    public int songOptionMenu(Song song) {
         d.songOptionMenu();
         switch (ui.getInt()) {
+            case 0:
+                return 0;
             case 1:// add song to playlist
-                ph.addSongToPlaylist(null, song);
+                ph.addSongToPlaylist(ah.getCurrentUser(), song);
                 break;
             case 2:// remove song from playlist
-                ph.removeSongFromPlaylist(null, song);
+                ph.removeSongFromPlaylist(ah.getCurrentUser(), song);
                 break;
             case 3:// write review
                 d.reviewPrompt();
                 String description = ui.getString();
                 d.ratingPrompt();
                 int rating = ui.getInt();
-                rh.createReview(null, song, description, rating);
+                rh.createReview(ah.getCurrentUser(), song, description, rating);
                 break;
             case 4:// delete review
-                rh.deleteReview();
+                //rh.deleteReview();
                 break;
             case 5:// previous page (routeSongMenu)
                 routeSongSearch();
                 break;
             default:// exit to main menu
+                return -1;
         }
+        return 1;
     }
 
     // --------------------------------------------------------------------------------------
