@@ -131,7 +131,6 @@ public class DBHandler {
      * Returns an array list containing song information
      * 
      * @param id The song's id in the database
-     * 
      * @return A string array list containing the following info in each index:
      *          0: songId 1: source_id 2: songName 3: artistName 4: albumName 5: artistId 6: artistSrcId 7: albumId 8: albumSrcId 
      *          Returns empty array list if error occurs
@@ -144,7 +143,6 @@ public class DBHandler {
      * Returns a string array list containing artist information
      * 
      * @param id The artist's id in the database
-     * 
      * @return A string array list containing the following info in each index:
      *          0: artistId 1: source_id 2: artistName 
      *          Returns empty array list if error occurs
@@ -158,7 +156,6 @@ public class DBHandler {
      * Returns a string array list containing album information
      * 
      * @param id The album's id in the database
-     * 
      * @return A string array list containing the following info in each index:
      *          0: albumId 1: source_id 2: albumName 3: artistName 4: artistId 5: artistSrcId
      *          Returns empty array list if error occurs
@@ -283,7 +280,6 @@ public class DBHandler {
      * Returns an array list of all song ids in the user's playlist
      * 
      * @param login The login object for the user
-     * 
      * @return An integer array list of all song ids in the user's playlist. An empty array list if there were no songs or an error occurred.
      */
     public ArrayList<Integer> getPlaylist(Login login)//this should return an integer arraylist of all the song IDs that are in a users playlist
@@ -308,13 +304,13 @@ public class DBHandler {
      * Returns a string array list containing review information
      * 
      * @param id The review's db id
-     * 
+     * @param login The user's login object. 
      * @return A string array list containing the following info in each index:
-     *          0: reviewId 1: description 2: rating 3: 
+     *          0: reviewId 1: description 2: rating 3: itemType(s,ar,al) 4: itemID
      *          Returns empty array list if error occurs
      */
-    public ArrayList<String> getReview(String id){
-        return queryExecutor.getReview(login, review);
+    public ArrayList<String> getReview(Login login, String id){
+        return queryExecutor.getReview(login, id);
     }
 
 
@@ -334,7 +330,6 @@ public class DBHandler {
      * 
      * @param login1 The first login object
      * @param login2 The second login object
-     * 
      * @return An integer array list of all song ids in the shared playlist. An empty array list if there were no songs or an error occurred.
      */
     public ArrayList<Integer> getSharedPlaylist(Login login1, Login login2){
