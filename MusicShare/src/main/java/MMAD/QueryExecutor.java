@@ -122,9 +122,8 @@ public class QueryExecutor {
      */
     public boolean deleteUser(Login login){
         try {
-            PreparedStatement statement = sqlConnection.prepareStatement("DELETE * FROM user WHERE username= ? AND password= ?;");
+            PreparedStatement statement = sqlConnection.prepareStatement("DELETE FROM user WHERE username= ?;");
             statement.setString(1, login.getUsername());
-            statement.setString(2, login.getPassword());
             statement.executeUpdate();
             return true;
         } 
@@ -641,31 +640,21 @@ public class QueryExecutor {
     /**
      * Returns a string array list containing review information
      * 
-     * @param login The user's login object.
-     * @param review The review object to be retrieved
+     * @param id The id of the review.
      * 
      * @return A string array list containing the following info in each index:
      *          0: reviewId 1: description 2: rating
      *          Returns empty array list if error occurs
      */
-    public ArrayList<String> getReview(Login login, Review review){
+    public ArrayList<String> getReview(String id){
         try {
-            String itemType;
-            if(review.getItem() instanceof Song){
-                itemType = "s";
-            } else if(review.getItem() instanceof Artist){
-                itemType = "ar";
-            } else {
-                itemType = "al";
-            }
             PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM review WHERE id= ?;");
-            String reviewID = login.getUsername() + itemType + review.getItem().getID();
-            statement.setString(1, reviewID);
+            statement.setString(1, id);
             ResultSet resultSet = statement.executeQuery();
             ArrayList<String> reviewInfo = new ArrayList<>();
 
             if(resultSet.next()){
-                reviewInfo.add(reviewID);
+                reviewInfo.add(id);
                 reviewInfo.add(resultSet.getString("text"));
                 reviewInfo.add(resultSet.getInt("rating")+"");
             }

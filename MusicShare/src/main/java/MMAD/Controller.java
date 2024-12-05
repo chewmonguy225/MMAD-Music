@@ -22,6 +22,8 @@ public class Controller {
         ar.add("song search");
         ar.add("album search");
         ar.add("artist search");
+        ar.add("account settings");
+        ar.add("logout");
         return ar;
     }
 
@@ -85,48 +87,9 @@ public class Controller {
         return -1;
     }
 
-    /*private static int login(){
-        d.loginUsername();
-        String username = ui.getString();
-        if (username.equals("0"))
-            return 0;
-        d.loginPassword();
-        String password = ui.getString();
-        if (password.equals("0"))
-            return 0;
-
-        if (ah.loginAttempt(username, password)) {
-            d.successfulLogin(username);
-            return 1;
-        } else {
-            d.invalidLogin();
-            return -1; // simulates username or password invalid
-        }
-        
-    }*/
-
-    /*private static int signup(){
-        d.loginUsername();
-        String username = ui.getString();
-        if (username.equals("0"))
-            return 0;
-        d.loginPassword();
-        String password = ui.getString();
-        if (password.equals("0"))
-            return 0;
-
-        if (ah.createAccount(username, password)) {
-            d.successfulSignup();
-            return 1;
-        } else {
-            d.unsuccessfulSignup();
-            return -1;
-        }
-    }*/
-
     private static void RouteHome() {// routes all requests from home page
         int option = -1;
-        while (option < 0 || option > 6) {
+        while (option < 0 || option > 8) {
             d.home();
             option = ui.getInt();
         }
@@ -156,16 +119,27 @@ public class Controller {
                     break;
                 case "artist search":
                     break;
-                    case "account":
+                    case "account settings":
                     option = accountSettings();
+                    if (option == 2)
+                        currentMenu = "login or signup";
+                        c.routeLogin();
+                        currentMenu = "exit";
+                    break;
+                case "logout":
+                    option = logout();
+                    currentMenu = "login or signup";
+                    c.routeLogin();
                     break;
                 default:
-                    if (option != 0) {
-                        RouteHome();
-                    }
+                    option =0;
             }
         }
-        d.exit();
+        if(option == 0)
+            d.exit();
+    }
+    private static int logout(){
+        return ah.logout();
     }
 
     private static int accountSettings(){
@@ -174,11 +148,16 @@ public class Controller {
         if(option == 0)
             return 0;
         if (option == 1){
-            return ah.changePassword(ui, d);//need to change logic to allow reprompting of new password.
-        }
-            
+            int result = -1;
+            do{
+                result =  ah.changePassword(ui, d);//need to change logic to allow reprompting of new password.
+            }while(result == -1);
+            return result;
+        } 
         if(option == 2){
             ah.deleteAccount();
+            ah.logout();
+            return 2;
         }
         return -1;
     }

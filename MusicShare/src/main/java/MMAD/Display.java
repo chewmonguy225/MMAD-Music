@@ -66,7 +66,7 @@ public class Display {
     public void home(){
         nextScreen();
         System.out.println("Please enter a number: 0-6");
-        System.out.println("1: Playlist\n2: Friends\n3: Reviews\n4: Search Song\n5: Search Album\n6: Search Artist\n");
+        System.out.println("1: Playlist\n2: Friends\n3: Reviews\n4: Search Song\n5: Search Album\n6: Search Artist\n7: Account Settings\n8: Logout");
     }
 
     public void displayPlaylist(Playlist playlist, int page){
@@ -93,13 +93,13 @@ public class Display {
             System.out.println("[" + (i+1) + "] " + theSongs.get(startIndex + i).name + " by " + theSongs.get(startIndex + i).getArtist().getName());
         }
         if(currentPage == 1){
-            System.out.println("[" + 6 + "] Next page" );
-            System.out.println("[" + 7 + "] Go Home" );
+            System.out.println("[" + 6 + "] Go Home" );
+            System.out.println("[" + 7 + "] Next page" );
         }else if(currentPage == totalPages){
-            System.out.println("[" + 7 + "] Previous page" );
+            System.out.println("[" + 6 + "] Previous page" );
         }else{
-            System.out.println("[" + 6 + "] Next page" );
-            System.out.println("[" + 7 + "] Previous page" );
+            System.out.println("[" + 6 + "] Previous page" );
+            System.out.println("[" + 7 + "] Next page" );
         }
     }
 
@@ -110,13 +110,13 @@ public class Display {
             System.out.println("[" + (i+1) + "] " + theAlbums.get(startIndex + i).name + " by " + theAlbums.get(startIndex + i).getArtist().getName());
         }
         if(currentPage == 1){
-            System.out.println("[" + 6 + "] Next page" );
-            System.out.println("[" + 7 + "] Go Home" );
+            System.out.println("[" + 6 + "] Go Home" );
+            System.out.println("[" + 7 + "] Next page" );
         }else if(currentPage == totalPages){
-            System.out.println("[" + 7 + "] Previous page" );
+            System.out.println("[" + 6 + "] Previous page" );
         }else{
-            System.out.println("[" + 6 + "] Next page" );
-            System.out.println("[" + 7 + "] Previous page" );
+            System.out.println("[" + 6 + "] Previous page" );
+            System.out.println("[" + 7 + "] Next page" );
         }
     }
 
@@ -127,13 +127,13 @@ public class Display {
             System.out.println("[" + (i+1) + "] " + theArtists.get(startIndex + i).name);
         }
         if(currentPage == 1){
-            System.out.println("[" + 6 + "] Next page" );
-            System.out.println("[" + 7 + "] Go Home" );
+            System.out.println("[" + 6 + "] Go Home" );
+            System.out.println("[" + 7 + "] Next page" );
         }else if(currentPage == totalPages){
-            System.out.println("[" + 7 + "] Previous page" );
+            System.out.println("[" + 6 + "] Previous page" );
         }else{
-            System.out.println("[" + 6 + "] Next page" );
-            System.out.println("[" + 7 + "] Previous page" );
+            System.out.println("[" + 6 + "] Previous page" );
+            System.out.println("[" + 7 + "] Next page" );
         }
     }
 
@@ -172,6 +172,11 @@ public class Display {
 
     public void ratingPrompt(){
         System.out.print("Rating: ");
+    }
+
+    public void changePassword(){
+        nextScreen();
+        System.out.print("Please enter your new password: ");
     }
     
 }

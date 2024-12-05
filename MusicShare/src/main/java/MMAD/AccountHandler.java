@@ -73,10 +73,16 @@ public class AccountHandler {
     }
 
     public int changePassword(UI ui, Display d){
-        if(currentUser != null){
-            //query to change password
-        }
+        d.changePassword();
+        String newPass = ui.getString();
+        currentUser = new Login(currentUser.getUsername(), newPass);
+        //query to change password - return 
         return -1;
+    }
+
+    public int logout(){
+        currentUser = null;
+        return 1;
     }
 
     public boolean deleteAccount(){
