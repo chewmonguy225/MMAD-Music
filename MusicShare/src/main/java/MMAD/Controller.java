@@ -152,6 +152,10 @@ public class Controller {
                     }
                     break;
                 case "album search":
+                    option = routeAlbumSearch();
+                    if (option == -1) {
+                        currentMenu = "home";
+                    }
                     break;
                 case "artist search":
                     break;
@@ -204,7 +208,7 @@ public class Controller {
                 rh.createReview(null, song, description, rating);
                 break;
             case 4:// delete review
-                rh.deleteReview();
+                //rh.deleteReview();
                 break;
             case 5:// previous page (routeSongMenu)
                 routeSongSearch();

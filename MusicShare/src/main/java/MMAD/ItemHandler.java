@@ -102,24 +102,27 @@ public class ItemHandler {
 
         d.displayAlbumSearchResult(results, currentPage, totalPages);
         int option = ui.getInt();
- 
+        
         selectedAlbum = null;
         while (selectedAlbum == null && option != -1) {
-            if (option >= 1 && option <= 5) {
-                selectedAlbum = results.get((currentPage * itemsPerPage) + (option - 1));
-            } else if (option == 6 && currentPage != totalPages) {
-                currentPage++;
-                d.displayAlbumSearchResult(results, currentPage, totalPages);
-                option = ui.getInt();
-            } else if (option == 7 && currentPage != 1) {
+            if(option == 0){
+                return option;
+            }else if (option >= 1 && option <= 5) {
+                selectedAlbum = results.get(((currentPage-1) * itemsPerPage) + (option - 1));
+            } else if (option == 6 && currentPage != 1) {
                 currentPage--;
                 d.displayAlbumSearchResult(results, currentPage, totalPages);
                 option = ui.getInt();
-            } else if (option == 7 && currentPage == 1) {
+            } else if (option == 7 && currentPage != totalPages) {
+                currentPage++;
+                d.displayAlbumSearchResult(results, currentPage, totalPages);
+                option = ui.getInt();
+            } else if (option == 6 && currentPage == 1) {
                 option = -1;
             }
         }
-        addAlbumToDB(selectedAlbum);
+        if (option != -1)
+            addAlbumToDB(selectedAlbum);
         return option;
     }
 
@@ -144,7 +147,7 @@ public class ItemHandler {
                 currentPage--;
                 d.displayArtistSearchResult(results, currentPage, totalPages);
                 option = ui.getInt();
-            } else if (option == 7 && currentPage == 1) {
+            } else if (option == 6 && currentPage == 1) {
                 option = -1;
             }
         }

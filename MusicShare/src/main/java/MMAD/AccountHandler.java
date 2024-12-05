@@ -67,7 +67,7 @@ public class AccountHandler {
         return dbh.createUser(login);
     }
 
-    private static boolean loginAttempt(String username, String password){
+    public static boolean loginAttempt(String username, String password){
         Login login = new Login(username, password);
         return login.attemptLogin(dbh);
     }

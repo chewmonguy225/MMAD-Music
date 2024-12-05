@@ -30,4 +30,8 @@ public class ReviewHandler {
             //error
         }
     }
+
+    public void deleteReview(Login login, Review review){
+        
+    }
 }
