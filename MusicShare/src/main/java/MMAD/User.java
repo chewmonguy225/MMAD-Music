@@ -14,6 +14,13 @@ public class User {
         reviews = new ArrayList<>();
     }
 
+    public User(Login cred, ArrayList<User> followList, ArrayList<Review> reviews, Playlist playlist) {
+        this.loginCredentials = cred;
+        this.playlist = playlist;
+        this.followList = followList;
+        this.reviews = reviews;
+    }
+
     public Login getLogin(){
         return loginCredentials;
     }
@@ -33,7 +40,9 @@ public class User {
         return reviewedItems;
     }
 
-    public void addFriend(User userToAdd){
+    public void addToFollowlist(User userToAdd){
         followList.add(userToAdd);
     }
+
+   
 }

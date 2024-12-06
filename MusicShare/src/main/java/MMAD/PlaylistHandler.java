@@ -35,7 +35,6 @@ public class PlaylistHandler {
         return ph;
     }
 
-
     public void removeSongFromPlaylist(Login login, Song song){
         playlist.removeSong(song);//removes song from playlist object if it exists in the playlist.
         

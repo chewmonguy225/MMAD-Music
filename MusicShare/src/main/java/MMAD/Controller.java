@@ -189,6 +189,9 @@ public class Controller {
                 routeArtistSearch();
                 break;
             case 4:
+                routeUserSearch();
+                break;
+            case 5:
                 RouteHome();
                 break;
             default:
@@ -201,7 +204,7 @@ public class Controller {
     }
 
     public static int routeSongSearch() {
-        d.searchPrompt();
+        d.searchPrompt("Song");
         String songTitle = ui.getString();
         Song selectedSong = ih.searchSong(songTitle);
         int option = -1;
@@ -215,7 +218,7 @@ public class Controller {
     }
 
     public static int routeAlbumSearch() {
-        d.searchPrompt();
+        d.searchPrompt("Album");
         String albumTitle = ui.getString();
         Album selected = ih.searchAlbum(albumTitle);
         int option = -1;
@@ -229,7 +232,7 @@ public class Controller {
     }
 
     public static int routeArtistSearch() {
-        d.searchPrompt();
+        d.searchPrompt("Artist");
         String artistName = ui.getString();
         Artist selected = ih.searchArtist(artistName);
         int option = -1;
@@ -334,18 +337,58 @@ public class Controller {
         }
     }
 
+
+    public static void routeUserSearch(){
+        d.searchPrompt("User");
+        String username = ui.getString();
+        User selected = ah.searchUser(username, ui, d);
+        routeUserOption(selected);
+    }
+
+    public static int routeUserOption(User user){
+        d.otherUserOptionMenu();
+        int option = ui.getInt();
+        switch (option) {
+            case 1:
+                //follow user
+                break;
+            case 2:
+                //unfollow user
+                break;
+            case 3:
+                //display user reviews
+                break;
+            case 4:
+                //display playlist
+                break;
+            case 5:
+                routeUserSearch();
+                break;
+            case 6:
+                RouteHome();
+                break;
+            default:
+                d.invalidOption();
+                routeSearch();
+                break;
+        }
+        option = -1;
+        return option;
+    }
+
+
     public void routeReview() {
 
     }
 
-    public void routeOptionsMenu() {
+    public void routeReviewOptionsMenu() {
         d.reviewOptionMenu();
         switch (ui.getInt()) {
             case 0:
                 viewReviews();
                 break;
             case 1:
-                rh.viewReview(ah.getCurrentUser());
+                //rh.viewReview(ah.getCurrentUser());
                 exit();
                 break;
             case 2:
@@ -361,16 +404,15 @@ public class Controller {
                 exit();
                 break;
             default:
-                d.invalidOption();
+               // d.invalidOption();
                 songOptionMenu(song);
                 break;
         }
     }
 
     public void viewReviews(){
-        rh.getReviews
+        //rh.getReviews
     }
-
     
 
 }

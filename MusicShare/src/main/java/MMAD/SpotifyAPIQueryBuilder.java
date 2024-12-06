@@ -13,6 +13,8 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
   SpotifyAPIConnection theApiConnection = new SpotifyAPIConnection();
   private static int intialLimit = 25;
 
+  private SpotifyAPIQueryBuilder(){}
+
   public static SpotifyAPIQueryBuilder access(){
     if (api == null){
       api = new SpotifyAPIQueryBuilder();
