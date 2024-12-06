@@ -11,21 +11,18 @@ import java.util.ArrayList;
  *      5 combine playlist
  */
 public class PlaylistHandler {
+    private static AccountHandler ah = AccountHandler.access();
+    private static DBHandler dbh = DBHandler.access();
+    private static ItemHandler ih = ItemHandler.access();
     private static PlaylistHandler ph = null;
+    private int page = 0;
 
     //first thing, query if the user has an existing playlist
     //if the user has a playlist, query to create a playlist object then continue.
     ArrayList<Song> musicList = new ArrayList<>();
-    Playlist playlist_EXISTS = new Playlist(musicList);
-    
-    //if the user does not have a playlist (at least one saved song), then create a new playlist object
-    Playlist playlist_DNE = new Playlist();//empty playlist
-
-    //both options will end up with a playlist object called playlist
     Playlist playlist = new Playlist();
 
-    DBHandler dbh = DBHandler.access();
-    ItemHandler ih = ItemHandler.access();
+    
     
     private PlaylistHandler (){
 
@@ -43,6 +40,7 @@ public class PlaylistHandler {
         playlist.removeSong(song);//removes song from playlist object if it exists in the playlist.
         
         //queries the removal of the song in the DB
+        dbh.removeSongFromPlaylist(login, song);
     }
 
     public boolean addSongToPlaylist(Login login, Song song){
@@ -63,25 +61,36 @@ public class PlaylistHandler {
          * call database hander dbh.getPlaylist to retrieve an arraylist of song IDs
          * call item handler ih.createSongFromID for each song id in arraylist
          */
+        Login login = ah.getCurrentUser();
+        ArrayList<Integer> songIDs = dbh.getPlaylist(login);
+        musicList = new ArrayList<>();
 
+        for(int songID:songIDs){
+            musicList.add(ih.createSongFromID(songID));
+        }
+        if(musicList.size()>0)
+            playlist = new Playlist(musicList);
 
-        //call display d.displauPlaylist(Playlist playlist, int page)
+        //d.displayPlaylist(playlist, 0);
 
         int option = -1;
-        int page = 0;
-        while(option <0 || option >7){//if 6 then prev, if 7 then next
-            if(option == 7)
-                page +=5;
-            if (option == 6)
-                page -= 5;
+        
 
+        while(option <0 || option >7){//if 6 then prev, if 7 then next
+            
             //displays the next (5) songs in playlist as long as there is at least one more song to print
             if(page >= 0 && playlist.getPlaylist().size() > page){
+                System.out.println("\n\nThis is page: "+page);
                 d.displayPlaylist(playlist, page);
                 option = ui.getInt();
             } else {//if on the first page and user select previous, then will go home
                 return -1;
             }
+
+            if(option == 7)
+                page = page + 5;
+            if (option == 6)
+                page = page - 5;
 
             //user chose to exit the system
             if (option == 0)
@@ -102,7 +111,6 @@ public class PlaylistHandler {
         //query to remove all songs from playlist
         dbh.clearPlaylist(login);
         playlist = new Playlist();//create empty playlist object
-        
     }
     
 }

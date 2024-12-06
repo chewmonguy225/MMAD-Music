@@ -6,7 +6,7 @@ public class User {
     private ArrayList<Review> reviews;
     private Playlist playlist;
 
-    public User (Login cred){
+    public User(Login cred){
         loginCredentials = cred;
         //Account handler will call database to validate/create user
         playlist = new Playlist();
@@ -31,5 +31,9 @@ public class User {
             reviewedItems.add(reviews.get(i).getItem());
         }
         return reviewedItems;
+    }
+
+    public void addFriend(User userToAdd){
+        followList.add(userToAdd);
     }
 }
