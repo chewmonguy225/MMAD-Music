@@ -1,7 +1,6 @@
 package MMAD;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Controller {
     private static Controller c;
@@ -14,13 +13,15 @@ public class Controller {
     private static ArrayList<String> menuList = populateMenus();
     private static String currentMenu = "login or signup";
 
-    private static ArrayList<String> populateMenus() {
-        ArrayList<String> ar = new ArrayList<String>();
+    private static ArrayList<String> populateMenus(){
+        ArrayList<String> ar= new ArrayList();
         ar.add("home");
         ar.add("playlist");
         ar.add("friends");
         ar.add("review");
         ar.add("search");
+        ar.add("account settings");
+        ar.add("logout");
         return ar;
     }
 
@@ -48,14 +49,14 @@ public class Controller {
                     }
                     break;
                 case "login":
-                    option = login();
-                    if (option == 1) {
+                    option = ah.login(ui, d);
+                    if(option == 1){
                         currentMenu = "home";
                     }
                     break;
                 case "signup":
-                    option = signup();
-                    if (option == 1)
+                    option = ah.signup(ui, d);
+                    if(option == 1)
                         currentMenu = "home";
                     break;
                 case "home":
@@ -84,48 +85,9 @@ public class Controller {
         return -1;
     }
 
-    private static int login() {
-        d.loginUsername();
-        String username = ui.getString();
-        if (username.equals("0"))
-            return 0;
-        d.loginPassword();
-        String password = ui.getString();
-        if (password.equals("0"))
-            return 0;
-
-        if (ah.loginAttempt(username, password)) {
-            d.successfulLogin(username);
-            return 1;
-        } else {
-            d.invalidLogin();
-            return -1; // simulates username or password invalid
-        }
-
-    }
-
-    private static int signup() {
-        d.loginUsername();
-        String username = ui.getString();
-        if (username.equals("0"))
-            return 0;
-        d.loginPassword();
-        String password = ui.getString();
-        if (password.equals("0"))
-            return 0;
-
-        if (ah.createAccount(username, password)) {
-            d.successfulSignup();
-            return 1;
-        } else {
-            d.unsuccessfulSignup();
-            return -1;
-        }
-    }
-
     private static void RouteHome() {// routes all requests from home page
         int option = -1;
-        while (option < 0 || option > 6) {
+        while (option < 0 || option > 8) {
             d.home();
             option = ui.getInt();
         }
@@ -141,7 +103,8 @@ public class Controller {
                     }
 
                     break;
-                case "friends":
+                case "friends"://new menu asks to view current friends or add new friend
+                    //unrelated -- add a account menu that allows user to change password or delete account
                     break;
                 case "review":
                     break;
@@ -150,17 +113,51 @@ public class Controller {
                     if (option == -1) {
                         currentMenu = "home";
                     }
+                    currentMenu = "home";
+                    break;
+                    case "account settings":
+                    option = accountSettings();
+                    if (option == 2)
+                        currentMenu = "login or signup";
+                        c.routeLogin();
+                        currentMenu = "exit";
+                    break;
+                case "logout":
+                    option = logout();
+                    currentMenu = "login or signup";
+                    c.routeLogin();
                     break;
                 default:
-                    if (option != 0) {
-                        RouteHome();
-                    }
+                    option =0;
             }
         }
-        d.exit();
+        if(option == 0)
+            d.exit();
+    }
+    private static int logout(){
+        return ah.logout();
     }
 
-    private static int routePlaylist() {// routes all playlist requests
+    private static int accountSettings(){
+        d.accountSettings();
+        int option = ui.getInt();
+        if(option == 0)
+            return 0;
+        if (option == 1){
+            int result = -1;
+            do{
+                result =  ah.changePassword(ui, d);//need to change logic to allow reprompting of new password.
+            }while(result == -1);
+            return result;
+        } 
+        if(option == 2){
+            ah.deleteAccount();
+            ah.logout();
+            return 2;
+        }
+        return -1;
+    }
+    private static int routePlaylist(){//routes all playlist requests
         int option = ph.displayPlaylist(ui, d);
 
         return option;
@@ -209,6 +206,8 @@ public class Controller {
     public void songOptionMenu(Song song) {
         d.songOptionMenu();
         switch (ui.getInt()) {
+            case 0:
+                return 0;
             case 1:// add song to playlist
                 ph.addSongToPlaylist(ah.getCurrentUser(), song);
                 break;
@@ -229,6 +228,7 @@ public class Controller {
                 routeSongSearch();
                 break;
             default:// exit to main menu
+                return -1;
         }
     }
 
@@ -290,6 +290,8 @@ public class Controller {
         }
     }
 
+    
+
     public static void route1(Login login) {
         Artist artist = new Artist("234234", "BLUR");
         Album album = new Album("123123", "album1", artist);
@@ -302,7 +304,7 @@ public class Controller {
     }
 
     public static void main(String[] args) {
-        final DBHandler dbh = DBHandler.access();
+        DBHandler dbh = DBHandler.access();
         Login login = new Login("John", "123123");
         User user = new User(login);
         // dbh.createUser(user.getLogin().getUsername(), user.getLogin().getPassword());
