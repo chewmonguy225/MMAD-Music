@@ -408,7 +408,7 @@ public class QueryExecutor {
             ArrayList<Integer> songIDs = new ArrayList<>();
 
             while(resultSet.next()){
-                songIDs.add(resultSet.getInt("id"));
+                songIDs.add(resultSet.getInt("song_id"));
             }
             return songIDs;
         } 

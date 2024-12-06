@@ -4,9 +4,9 @@ public class AccountHandler {
     private static AccountHandler ah;
     private static DBHandler dbh = DBHandler.access();
     Login currentUser;
+    User user; 
 
     private AccountHandler(){
-
     }
 
     public static AccountHandler access(){
@@ -61,7 +61,6 @@ public class AccountHandler {
         }
     }
 
-
     public boolean createAccount(String username, String password){
         Login login = new Login(username, password);
         return dbh.createUser(login);
@@ -89,5 +88,10 @@ public class AccountHandler {
         if(currentUser != null)
             return dbh.deleteUser(currentUser);
         return false;
+    }
+
+    public void addFriend(String friendUsername){
+        User friendUser = new User()
+        currentUser.addFriend(UserToAdd);
     }
 }

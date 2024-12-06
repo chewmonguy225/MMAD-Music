@@ -13,15 +13,13 @@ public class Controller {
     private static ArrayList<String> menuList = populateMenus();
     private static String currentMenu = "login or signup";
 
-    private static ArrayList<String> populateMenus(){
-        ArrayList<String> ar= new ArrayList();
+    private static ArrayList<String> populateMenus() {
+        ArrayList<String> ar = new ArrayList<String>();
         ar.add("home");
         ar.add("playlist");
         ar.add("friends");
         ar.add("review");
-        ar.add("song search");
-        ar.add("album search");
-        ar.add("artist search");
+        ar.add("search");
         ar.add("account settings");
         ar.add("logout");
         return ar;
@@ -52,13 +50,13 @@ public class Controller {
                     break;
                 case "login":
                     option = ah.login(ui, d);
-                    if(option == 1){
+                    if (option == 1) {
                         currentMenu = "home";
                     }
                     break;
                 case "signup":
                     option = ah.signup(ui, d);
-                    if(option == 1)
+                    if (option == 1)
                         currentMenu = "home";
                     break;
                 case "home":
@@ -69,8 +67,14 @@ public class Controller {
                     option = 0;
             }
         }
-        if (!currentMenu.equals("exit"))
-            d.exit();
+        if (!currentMenu.equals("exit")) {
+            exit();
+        }
+    }
+
+    private static void exit() {
+        d.exit();
+        System.exit(0);
     }
 
     private static int loginOrSignup() {
@@ -100,31 +104,32 @@ public class Controller {
                     option = routePlaylist();
                     if (option == -1) {
                         currentMenu = "home";
+                        RouteHome();
                     }
-
                     break;
-                case "friends"://new menu asks to view current friends or add new friend
-                    //unrelated -- add a account menu that allows user to change password or delete account
+                case "friends":// new menu asks to view current friends or add new friend
+                    option = -1;
+                    currentMenu = "home";
+                    // unrelated -- add a account menu that allows user to change password or delete
+                    // account
                     break;
                 case "review":
-                    break;
-                case "song search":
-                    option = routeSongSearch();
-                    if (option == 0) {
-                        currentMenu = "exit";
-                    }
+                    // option = routeReview();
+                    option = -1;
                     currentMenu = "home";
                     break;
-                case "album search":
+                case "search":
+                    option = routeSearch();
+                    if (option == -1) {
+                        currentMenu = "home";
+                    }
                     break;
-                case "artist search":
-                    break;
-                    case "account settings":
+                case "account settings":
                     option = accountSettings();
                     if (option == 2)
                         currentMenu = "login or signup";
-                        c.routeLogin();
-                        currentMenu = "exit";
+                    c.routeLogin();
+                    currentMenu = "exit";
                     break;
                 case "logout":
                     option = logout();
@@ -132,62 +137,123 @@ public class Controller {
                     c.routeLogin();
                     break;
                 default:
-                    option =0;
+                    option = 0;
             }
         }
-        if(option == 0)
-            d.exit();
+        if (option == 0)
+            exit();
     }
-    private static int logout(){
+
+    private static int logout() {
         return ah.logout();
     }
 
-    private static int accountSettings(){
+    private static int accountSettings() {
         d.accountSettings();
         int option = ui.getInt();
-        if(option == 0)
+        if (option == 0)
             return 0;
-        if (option == 1){
+        if (option == 1) {
             int result = -1;
-            do{
-                result =  ah.changePassword(ui, d);//need to change logic to allow reprompting of new password.
-            }while(result == -1);
+            do {
+                result = ah.changePassword(ui, d);// need to change logic to allow reprompting of new password.
+            } while (result == -1);
             return result;
-        } 
-        if(option == 2){
+        }
+        if (option == 2) {
             ah.deleteAccount();
             ah.logout();
             return 2;
         }
         return -1;
     }
-    private static int routePlaylist(){//routes all playlist requests
+
+    private static int routePlaylist() {// routes all playlist requests
         int option = ph.displayPlaylist(ui, d);
 
         return option;
 
     }
 
+    public static int routeSearch() {
+        d.searchOptions();
+        int option = ui.getInt();
+        switch (option) {
+            case 1:
+                routeSongSearch();
+                break;
+            case 2:
+                routeAlbumSearch();
+                break;
+            case 3:
+                routeArtistSearch();
+                break;
+            case 4:
+                RouteHome();
+                break;
+            default:
+                d.invalidOption();
+                routeSearch();
+                break;
+        }
+        option = -1;
+        return option;
+    }
+
     public static int routeSongSearch() {
         d.searchPrompt();
         String songTitle = ui.getString();
-        int option = ih.searchSong(songTitle, ui, d);
-        if(option == 0 || option == -1){
-            return option;
+        Song selectedSong = ih.searchSong(songTitle);
+        int option = -1;
+        if (selectedSong == null) {
+            routeSearch();
+        } else {
+            ih.addSongToDB(selectedSong);
+            c.songOptionMenu(selectedSong);
         }
-        return c.songOptionMenu(ih.getSelectedSong());
+        return option;
     }
 
-    public int songOptionMenu(Song song) {
+    public static int routeAlbumSearch() {
+        d.searchPrompt();
+        String albumTitle = ui.getString();
+        Album selected = ih.searchAlbum(albumTitle);
+        int option = -1;
+        if (selected == null) {
+            routeSearch();
+        } else {
+            ih.addAlbumToDB(selected);
+            c.albumOptionMenu(selected);
+        }
+        return option;
+    }
+
+    public static int routeArtistSearch() {
+        d.searchPrompt();
+        String artistName = ui.getString();
+        Artist selected = ih.searchArtist(artistName);
+        int option = -1;
+        if (selected == null) {
+            routeSearch();
+        } else {
+            ih.addArtistToDB(selected);
+            c.artistOptionMenu(selected);
+        }
+        return option;
+    }
+
+    public void songOptionMenu(Song song) {
         d.songOptionMenu();
         switch (ui.getInt()) {
             case 0:
-                return 0;
+                exit();
             case 1:// add song to playlist
                 ph.addSongToPlaylist(ah.getCurrentUser(), song);
+                RouteHome();
                 break;
             case 2:// remove song from playlist
                 ph.removeSongFromPlaylist(ah.getCurrentUser(), song);
+                RouteHome();
                 break;
             case 3:// write review
                 d.reviewPrompt();
@@ -197,54 +263,114 @@ public class Controller {
                 rh.createReview(ah.getCurrentUser(), song, description, rating);
                 break;
             case 4:// delete review
-                //rh.deleteReview();
+                   // rh.deleteReview();
                 break;
             case 5:// previous page (routeSongMenu)
                 routeSongSearch();
                 break;
-            default:// exit to main menu
-                return -1;
+            case 6:// previous page (routeSongMenu)
+                RouteHome();
+                break;
+            default:
+                d.invalidOption();
+                songOptionMenu(song);
+                break;
         }
-        return 1;
     }
 
-    // --------------------------------------------------------------------------------------
-
-    public void routeSongMenu() {
+    public void albumOptionMenu(Album album) {
+        d.albumOptionMenu();
         switch (ui.getInt()) {
-            case 0:// previous page, if no previous page then page 1
+            case 0:
+                exit();
+            case 1:// write review
+                d.reviewPrompt();
+                String description = ui.getString();
+                d.ratingPrompt();
+                int rating = ui.getInt();
+                rh.createReview(ah.getCurrentUser(), album, description, rating);
+                break;
+            case 2:// delete review
+                   // rh.deleteReview();
+                break;
+            case 3:// previous page (routeSongMenu)
+                routeAlbumSearch();
+                break;
+            case 4:
+                RouteHome();
+                break;
+            default:
+                d.invalidOption();
+                albumOptionMenu(album);
+                break;
+        }
+    }
+
+    public void artistOptionMenu(Artist artist) {
+        d.itemOptionMenu();
+        switch (ui.getInt()) {
+            case 0:
+                exit();
+            case 1:// write review
+                d.reviewPrompt();
+                String description = ui.getString();
+                d.ratingPrompt();
+                int rating = ui.getInt();
+                rh.createReview(ah.getCurrentUser(), artist, description, rating);
+                break;
+            case 2:// delete review
+                   // rh.deleteReview();
+                break;
+            case 3:// previous page (routeSongMenu)
+                routeArtistSearch();
+                break;
+            case 4:
+                RouteHome();
+                break;
+            default:
+                d.invalidOption();
+                artistOptionMenu(artist);
+                break;
+        }
+    }
+
+    public void routeReview() {
+
+    }
+
+    public void routeOptionsMenu() {
+        d.reviewOptionMenu();
+        switch (ui.getInt()) {
+            case 0:
+                viewReviews();
                 break;
             case 1:
+                rh.viewReview(ah.getCurrentUser());
+                exit();
+                break;
             case 2:
+                exit();
+                break;
             case 3:
+                exit();
+                break;
             case 4:
+                exit();
+                break;
             case 5:
-                // create Song object "song" from option 1-5 and call songOptionMenu(song)
+                exit();
                 break;
-            case 6:// next page, if no next page then page 1
+            default:
+                d.invalidOption();
+                songOptionMenu(song);
                 break;
-            default:// exit to main menu
         }
+    }
+
+    public void viewReviews(){
+        rh.getReviews
     }
 
     
 
-    public static void route1(Login login) {
-        Artist artist = new Artist("234234", "BLUR");
-        Album album = new Album("123123", "album1", artist);
-        Song song = new Song("12", "Song", artist, album);
-        ih.addSongToDB(song);
-        ih.addSongToDB(song);
-
-        ph.addSongToPlaylist(login, song);
-        ph.clearPlaylist(login);
-    }
-
-    public static void main(String[] args) {
-        DBHandler dbh = DBHandler.access();
-        Login login = new Login("John", "123123");
-        User user = new User(login);
-        // dbh.createUser(user.getLogin().getUsername(), user.getLogin().getPassword());
-        route1(user.getLogin());
-    }
 }
