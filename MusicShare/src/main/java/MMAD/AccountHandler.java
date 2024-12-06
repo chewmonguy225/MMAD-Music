@@ -1,8 +1,12 @@
 package MMAD;
 
+import java.util.ArrayList;
+
 public class AccountHandler {
     private static AccountHandler ah;
     private static DBHandler dbh = DBHandler.access();
+    private static ReviewHandler rh = ReviewHandler.access();
+    private final int itemsPerPage = 5;
     Login currentUser;
     User user; 
 
@@ -90,8 +94,53 @@ public class AccountHandler {
         return false;
     }
 
-    public void addFriend(String friendUsername){
-        User friendUser = new User()
-        currentUser.addFriend(UserToAdd);
+    public void followUser(User friendUser){
+        user.addToFollowlist(friendUser);
+    }
+
+    public User getUserPublicSharables(String username){
+        Login login = new Login(username, null);
+        Playlist playlist = null;
+        ArrayList<User> followList = null;
+        //ph.getUserPlaylist(login);
+        ArrayList<Review> thReviews = rh.getUserReviews(username);
+        User publicUser = new User(login, followList, thReviews, playlist);
+
+        return publicUser;
+    }
+
+
+    public User searchUser(String username, UI ui, Display d) {
+        ArrayList<String> results = dbh.searchUsers(username);
+
+        int totalPages = (int) Math.ceil((double) results.size() / itemsPerPage);
+        int currentPage = 1;
+
+        
+        User selected = selectUser(results, currentPage, totalPages, ui, d);
+        return selected;
+    }
+
+    private User selectUser(ArrayList<String> searchResults, int currentPage, int totalPages, UI ui, Display display) {
+        display.displayUserSearchResult(searchResults, currentPage, totalPages);
+        int option = ui.getInt();
+        String selected = null;
+        while (selected == null && !((option == 6 && currentPage == 1) || (option == 7 && currentPage == totalPages))) {
+            if (option >= 1 && option <= 5) {
+                selected = searchResults.get(((currentPage - 1) * itemsPerPage) + (option - 1));
+            } else if (option == (itemsPerPage + 1) && currentPage != 1) {
+                currentPage--;
+                display.displayUserSearchResult(searchResults, currentPage, totalPages);
+                option = ui.getInt();
+            } else if (option == (itemsPerPage + 2) && currentPage != totalPages) {
+                currentPage++;
+                display.displayUserSearchResult(searchResults, currentPage, totalPages);
+                option = ui.getInt();
+            }else{
+                display.invalidOption();
+            }
+        }
+        User selectedUser = getUserPublicSharables(selected);
+        return selectedUser;
     }
 }

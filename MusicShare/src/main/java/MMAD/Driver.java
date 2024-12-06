@@ -9,6 +9,7 @@ public class Driver {
   private static Display d = Display.access();
   private static PlaylistHandler ph = PlaylistHandler.access();
   private static ReviewHandler rh = ReviewHandler.access();
+  private static DBHandler dbh = DBHandler.access();
   private static Driver dr = new Driver();
 
   public static void main(String[] args) {
@@ -46,40 +47,11 @@ public class Driver {
     // //songOptionMenu(ih.getSelectedSong());
     // System.out.println(option);
 
-    routeSongSearch();
-  }
-
-  public static int routeSongSearch() {
-    d.searchPrompt();
-    String songTitle = ui.getString();
-    int option = ih.searchSong(songTitle, ui, d);
-    dr.songOptionMenu(ih.getSelectedSong());
-    return option;
-  }
-
-  public void songOptionMenu(Song song) {
-    d.songOptionMenu();
-    switch (ui.getInt()) {
-      case 1:// add song to playlist
-        ph.addSongToPlaylist(null, song);
-        break;
-      case 2:// remove song from playlist
-        ph.removeSongFromPlaylist(null, song);
-        break;
-      case 3:// write review
-        d.reviewPrompt();
-        String description = ui.getString();
-        d.ratingPrompt();
-        int rating = ui.getInt();
-        rh.createReview(null, song, description, rating);
-        break;
-      case 4:// delete review
-        //rh.deleteReview();
-        break;
-      case 5:// previous page (routeSongMenu)
-        routeSongSearch();
-        break;
-      default:// exit to main menu
+    ArrayList<String> user = dbh.searchUsers("m");
+    for(String username : user){
+      System.out.println(username);
     }
   }
+
+
 }

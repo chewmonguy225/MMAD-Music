@@ -347,6 +347,10 @@ public class DBHandler {
         return queryExecutor.getFriendsList(login);
     }
 
+    public ArrayList<String> searchUsers(String usernameToSearch){
+        return queryExecutor.searchUsers(usernameToSearch);
+    }
+
 
     // DBHandler
     // public bool deleteReview(getReviewID)

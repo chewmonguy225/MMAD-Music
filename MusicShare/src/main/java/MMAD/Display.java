@@ -94,68 +94,14 @@ public class Display {
 
     }
 
-    public void displaySongSearchResult(ArrayList<Song> theSongs, int currentPage, int totalPages) {
-        nextScreen();
-        System.out.println("Please enter a number 0-7:\n");
-        int startIndex = ((currentPage - 1) * 5);
-        for (int i = 0; i < 5; i++) {
-            System.out.println("[" + (i + 1) + "] " + theSongs.get(startIndex + i).name + " by "
-                    + theSongs.get(startIndex + i).getArtist().getName());
-        }
-        if (currentPage == 1) {
-            System.out.println("[" + 6 + "] Go Home");
-            System.out.println("[" + 7 + "] Next page");
-        } else if (currentPage == totalPages) {
-            System.out.println("[" + 6 + "] Previous page");
-        } else {
-            System.out.println("[" + 6 + "] Previous page");
-            System.out.println("[" + 7 + "] Next page");
-        }
-    }
-
-    public void displayAlbumSearchResult(ArrayList<Album> theAlbums, int currentPage, int totalPages) {
-        nextScreen();
-        int startIndex = ((currentPage - 1) * 5);
-        for (int i = 0; i < 5; i++) {
-            System.out.println("[" + (i + 1) + "] " + theAlbums.get(startIndex + i).name + " by "
-                    + theAlbums.get(startIndex + i).getArtist().getName());
-        }
-        if (currentPage == 1) {
-            System.out.println("[" + 6 + "] Go Home");
-            System.out.println("[" + 7 + "] Next page");
-        } else if (currentPage == totalPages) {
-            System.out.println("[" + 6 + "] Previous page");
-        } else {
-            System.out.println("[" + 6 + "] Previous page");
-            System.out.println("[" + 7 + "] Next page");
-        }
-    }
-
-    public void displayArtistSearchResult(ArrayList<Artist> theArtists, int currentPage, int totalPages) {
-        nextScreen();
-        int startIndex = ((currentPage - 1) * 5);
-        for (int i = 0; i < 5; i++) {
-            System.out.println("[" + (i + 1) + "] " + theArtists.get(startIndex + i).name);
-        }
-        if (currentPage == 1) {
-            System.out.println("[" + 6 + "] Go Home");
-            System.out.println("[" + 7 + "] Next page");
-        } else if (currentPage == totalPages) {
-            System.out.println("[" + 6 + "] Previous page");
-        } else {
-            System.out.println("[" + 6 + "] Previous page");
-            System.out.println("[" + 7 + "] Next page");
-        }
-    }
-
     public void accountSettings() {
         nextScreen();
         System.out.println("Please enter 0-2\n1: Change Password\n2: Delete Account");
     }
 
-    public void searchPrompt() {
+    public void searchPrompt(String type) {
         split();
-        System.out.print("Search: ");
+        System.out.print("Search " + type + ": ");
     }
 
     public void songOptionMenu() {
@@ -196,7 +142,8 @@ public class Display {
         System.out.println("[1] Search Song");
         System.out.println("[2] Search Album");
         System.out.println("[3] Search Artist");
-        System.out.println("[4] Go Home");
+        System.out.println("[4] Search MMAD User");
+        System.out.println("[5] Go Home");
 
     }
 
@@ -249,15 +196,79 @@ public class Display {
         }
 
     }
-    
-    public void reviewOptionMenu(){
+
+    public void displayUserSearchResult(ArrayList<String> usernames, int currentPage, int totalPages) {
+        nextScreen();
+        int startIndex = ((currentPage - 1) * 5);
+        if (!usernames.isEmpty()) {
+            for (int i = 0; i < 5; i++) {
+                System.out.println("[" + (i + 1) + "] " + usernames.get(startIndex));
+            }
+            if (currentPage == 1) {
+                System.out.println("[" + 6 + "] Search different item");
+                System.out.println("[" + 7 + "] Next page");
+            } else if (currentPage == totalPages) {
+                System.out.println("[" + 6 + "] Previous page");
+                System.out.println("[" + 7 + "] Search different item");
+            } else {
+                System.out.println("[" + 6 + "] Previous page");
+                System.out.println("[" + 7 + "] Next page");
+            }
+        } else{
+            System.out.println("[!] There are no users to display");
+            split();
+            System.out.println("[1] Search different item");
+            System.out.println("[2] Go Home");
+        }
+
+    }
+
+    public void reviewOptionMenu() {
         nextScreen();
         System.out.println("Please enter a number 0-3:\n");
         System.out.println("[1] View reviews");
         System.out.println("[2] View own reviews");
-        //System.out.println("[2] Search reviews");
+        // System.out.println("[2] Search reviews");
         System.out.println("[3] Write Review");
         System.out.println("[4] Delete Review");
         System.out.println("[5] Write Review");
+    }
+
+    public void friendOptionMenu() {
+        nextScreen();
+        System.out.println("Please enter a number 0-3:\n");
+        System.out.println("[1] View following");
+        System.out.println("[2] View followers");
+        System.out.println("[3] Search Users");
+    }
+
+    public void otherUserOptionMenu() {
+        nextScreen();
+        System.out.println("Please enter a number 0-3:\n");
+        System.out.println("[1] Follow User");
+        System.out.println("[2] Unfollow User");
+        System.out.println("[3] View User's Reviews");
+        System.out.println("[4] View User's Playlist");
+        System.out.println("[5] Search other users");
+        System.out.println("[6] Go Home");
+    }
+
+    public void displaySongSearchResult(ArrayList<Song> theSongs, int currentPage, int totalPages) {
+        nextScreen();
+        System.out.println("Please enter a number 0-7:\n");
+        int startIndex = ((currentPage - 1) * 5);
+        for (int i = 0; i < 5; i++) {
+            System.out.println("[" + (i + 1) + "] " + theSongs.get(startIndex + i).name + " by "
+                    + theSongs.get(startIndex + i).getArtist().getName());
+        }
+        if (currentPage == 1) {
+            System.out.println("[" + 6 + "] Go Home");
+            System.out.println("[" + 7 + "] Next page");
+        } else if (currentPage == totalPages) {
+            System.out.println("[" + 6 + "] Previous page");
+        } else {
+            System.out.println("[" + 6 + "] Previous page");
+            System.out.println("[" + 7 + "] Next page");
+        }
     }
 }
