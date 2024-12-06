@@ -9,21 +9,22 @@ import se.michaelthelin.spotify.model_objects.specification.*;
 import se.michaelthelin.spotify.requests.data.search.simplified.*;
 
 public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
-  private static SpotifyAPIQueryBuilder api;
-  SpotifyAPIConnection theApiConnection = new SpotifyAPIConnection();
+  private static SpotifyAPIQueryBuilder queryBuilder;
+  SpotifyAPIConnection connectionManager = new SpotifyAPIConnection();
+
   private static int intialLimit = 25;
 
   public static SpotifyAPIQueryBuilder access(){
-    if (api == null){
-      api = new SpotifyAPIQueryBuilder();
+    if (queryBuilder == null){
+      queryBuilder = new SpotifyAPIQueryBuilder();
     }
-    return api;
+    return queryBuilder;
   }
 
 
   public ArrayList<Album> searchAlbum(String albumTitle) {
     ArrayList<Album> Albums = new ArrayList<>();
-    SearchAlbumsRequest searchAlbumsRequest = theApiConnection.getConnection().searchAlbums(albumTitle)
+    SearchAlbumsRequest searchAlbumsRequest = connectionManager.getConnection().searchAlbums(albumTitle)
         .limit(intialLimit)
         .build();
     try {
@@ -42,7 +43,7 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
 
   public ArrayList<Song> searchSong(String songTitle) {
     ArrayList<Song> Songs = new ArrayList<>();
-    SearchTracksRequest searchTracksRequest = theApiConnection.getConnection().searchTracks(songTitle)
+    SearchTracksRequest searchTracksRequest = connectionManager.getConnection().searchTracks(songTitle)
         .limit(intialLimit)
         .build();
     try {
@@ -60,7 +61,7 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
 
   public ArrayList<Artist> searchArtist(String artistName) {
     ArrayList<Artist> Artists = new ArrayList<>();
-    SearchArtistsRequest searchArtistsRequest = theApiConnection.getConnection().searchArtists(artistName)
+    SearchArtistsRequest searchArtistsRequest = connectionManager.getConnection().searchArtists(artistName)
         .limit(intialLimit)
         .build();
 

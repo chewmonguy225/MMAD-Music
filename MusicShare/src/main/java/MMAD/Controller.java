@@ -20,9 +20,7 @@ public class Controller {
         ar.add("playlist");
         ar.add("friends");
         ar.add("review");
-        ar.add("song search");
-        ar.add("album search");
-        ar.add("artist search");
+        ar.add("search");
         return ar;
     }
 
@@ -134,6 +132,8 @@ public class Controller {
         currentMenu = menuList.get(option);
         while (option != 0) {// 0 input will exit system
             switch (currentMenu) {
+                case "home":
+                    RouteHome();
                 case "playlist":
                     option = routePlaylist();
                     if (option == -1) {
@@ -145,19 +145,11 @@ public class Controller {
                     break;
                 case "review":
                     break;
-                case "song search":
-                    option = routeSongSearch();
+                case "search":
+                    option = routeSearch();
                     if (option == -1) {
                         currentMenu = "home";
                     }
-                    break;
-                case "album search":
-                    option = routeAlbumSearch();
-                    if (option == -1) {
-                        currentMenu = "home";
-                    }
-                    break;
-                case "artist search":
                     break;
                 default:
                     if (option != 0) {
@@ -178,16 +170,39 @@ public class Controller {
     public static int routeSongSearch() {
         d.searchPrompt();
         String songTitle = ui.getString();
-        int option = ih.searchSong(songTitle, ui, d);
-        c.songOptionMenu(ih.getSelectedSong());
+        Song selectedSong = ih.searchSong(songTitle);
+        int option = -1;
+        if(selectedSong == null){
+            routeSearch();
+        }else{
+            c.songOptionMenu(selectedSong);
+        }
         return option;
     }
 
-    public static int routeAlbumSearch(){
+    public static int routeAlbumSearch() {
         d.searchPrompt();
         String albumTitle = ui.getString();
-        int option = ih.searchAlbum(albumTitle, ui, d);
-        c.albumOptionMenu(ih.getSelectedAlbum());
+        Album selected = ih.searchAlbum(albumTitle);
+        int option = -1;
+        if(selected == null){
+            routeSearch();
+        }else{
+            c.albumOptionMenu(selected);
+        }
+        return option;
+    }
+
+    public static int routeArtistSearch() {
+        d.searchPrompt();
+        String artistName = ui.getString();
+        Artist selected= ih.searchArtist(artistName);
+        int option = -1;
+        if(selected == null){
+            routeSearch();
+        }else{
+            c.artistOptionMenu(selected);
+        }
         return option;
     }
 
@@ -195,20 +210,20 @@ public class Controller {
         d.songOptionMenu();
         switch (ui.getInt()) {
             case 1:// add song to playlist
-                ph.addSongToPlaylist(null, song);
+                ph.addSongToPlaylist(ah.getCurrentUser(), song);
                 break;
             case 2:// remove song from playlist
-                ph.removeSongFromPlaylist(null, song);
+                ph.removeSongFromPlaylist(ah.getCurrentUser(), song);
                 break;
             case 3:// write review
                 d.reviewPrompt();
                 String description = ui.getString();
                 d.ratingPrompt();
                 int rating = ui.getInt();
-                rh.createReview(null, song, description, rating);
+                rh.createReview(ah.getCurrentUser(), song, description, rating);
                 break;
             case 4:// delete review
-                //rh.deleteReview();
+                   // rh.deleteReview();
                 break;
             case 5:// previous page (routeSongMenu)
                 routeSongSearch();
@@ -225,10 +240,10 @@ public class Controller {
                 String description = ui.getString();
                 d.ratingPrompt();
                 int rating = ui.getInt();
-                rh.createReview(null, album, description, rating);
+                rh.createReview(ah.getCurrentUser(), album, description, rating);
                 break;
             case 2:// delete review
-                //rh.deleteReview();
+                   // rh.deleteReview();
                 break;
             case 3:// previous page (routeSongMenu)
                 routeAlbumSearch();
@@ -237,6 +252,25 @@ public class Controller {
         }
     }
 
+    public void artistOptionMenu(Artist artist) {
+        d.itemOptionMenu();
+        switch (ui.getInt()) {
+            case 1:// write review
+                d.reviewPrompt();
+                String description = ui.getString();
+                d.ratingPrompt();
+                int rating = ui.getInt();
+                rh.createReview(ah.getCurrentUser(), artist, description, rating);
+                break;
+            case 2:// delete review
+                   // rh.deleteReview();
+                break;
+            case 3:// previous page (routeSongMenu)
+                routeArtistSearch();
+                break;
+            default:// exit to main menu
+        }
+    }
     // --------------------------------------------------------------------------------------
 
     public void routeSongMenu() {
@@ -274,4 +308,31 @@ public class Controller {
         // dbh.createUser(user.getLogin().getUsername(), user.getLogin().getPassword());
         route1(user.getLogin());
     }
+
+    public static int routeSearch(){
+        d.searchOptions();
+        int option = ui.getInt();
+        switch (option) {
+            case 1:
+                RouteHome();
+                break;
+            case 2:
+                routeSongSearch();
+                break;
+            case 3:
+                routeAlbumSearch();
+                break;
+            case 4:
+                routeArtistSearch();
+                break;
+            default:
+                d.invalidOption();
+                routeSearch();
+                break;
+        }
+        option = -1;
+        return option;
+    }
+
 }
+

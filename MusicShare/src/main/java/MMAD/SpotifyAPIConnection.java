@@ -9,7 +9,7 @@ public class SpotifyAPIConnection extends MusicAbstractAPI {
     SpotifyClientCredentials theCredentials = new SpotifyClientCredentials();
     private String clientID = SpotifyClientCredentials.getClientID();
     private String clientSecret = SpotifyClientCredentials.getClientSecret();
-    private SpotifyApi connection;
+    private static SpotifyApi connection;
 
     public SpotifyAPIConnection() {
         connect();

@@ -6,10 +6,9 @@ public class ItemHandler {
     private static ItemHandler ih;
     private static SpotifyAPIQueryBuilder api = SpotifyAPIQueryBuilder.access();
     DBHandler dbh = DBHandler.access();
+    UI ui = UI.access();
+    Display display = Display.access();
     private final int itemsPerPage = 5;
-    private Song selectedSong;
-    private Album selectedAlbum;
-
 
     private ItemHandler() {
 
@@ -59,105 +58,104 @@ public class ItemHandler {
         return theSong;
     }
 
-    public int searchSong(String songTitle, UI ui, Display d) {
+    public Song searchSong(String songTitle) {
         ArrayList<Song> results = api.searchSong(songTitle);
 
         int totalPages = (int) Math.ceil((double) results.size() / itemsPerPage);
         int currentPage = 1;
 
-        d.displaySongSearchResult(results, currentPage, totalPages);
-        int option = ui.getInt();
-        
-        selectedSong = null;
-        while (selectedSong == null && option != -1) {
-            if(option == 0){
-                return option;
-            }
-            if (option >= 1 && option <= 5) {
-                selectedSong = results.get(((currentPage-1) * itemsPerPage) + (option - 1));
-            } else if (option == 6 && currentPage != 1) {
-                currentPage--;
-                d.displaySongSearchResult(results, currentPage, totalPages);
-                option = ui.getInt();
-            } else if (option == 7 && currentPage != totalPages) {
-                currentPage++;
-                d.displaySongSearchResult(results, currentPage, totalPages);
-                option = ui.getInt();
-            } else if (option == 6 && currentPage == 1) {
-                option = -1;
-            }
-        }
-        if (option != -1)
-            addSongToDB(selectedSong);
-        return option;
-        
+        Song selected = selectSong(results, currentPage, totalPages);
+        return selected;
     }
 
-    public int searchAlbum(String albumTitle, UI ui, Display d) {
+    public Album searchAlbum(String albumTitle) {
         ArrayList<Album> results = api.searchAlbum(albumTitle);
 
         int totalPages = (int) Math.ceil((double) results.size() / itemsPerPage);
         int currentPage = 1;
 
-        d.displayAlbumSearchResult(results, currentPage, totalPages);
-        int option = ui.getInt();
-        
-        selectedAlbum = null;
-        while (selectedAlbum == null && option != -1) {
-            if(option == 0){
-                return option;
-            }else if (option >= 1 && option <= 5) {
-                selectedAlbum = results.get(((currentPage-1) * itemsPerPage) + (option - 1));
-            } else if (option == 6 && currentPage != 1) {
-                currentPage--;
-                d.displayAlbumSearchResult(results, currentPage, totalPages);
-                option = ui.getInt();
-            } else if (option == 7 && currentPage != totalPages) {
-                currentPage++;
-                d.displayAlbumSearchResult(results, currentPage, totalPages);
-                option = ui.getInt();
-            } else if (option == 6 && currentPage == 1) {
-                option = -1;
-            }
-        }
-        if (option != -1)
-            addAlbumToDB(selectedAlbum);
-        return option;
+        Album selected = selectAlbum(results, currentPage, totalPages);
+        return selected;
     }
 
-    public int searchArtist(String artistName, UI ui, Display d) {
+    public Artist searchArtist(String artistName) {
         ArrayList<Artist> results = api.searchArtist(artistName);
 
         int totalPages = (int) Math.ceil((double) results.size() / itemsPerPage);
         int currentPage = 1;
 
-        d.displayArtistSearchResult(results, currentPage, totalPages);
-        int option = ui.getInt();
- 
-        Artist selected = null;
-        while (selected == null && option != -1) {
-            if (option >= 1 && option <= 5) {
-                selected = results.get((currentPage * itemsPerPage) + (option - 1));
-            } else if (option == 6 && currentPage != totalPages) {
-                currentPage++;
-                d.displayArtistSearchResult(results, currentPage, totalPages);
-                option = ui.getInt();
-            } else if (option == 7 && currentPage != 1) {
-                currentPage--;
-                d.displayArtistSearchResult(results, currentPage, totalPages);
-                option = ui.getInt();
-            } else if (option == 6 && currentPage == 1) {
-                option = -1;
-            }
-        }
-        addArtistToDB(selected);
-        return option;
+        Artist selected = (Artist) selectItem(results, currentPage, totalPages);
+        return selected;
     }
 
-    public Song getSelectedSong(){
-        return selectedSong;
+    private Song selectSong(ArrayList<Song> searchResults, int currentPage, int totalPages) {
+        display.displaySearchResult(searchResults, currentPage, totalPages);
+        int option = ui.getInt();
+        Song selected = null;
+        while (selected == null && !((option == 6 && currentPage == 1) || (option == 7 && currentPage == totalPages))) {
+            if (option >= 1 && option <= 5) {
+                selected = searchResults.get(((currentPage - 1) * itemsPerPage) + (option - 1));
+            } else if (option == (itemsPerPage + 1) && currentPage != 1) {
+                currentPage--;
+                display.displaySearchResult(searchResults, currentPage, totalPages);
+                option = ui.getInt();
+            } else if (option == (itemsPerPage + 2) && currentPage != totalPages) {
+                currentPage++;
+                display.displaySearchResult(searchResults, currentPage, totalPages);
+                option = ui.getInt();
+            }else{
+                display.invalidOption();
+            }
+        }
+
+        return selected;
     }
-    public Album getSelectedAlbum(){
-        return selectedAlbum;
+
+    private Album selectAlbum(ArrayList<Album> searchResults, int currentPage, int totalPages) {
+        display.displaySearchResult(searchResults, currentPage, totalPages);
+        int option = ui.getInt();
+        Album selected = null;
+        while (selected == null && !((option == 6 && currentPage == 1) || (option == 7 && currentPage == totalPages))) {
+            if (option >= 1 && option <= 5) {
+                selected = searchResults.get(((currentPage - 1) * itemsPerPage) + (option - 1));
+            } else if (option == (itemsPerPage + 1) && currentPage != 1) {
+                currentPage--;
+                display.displaySearchResult(searchResults, currentPage, totalPages);
+                option = ui.getInt();
+            } else if (option == (itemsPerPage + 2) && currentPage != totalPages) {
+                currentPage++;
+                display.displaySearchResult(searchResults, currentPage, totalPages);
+                option = ui.getInt();
+            }else{
+                display.invalidOption();
+            }
+        }
+
+        return selected;
     }
+
+    private Item selectItem(ArrayList<? extends Item> searchResults, int currentPage, int totalPages) {
+        display.displaySearchResult(searchResults, currentPage, totalPages); 
+        int option = ui.getInt();
+        Item selected = null;
+        
+        while (selected == null && !((option == 6 && currentPage == 1) || (option == 7 && currentPage == totalPages))) {
+            if (option >= 1 && option <= 5) { // Valid options for selection
+                selected = searchResults.get(((currentPage - 1) * itemsPerPage) + (option - 1)); 
+            } else if (option == (itemsPerPage + 1) && currentPage != 1) { // Option to go to the previous page
+                currentPage--;
+                display.displaySearchResult(searchResults, currentPage, totalPages);
+                option = ui.getInt();
+            } else if (option == (itemsPerPage + 2) && currentPage != totalPages) { // Option to go to the next page
+                currentPage++;
+                display.displaySearchResult(searchResults, currentPage, totalPages);
+                option = ui.getInt();
+            } else {
+                display.invalidOption();
+            }
+        }
+    
+        return selected;
+    }
+
 }
