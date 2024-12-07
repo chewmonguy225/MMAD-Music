@@ -354,6 +354,14 @@ public class DBHandler {
 
     // DBHandler
     // public bool deleteReview(getReviewID)
+    /**
+     * Deletes a review in the database
+     * @param review The review object to be deleted.
+     * @return True if successful, false otherwise.
+     */
+    public boolean deleteReview(Review review){
+        return queryExecutor.deleteReview(review);
+    }
     // public ArrayList<String> getReviewInfo(reviewID) - return an ArrayList. Index 0: Description, Index 1: Rating, Index 2: Item ID  
 
     // QueryExecutor only
