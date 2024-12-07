@@ -411,7 +411,7 @@ public class Controller {
     }
 
     public void viewReviews(){
-        //dbh.getReviews
+        //rh.getReviews
     }
     
 
