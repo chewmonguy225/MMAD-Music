@@ -565,6 +565,26 @@ public class QueryExecutor {
     }
 
     /**
+     * Deletes a review in the database
+     * 
+     * @param login  The user's login object.
+     * @param review The review object to be deleted.
+     * @return True if successful, false if not.
+     */
+    public boolean deleteReview(Review review) {
+        try {
+            PreparedStatement statement = sqlConnection
+                    .prepareStatement("DELETE FROM review WHERE id = ?;");
+            statement.setString(1, review.getId);// not a method yet
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected == 1;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return false;
+        }
+    }
+    
+    /**
      * Returns an array list containing all the review id's of all a user's reviews
      * 
      * @param login The user's login object.
