@@ -24,7 +24,7 @@ public class ReviewHandler {
     }
 
     public void deleteReview(Review review){
-        //qe.deleteReview(review);
+        dbh.deleteReview(review);
     }
 
     public ArrayList<Review> getUserReviews(String username){
