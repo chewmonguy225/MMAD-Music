@@ -179,27 +179,35 @@ public class Controller {
         d.searchOptions();
         int option = ui.getInt();
         switch (option) {
+            case 0:
+                exit();
+                break;
             case 1:
                 routeSongSearch();
+                routeSearch();
+                option = -1;
                 break;
             case 2:
                 routeAlbumSearch();
+                option = -1;
                 break;
             case 3:
                 routeArtistSearch();
+                option = -1;
                 break;
             case 4:
                 routeUserSearch();
+                option = -1;
                 break;
             case 5:
                 RouteHome();
+                option = -1;
                 break;
             default:
                 d.invalidOption();
                 routeSearch();
                 break;
         }
-        option = -1;
         return option;
     }
 
@@ -245,6 +253,13 @@ public class Controller {
         return option;
     }
 
+    public static void routeUserSearch() {
+        d.searchPrompt("User");
+        String username = ui.getString();
+        User selected = ah.searchUser(username, ui, d);
+        userOptionMenu(selected);
+    }
+
     public void songOptionMenu(Song song) {
         d.songOptionMenu();
         switch (ui.getInt()) {
@@ -259,11 +274,7 @@ public class Controller {
                 RouteHome();
                 break;
             case 3:// write review
-                d.reviewPrompt();
-                String description = ui.getString();
-                d.ratingPrompt();
-                int rating = ui.getInt();
-                rh.createReview(ah.getCurrentUser(), song, description, rating);
+                c.writeReview(song);
                 break;
             case 4:// delete review
                    // rh.deleteReview();
@@ -281,17 +292,13 @@ public class Controller {
         }
     }
 
-    public void albumOptionMenu(Album album) {
+    private static void albumOptionMenu(Album album) {
         d.albumOptionMenu();
         switch (ui.getInt()) {
             case 0:
                 exit();
             case 1:// write review
-                d.reviewPrompt();
-                String description = ui.getString();
-                d.ratingPrompt();
-                int rating = ui.getInt();
-                rh.createReview(ah.getCurrentUser(), album, description, rating);
+                c.writeReview(album);
                 break;
             case 2:// delete review
                    // rh.deleteReview();
@@ -337,29 +344,24 @@ public class Controller {
         }
     }
 
-
-    public static void routeUserSearch(){
-        d.searchPrompt("User");
-        String username = ui.getString();
-        User selected = ah.searchUser(username, ui, d);
-        routeUserOption(selected);
-    }
-
-    public static int routeUserOption(User user){
+    public static int userOptionMenu(User user) {
         d.otherUserOptionMenu();
         int option = ui.getInt();
         switch (option) {
+            case 0:
+                exit();
+                break;
             case 1:
-                //follow user
+                // follow user
                 break;
             case 2:
-                //unfollow user
+                // unfollow user
                 break;
             case 3:
-                //display user reviews
+                rh.
                 break;
             case 4:
-                //display playlist
+                // display playlist
                 break;
             case 5:
                 routeUserSearch();
@@ -376,43 +378,13 @@ public class Controller {
         return option;
     }
 
-
-    public void routeReview() {
+    private void writeReview(Item item) {
+        d.reviewPrompt();
+        String description = ui.getString();
+        d.ratingPrompt();
+        int rating = ui.getInt();
+        rh.createReview(ah.getCurrentUser(), item, description, rating);
 
     }
-
-    public void routeReviewOptionsMenu() {
-        d.reviewOptionMenu();
-        switch (ui.getInt()) {
-            case 0:
-                viewReviews();
-                break;
-            case 1:
-                //rh.viewReview(ah.getCurrentUser());
-                exit();
-                break;
-            case 2:
-                exit();
-                break;
-            case 3:
-                exit();
-                break;
-            case 4:
-                exit();
-                break;
-            case 5:
-                exit();
-                break;
-            default:
-               // d.invalidOption();
-                songOptionMenu(song);
-                break;
-        }
-    }
-
-    public void viewReviews(){
-        //rh.getReviews
-    }
-    
 
 }

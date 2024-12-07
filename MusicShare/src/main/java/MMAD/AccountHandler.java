@@ -125,8 +125,8 @@ public class AccountHandler {
         display.displayUserSearchResult(searchResults, currentPage, totalPages);
         int option = ui.getInt();
         String selected = null;
-        while (selected == null && !((option == 6 && currentPage == 1) || (option == 7 && currentPage == totalPages))) {
-            if (option >= 1 && option <= 5) {
+        while (selected == null && !((option == (itemsPerPage + 1) && currentPage == 1) || (option == (itemsPerPage + 2) && currentPage == totalPages))) {
+            if (option >= 1 && option <= itemsPerPage) {
                 selected = searchResults.get(((currentPage - 1) * itemsPerPage) + (option - 1));
             } else if (option == (itemsPerPage + 1) && currentPage != 1) {
                 currentPage--;

@@ -666,7 +666,7 @@ public class QueryExecutor {
             return new ArrayList<String>();
         }
     }
-
+    
     public ArrayList<String> searchUsers(String usernameToSearch) {
         try {
             // Use ? for dynamic parameter binding
@@ -678,7 +678,9 @@ public class QueryExecutor {
             
             ResultSet resultSet = statement.executeQuery();
             ArrayList<String> usernames = new ArrayList<>();
-    
+            for(String usern : usernames){
+                System.out.println(usern);
+            }
             // Retrieve "username" instead of "friend_username"
             while (resultSet.next()) {
                 usernames.add(resultSet.getString("username"));
