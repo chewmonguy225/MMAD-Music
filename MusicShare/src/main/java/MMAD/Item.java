@@ -21,6 +21,8 @@ public abstract class Item {
     public abstract String getSourceID();
 
     public abstract String getName();
+
+    public abstract void setID(int id);
 }
 
 

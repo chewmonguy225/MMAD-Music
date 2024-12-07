@@ -296,6 +296,8 @@ public class DBHandler {
      * @return True if successful, false otherwise.
      */
     public boolean createReview(Login login, Review review){
+        System.out.println(review.getItem().getID());
+        
         return queryExecutor.createReview(login, review);
     }
 
@@ -306,11 +308,11 @@ public class DBHandler {
      * @param id The review's db id
      * @param login The user's login object. 
      * @return A string array list containing the following info in each index:
-     *          0: reviewId 1: description 2: rating 3: itemType(s,ar,al) 4: itemID
+     *          0: reviewId (type + id) 1: description 2: rating 3: username
      *          Returns empty array list if error occurs
      */
-    public ArrayList<String> getReview(Login login, String id){
-        return queryExecutor.getReview(login, id);
+    public ArrayList<String> getReview(Login login, Item item){
+        return queryExecutor.getReview(login, item);
     }
 
 

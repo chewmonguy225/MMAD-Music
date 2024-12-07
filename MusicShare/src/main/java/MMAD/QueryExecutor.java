@@ -550,12 +550,14 @@ public class QueryExecutor {
                 itemType = "al";
             }
 
+            System.out.println(review.getItem().getID());
             PreparedStatement statement = sqlConnection
-                    .prepareStatement("INSERT INTO review (id, text, rating) VALUES (?,?,?);");
-            String reviewID = login.getUsername() + itemType + review.getItem().getID();
+                    .prepareStatement("INSERT INTO review (id, text, rating, username) VALUES (?,?,?,?);");
+            String reviewID = itemType + review.getItem().getID();
             statement.setString(1, reviewID);
             statement.setString(2, review.getDescription());
             statement.setInt(3, review.getRating());
+            statement.setString(4, login.getUsername());
             statement.executeUpdate();
             return true;
         } catch (SQLException ex) {
@@ -572,7 +574,7 @@ public class QueryExecutor {
      */
     public ArrayList<String> getUserReviews(Login login) {
         try {
-            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM review WHERE id LIKE ?;");
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM review WHERE username LIKE ?;");
             statement.setString(1, login.getUsername());
             ResultSet resultSet = statement.executeQuery();
             ArrayList<String> reviewIDs = new ArrayList<>();
@@ -593,20 +595,32 @@ public class QueryExecutor {
      * @param id    The id of the review.
      * @param login The user's login object.
      * @return A string array list containing the following info in each index:
-     *         0: reviewId 1: description 2: rating 3: itemType(s,ar,al) 4: itemId
+     *         0: reviewId (type + id) 1: description 2: rating 3: username
      *         Returns empty array list if error occurs
      */
-    public ArrayList<String> getReview(Login login, String id) {
+    public ArrayList<String> getReview(Login login, Item item) {
         try {
-            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM review WHERE id= ?;");
-            statement.setString(1, id);
+            String itemType;
+            if (item instanceof Song) {
+                itemType = "s";
+            } else if (item instanceof Artist) {
+                itemType = "ar";
+            } else {
+                itemType = "al";
+            }
+            System.out.println(itemType + item.getID());
+            String reviewID = itemType + item.getID();
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM review WHERE id = ? AND username = ?;");
+            statement.setString(1, reviewID);
+            statement.setString(2, login.getUsername());
             ResultSet resultSet = statement.executeQuery();
             ArrayList<String> reviewInfo = new ArrayList<>();
 
             if (resultSet.next()) {
-                reviewInfo.add(id);
+                reviewInfo.add(reviewID);
                 reviewInfo.add(resultSet.getString("text"));
                 reviewInfo.add(resultSet.getInt("rating") + "");
+                reviewInfo.add(resultSet.getString("username") + "");
                 // reviewInfo.add(item type)
                 // reviewInfo.add(item id)
             }

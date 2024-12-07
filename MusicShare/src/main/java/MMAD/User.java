@@ -40,9 +40,19 @@ public class User {
         return reviewedItems;
     }
 
+    public Playlist getPlaylist(){
+        return playlist;
+    }
+
     public void addToFollowlist(User userToAdd){
         followList.add(userToAdd);
     }
 
-   
+    public void setReviews(ArrayList<Review> reviews){
+        this.reviews = reviews;
+    }
+    
+    public ArrayList<Review> getReviews(){
+        return reviews;
+    }
 }

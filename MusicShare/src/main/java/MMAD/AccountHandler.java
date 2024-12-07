@@ -24,6 +24,10 @@ public class AccountHandler {
         return currentUser;
     }
 
+    public User getCurrentUserObject(){
+        return user;
+    }
+
     public int login(UI ui, Display d){
         d.loginUsername();
         String username = ui.getString();
@@ -98,17 +102,12 @@ public class AccountHandler {
         user.addToFollowlist(friendUser);
     }
 
-    public User getUserPublicSharables(String username){
-        Login login = new Login(username, null);
-        Playlist playlist = null;
-        ArrayList<User> followList = null;
-        //ph.getUserPlaylist(login);
-        ArrayList<Review> thReviews = rh.getUserReviews(username);
-        User publicUser = new User(login, followList, thReviews, playlist);
-
+    public User getUserPublicSharables(User user){
+        Login usernameOnly = new Login(user.getLogin().getUsername(), "");
+        ArrayList<User> followings = new ArrayList<User>();
+        User publicUser = new User(usernameOnly, followings, user.getReviews(), user.getPlaylist());
         return publicUser;
     }
-
 
     public User searchUser(String username, UI ui, Display d) {
         ArrayList<String> results = dbh.searchUsers(username);
@@ -140,7 +139,10 @@ public class AccountHandler {
                 display.invalidOption();
             }
         }
-        User selectedUser = getUserPublicSharables(selected);
+        Login login = new Login(selected, "");
+        User selectedUser = new User(login);
+        rh.setUserReviews(selectedUser);
+        //p.setUserPlaylist(selectedUser)
         return selectedUser;
     }
 }

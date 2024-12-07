@@ -29,7 +29,12 @@ public class Album extends Item {
         return this.id;
     }
 
+    public void setID(int id){
+        this.id = id;
+    }
+
     public Artist getArtist(){
         return this.artist;
     }
+
 }

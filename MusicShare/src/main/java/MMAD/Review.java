@@ -1,9 +1,12 @@
 package MMAD;
 public class Review {
+
+    private User author;
+    //type + int::itemId
     private String id;
     private Item item;
     private String description;
-    private int rating;
+    private int rating; 
 
     /**
      * This constructer is called to create a new review (before DB)
@@ -11,7 +14,8 @@ public class Review {
      * @param description
      * @param rating
      */
-    public Review (Item item, String description, int rating){
+    public Review (User author, Item item, String description, int rating){
+        this.author = author;
         this.description = description;
         this.id = null;
         this.item = item;
@@ -52,6 +56,10 @@ public class Review {
      */
     public int getRating(){
         return this.rating;
+    }
+
+    public User getAuthor(){
+        return this.author;
     }
 
 

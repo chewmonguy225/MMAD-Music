@@ -11,6 +11,7 @@ public class Driver {
   private static ReviewHandler rh = ReviewHandler.access();
   private static DBHandler dbh = DBHandler.access();
   private static Driver dr = new Driver();
+  private static QueryExecutor qe = new QueryExecutor();
 
   public static void main(String[] args) {
     SpotifyAPIQueryBuilder thQueryBuilder = SpotifyAPIQueryBuilder.access();
@@ -47,9 +48,12 @@ public class Driver {
     // //songOptionMenu(ih.getSelectedSong());
     // System.out.println(option);
 
-    ArrayList<String> user = dbh.searchUsers("pop");
-    for(String username : user){
-      System.out.println(username);
+   Song song = new Song(26, null, null, null, null);
+   Login login = new Login("m", null);
+    ArrayList<String> b =  qe.getReview(login, song);
+  
+    for(String a: b ){
+      System.out.println(a);
     }
   }
 

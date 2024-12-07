@@ -358,7 +358,8 @@ public class Controller {
                 // unfollow user
                 break;
             case 3:
-                rh.
+                ArrayList<Review> thReviews = user.getReviews();
+                rh.displayReviews(thReviews, ui, d);
                 break;
             case 4:
                 // display playlist
@@ -383,7 +384,7 @@ public class Controller {
         String description = ui.getString();
         d.ratingPrompt();
         int rating = ui.getInt();
-        rh.createReview(ah.getCurrentUser(), item, description, rating);
+        rh.createReview(ah.getCurrentUserObject(), item, description, rating);
 
     }
 
