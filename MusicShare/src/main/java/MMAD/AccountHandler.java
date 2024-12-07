@@ -42,6 +42,8 @@ public class AccountHandler {
         {   
             d.successfulLogin(username);
             currentUser = new Login(username, password);
+            user = new User(currentUser);
+            rh.setUserReviews(user);
             return 1;
         } else {
             d.invalidLogin();

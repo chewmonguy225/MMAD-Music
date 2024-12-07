@@ -237,16 +237,16 @@ public class Display {
         int startIndex = ((currentPage - 1) * itemsPerPage);
         if (theReviews.size() >= itemsPerPage) {
             for (int i = 0; i < itemsPerPage; i++) {
-                System.out.println("[" + (i + 1) + "] " + theReviews.get(startIndex));
+                System.out.println(theReviews.get(startIndex + i).displayFormat());
             }
         } else if (theReviews.isEmpty()) {
-            System.out.println("[!] There are no users to display");
+            System.out.println("[!] There are reviews to display");
             split();
             System.out.println("[1] Search different item");
             System.out.println("[2] Go Home");
         } else {
             for (int i = 0; i < theReviews.size(); i++) {
-                System.out.println("[" + (i + 1) + "] " + theReviews.get(startIndex));
+                System.out.println(theReviews.get(startIndex + i).displayFormat());
             }
         }
 

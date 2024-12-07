@@ -55,4 +55,9 @@ public class User {
     public ArrayList<Review> getReviews(){
         return reviews;
     }
+
+    public void addReview(Review review){
+        reviews.add(review);
+    }
 }
+

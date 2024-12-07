@@ -26,7 +26,7 @@ public class ReviewHandler {
         item.setID(dbh.getSongID((Song) item));
         Review r = new Review(user, item, description, rating); // Create review object
         dbh.createReview(user.getLogin(), r); // Add the review to the database
-
+        ah.getCurrentUserObject().addReview(r);
         return r;
     }
 
@@ -41,11 +41,9 @@ public class ReviewHandler {
         ArrayList<String> reviewIDs = dbh.getUserReviews(login); // Fetch review IDs for the user
         if(!reviewIDs.isEmpty()){
         for (String reviewID : reviewIDs) {
-            System.out.println("The review ID: " + reviewID);
             // Extract letters and numbers from reviewID
             String[] parts = separateLettersAndNumbers(reviewID);
             String reviewType = parts[0]; // Letters (s, a, ar, etc.)
-            System.out.println(parts[1]);
             int itemID = Integer.parseInt(parts[1]); // Numeric part of the ID
 
             Item item = null;
