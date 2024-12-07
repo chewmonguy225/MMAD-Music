@@ -18,13 +18,15 @@ public class ReviewHandler {
         return rh;
     }
 
-    public void createReview(Login login, Item item, String description, int rating) {
+    public Review createReview(Login login, Item item, String description, int rating) {
         Review r = new Review(item, description, rating); // Create review object
         dbh.createReview(ah.getCurrentUser(), r); // Add the review to the database
+
+        return r;
     }
 
     public void deleteReview(Review review){
-        //qe.deleteReview(review);
+        //dbh,
     }
 
     public ArrayList<Review> getUserReviews(String username){

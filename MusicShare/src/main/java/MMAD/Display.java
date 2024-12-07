@@ -4,6 +4,7 @@ import java.util.*;
 
 public class Display {
     private static Display d;
+    private final int itemsPerPage = 5;
 
     private Display() {
 
@@ -199,26 +200,68 @@ public class Display {
 
     public void displayUserSearchResult(ArrayList<String> usernames, int currentPage, int totalPages) {
         nextScreen();
-        int startIndex = ((currentPage - 1) * 5);
-        if (!usernames.isEmpty()) {
-            for (int i = 0; i < 5; i++) {
+        int startIndex = ((currentPage - 1) * itemsPerPage);
+        if (usernames.size() >= itemsPerPage) {
+            for (int i = 0; i < itemsPerPage; i++) {
                 System.out.println("[" + (i + 1) + "] " + usernames.get(startIndex));
             }
-            if (currentPage == 1) {
-                System.out.println("[" + 6 + "] Search different item");
-                System.out.println("[" + 7 + "] Next page");
-            } else if (currentPage == totalPages) {
-                System.out.println("[" + 6 + "] Previous page");
-                System.out.println("[" + 7 + "] Search different item");
-            } else {
-                System.out.println("[" + 6 + "] Previous page");
-                System.out.println("[" + 7 + "] Next page");
-            }
-        } else{
+        } else if (usernames.isEmpty()) {
             System.out.println("[!] There are no users to display");
             split();
             System.out.println("[1] Search different item");
             System.out.println("[2] Go Home");
+        } else {
+            for (int i = 0; i < usernames.size(); i++) {
+                System.out.println("[" + (i + 1) + "] " + usernames.get(startIndex));
+            }
+        }
+
+        split();
+        if (currentPage == 1) {
+            System.out.println("[" + 6 + "] Search different item");
+            System.out.println("[" + 7 + "] Next page");
+        } else if (currentPage == 1 && totalPages == 1 && !usernames.isEmpty()) {
+            System.out.println("[" + 6 + "] Search different item");
+        } else if (currentPage == totalPages) {
+            System.out.println("[" + 6 + "] Previous page");
+            System.out.println("[" + 7 + "] Search different item");
+        } else {
+            System.out.println("[" + 6 + "] Previous page");
+            System.out.println("[" + 7 + "] Next page");
+        }
+
+    }
+
+    public void displayReviewsResult(ArrayList<Review> theReviews, int currentPage, int totalPages) {
+        nextScreen();
+        int startIndex = ((currentPage - 1) * itemsPerPage);
+        if (theReviews.size() >= itemsPerPage) {
+            for (int i = 0; i < itemsPerPage; i++) {
+                System.out.println("[" + (i + 1) + "] " + theReviews.get(startIndex));
+            }
+        } else if (theReviews.isEmpty()) {
+            System.out.println("[!] There are no users to display");
+            split();
+            System.out.println("[1] Search different item");
+            System.out.println("[2] Go Home");
+        } else {
+            for (int i = 0; i < theReviews.size(); i++) {
+                System.out.println("[" + (i + 1) + "] " + theReviews.get(startIndex));
+            }
+        }
+
+        split();
+        if (currentPage == 1) {
+            System.out.println("[" + 6 + "] Search different item");
+            System.out.println("[" + 7 + "] Next page");
+        } else if (currentPage == 1 && totalPages == 1 && !theReviews.isEmpty()) {
+            System.out.println("[" + 6 + "] Search different item");
+        } else if (currentPage == totalPages) {
+            System.out.println("[" + 6 + "] Previous page");
+            System.out.println("[" + 7 + "] Search different item");
+        } else {
+            System.out.println("[" + 6 + "] Previous page");
+            System.out.println("[" + 7 + "] Next page");
         }
 
     }
@@ -271,4 +314,5 @@ public class Display {
             System.out.println("[" + 7 + "] Next page");
         }
     }
+
 }

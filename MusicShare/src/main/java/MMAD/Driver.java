@@ -13,7 +13,7 @@ public class Driver {
   private static Driver dr = new Driver();
 
   public static void main(String[] args) {
-    SpotifyAPIQueryBuilder thQueryBuilder = new SpotifyAPIQueryBuilder();
+    SpotifyAPIQueryBuilder thQueryBuilder = SpotifyAPIQueryBuilder.access();
     // Scanner scan = new Scanner(System.in);
     // System.out.print("Search: ");
     // String songTitle = scan.nextLine();
@@ -47,7 +47,7 @@ public class Driver {
     // //songOptionMenu(ih.getSelectedSong());
     // System.out.println(option);
 
-    ArrayList<String> user = dbh.searchUsers("m");
+    ArrayList<String> user = dbh.searchUsers("pop");
     for(String username : user){
       System.out.println(username);
     }
