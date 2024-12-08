@@ -14,7 +14,6 @@ public class PlaylistHandler {
     private static AccountHandler ah = AccountHandler.access();
     private static DBHandler dbh = DBHandler.access();
     private static ItemHandler ih = ItemHandler.access();
-    private static ReviewHandler rh = ReviewHandler.access();
     private static PlaylistHandler ph = null;
     private int page = 0;
 
@@ -56,10 +55,10 @@ public class PlaylistHandler {
         int result = dbh.addSongToPlaylist(login, song);//adds the song to the playlist
         if(result == 1){
             ah.getCurrentUserObject().getPlaylist().addSong(song);
-            musicList.add(song);
+            //musicList.add(song);
             return true;
         } else if (result == 2){
-            return true;
+            return false;
         }
         return false;
     }
@@ -116,6 +115,8 @@ public class PlaylistHandler {
             //this will call a display function asking if the user would like to remove the song from playlist.
             d.playlistOptionMenu();
             switch( ui.getInt()){
+                case 0:
+                    return 0;
                 case 1:
                     ph.removeSongFromPlaylist(ah.getCurrentUserObject().getLogin(), playlist.getPlaylist().get(option+page-1));
                     d.songRemoved(playlist.getPlaylist().get(option+page-1).getName());

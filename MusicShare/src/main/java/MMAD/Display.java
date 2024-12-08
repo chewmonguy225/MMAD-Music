@@ -81,10 +81,10 @@ public class Display {
         nextScreen();
         ArrayList<Song> musicList = playlist.getPlaylist();
         if ((musicList.size() - page) >= 5)
-            System.out.println("Please enter a number: 0-7");
+            System.out.println("Please enter a number: 0-7\n");
         else {
             int num = musicList.size() - page;
-            System.out.println("Please enter a number: 0-" + num + " or 6-7");
+            System.out.println("Please enter a number: 0-" + num + " or 6\n");
         }
         for (int i = page; i < musicList.size() && i < page + 5; i++) {
             // prints out the name and artist of the next 5 songs in the playlist
@@ -96,8 +96,16 @@ public class Display {
         } else {
             System.out.println("\n6: Previous");
         }
-        
+    }
 
+    public void passwordChanged(){
+        split();
+        System.out.println("Password changed successfully!");
+    }
+
+    public void invalidPassword(){
+        split();
+        System.out.println("Please try again, your new password is invalid");
     }
 
     public void accountSettings() {
@@ -128,7 +136,6 @@ public class Display {
         System.out.println("Please enter a number 0-5:\n");
         System.out.println("[1] Remove song from playlist");
         System.out.println("[2] Back to playlist");
-        System.out.println("[3] Go Home");
     }
 
     public void songRemoved(String name){
