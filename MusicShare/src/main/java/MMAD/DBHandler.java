@@ -293,12 +293,14 @@ public class DBHandler {
     public int addSongToPlaylist(Login login, Song song)
     {
         try {
-            if(queryExecutor.checkSongInPlaylist(login, song)){
-                return 2;
-            } else {
-                boolean f = queryExecutor.addSongToPlaylist(login, song);
-                if (f)
-                return 1;
+            if(queryExecutor.checkUserExists(login.getUsername())){
+                if(queryExecutor.checkSongInPlaylist(login, song)){
+                    return 2;
+                } else {
+                    boolean f = queryExecutor.addSongToPlaylist(login, song);
+                    if (f)
+                    return 1;
+                }
             }
             return -1;
         }

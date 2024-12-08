@@ -60,6 +60,13 @@ public class AccountHandler {
         return result;
     }
 
+    public boolean createAccount(String username, String password){
+        Login login = new Login(username, password);
+        currentUser = new Login(username, password);
+        currentUserObject = new User(currentUser);
+        return dbh.createUser(login);
+    }
+
     public int signup(UI ui, Display d){
         d.loginUsername();
         String username = ui.getString();
@@ -81,10 +88,7 @@ public class AccountHandler {
         }
     }
 
-    public boolean createAccount(String username, String password){
-        Login login = new Login(username, password);
-        return dbh.createUser(login);
-    }
+    
 
     
 

@@ -30,6 +30,7 @@ public class AddSongToPlaylistTest {
         invalidUser = new Login("Not a user", "123");
 
         validUser = new Login("TestUser123", "TestUser123");
+
         ah.createAccount("TestUser123", "TestUser123");
 
         invalidSong = new Song(null, null, null, null);
@@ -44,7 +45,7 @@ public class AddSongToPlaylistTest {
 
     @After
     public void resetSongAndUserInDB(){
-
+        
     }
 
     @Test
