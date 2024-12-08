@@ -52,6 +52,9 @@ public class DBHandler {
     }
 
 
+    
+
+
     /**
     * Adds a song into the database song table.
     * First checks if the song is already in the database to avoid duplicate entries.
@@ -296,8 +299,6 @@ public class DBHandler {
      * @return True if successful, false otherwise.
      */
     public boolean createReview(Login login, Review review){
-        System.out.println(review.getItem().getID());
-        
         return queryExecutor.createReview(login, review);
     }
 
@@ -315,9 +316,19 @@ public class DBHandler {
         return queryExecutor.getReview(login, item);
     }
 
+    /**
+     * Returns an array list containing all usernames's of users who have reviewed an itemn
+     * 
+     * @param id The Item
+     * @return A string array list containing usernames
+     */
+    public ArrayList<String> getItemReviews(Item item){
+        return queryExecutor.getItemReviews(item);
+    }
+
 
     /**
-     * Returns an array list containing all the review id's of all a user's reviews
+     * Returns an array list containing all the reviewID's of all a user's reviews
      * 
      * @param login The user's login object.
      * @return an array list containing all the review id's of all a user's reviews

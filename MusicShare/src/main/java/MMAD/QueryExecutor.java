@@ -164,6 +164,19 @@ public class QueryExecutor {
         }
     }
 
+    public boolean unfollow(String username, String friendUsername){
+        try {
+            PreparedStatement statement = sqlConnection
+                    .prepareStatement("DELETE FROM user_friend WHERE username = ? AND friend_username = ?;");
+            statement.setString(1, username);
+            statement.setString(2, friendUsername);
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected == 1;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return false;
+        }
+    }
     /**
      * Checks if a song already exists in the database.
      *
@@ -608,7 +621,6 @@ public class QueryExecutor {
             } else {
                 itemType = "al";
             }
-            System.out.println(itemType + item.getID());
             String reviewID = itemType + item.getID();
             PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM review WHERE id = ? AND username = ?;");
             statement.setString(1, reviewID);
@@ -625,6 +637,33 @@ public class QueryExecutor {
                 // reviewInfo.add(item id)
             }
             return reviewInfo;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return new ArrayList<String>();
+        }
+    }
+
+    public ArrayList<String> getItemReviews(Item item) {
+        try {
+            String itemType;
+            if (item instanceof Song) {
+                itemType = "s";
+            } else if (item instanceof Artist) {
+                itemType = "ar";
+            } else {
+                itemType = "al";
+            }
+            String reviewID = itemType + item.getID();
+
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT username FROM review WHERE id LIKE ?;");
+            statement.setString(1, reviewID);
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<String> usernames = new ArrayList<>();
+
+            while (resultSet.next()) {
+                usernames.add(resultSet.getString("username"));
+            }
+            return usernames;
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             return new ArrayList<String>();

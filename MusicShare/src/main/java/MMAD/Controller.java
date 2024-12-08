@@ -107,7 +107,8 @@ public class Controller {
                         RouteHome();
                     }
                     break;
-                case "friends":// new menu asks to view current friends or add new friend
+                case "friends":
+                    c.routeFriends();
                     option = -1;
                     currentMenu = "home";
                     // unrelated -- add a account menu that allows user to change password or delete
@@ -189,14 +190,17 @@ public class Controller {
                 break;
             case 2:
                 routeAlbumSearch();
+                routeSearch();
                 option = -1;
                 break;
             case 3:
                 routeArtistSearch();
+                routeSearch();
                 option = -1;
                 break;
             case 4:
                 routeUserSearch();
+                routeSearch();
                 option = -1;
                 break;
             case 5:
@@ -279,10 +283,14 @@ public class Controller {
             case 4:// delete review
                    // rh.deleteReview();
                 break;
-            case 5:// previous page (routeSongMenu)
-                routeSongSearch();
+            case 5:// delete review
+                ArrayList<Review> theReviews = rh.getItemReviews(song);
+                rh.displayReviews(theReviews, ui, d);
                 break;
             case 6:// previous page (routeSongMenu)
+                routeSongSearch();
+                break;
+            case 7:// previous page (routeSongMenu)
                 RouteHome();
                 break;
             default:
@@ -352,7 +360,8 @@ public class Controller {
                 exit();
                 break;
             case 1:
-                // follow user
+                ah.followUser(user);
+                routeSearch();
                 break;
             case 2:
                 // unfollow user
@@ -388,4 +397,25 @@ public class Controller {
 
     }
 
+    private void routeFriends() {
+        d.friendOptionMenu();
+        int option = ui.getInt();
+        switch (option) {
+            case 0:
+                exit();
+                break;
+            case 1:
+                ArrayList<User> following = ah.currentUserObject.getFollowingList();
+                System.out.print(following);
+                User selected = ah.listUsers(following, ui, d);
+                userOptionMenu(selected);
+                option = -1;
+                break;
+            case 2:
+                routeAlbumSearch();
+                routeSearch();
+                option = -1;
+                break;
+        }
+    }
 }

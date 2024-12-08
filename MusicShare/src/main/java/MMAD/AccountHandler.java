@@ -8,7 +8,7 @@ public class AccountHandler {
     private static ReviewHandler rh = ReviewHandler.access();
     private final int itemsPerPage = 5;
     Login currentUser;
-    User user; 
+    User currentUserObject;
 
     private AccountHandler(){
     }
@@ -25,7 +25,7 @@ public class AccountHandler {
     }
 
     public User getCurrentUserObject(){
-        return user;
+        return currentUserObject;
     }
 
     public int login(UI ui, Display d){
@@ -42,8 +42,8 @@ public class AccountHandler {
         {   
             d.successfulLogin(username);
             currentUser = new Login(username, password);
-            user = new User(currentUser);
-            rh.setUserReviews(user);
+            currentUserObject = new User(currentUser);
+            currentUserObject = getCompleteUser(currentUserObject);
             return 1;
         } else {
             d.invalidLogin();
@@ -101,7 +101,8 @@ public class AccountHandler {
     }
 
     public void followUser(User friendUser){
-        user.addToFollowlist(friendUser);
+        currentUserObject.addToFollowlist(friendUser);
+        dbh.addFriend(ah.getCurrentUserObject().getLogin(), friendUser.getLogin());
     }
 
     public User getUserPublicSharables(User user){
@@ -113,22 +114,37 @@ public class AccountHandler {
 
     public User searchUser(String username, UI ui, Display d) {
         ArrayList<String> results = dbh.searchUsers(username);
+        ArrayList<User> users = new ArrayList<User>();
+        for(String usernameInfo : results){
+            Login login = new Login(usernameInfo, null);
+            User user = new User(login);
+            users.add(user);
+        }
 
         int totalPages = (int) Math.ceil((double) results.size() / itemsPerPage);
         int currentPage = 1;
 
         
-        User selected = selectUser(results, currentPage, totalPages, ui, d);
+        User selected = selectUser(users, currentPage, totalPages, ui, d);
         return selected;
     }
 
-    private User selectUser(ArrayList<String> searchResults, int currentPage, int totalPages, UI ui, Display display) {
+    public User listUsers(ArrayList<User> users, UI ui, Display d){
+        int totalPages = (int) Math.ceil((double) users.size() / itemsPerPage);
+        int currentPage = 1;
+        
+        User selected = selectUser(users, currentPage, totalPages, ui, d);
+        return selected;
+    }
+
+    private User selectUser(ArrayList<User> searchResults, int currentPage, int totalPages, UI ui, Display display) {
         display.displayUserSearchResult(searchResults, currentPage, totalPages);
         int option = ui.getInt();
-        String selected = null;
+        User selected = null;
         while (selected == null && !((option == (itemsPerPage + 1) && currentPage == 1) || (option == (itemsPerPage + 2) && currentPage == totalPages))) {
             if (option >= 1 && option <= itemsPerPage) {
                 selected = searchResults.get(((currentPage - 1) * itemsPerPage) + (option - 1));
+                selected = getCompleteUser(selected);
             } else if (option == (itemsPerPage + 1) && currentPage != 1) {
                 currentPage--;
                 display.displayUserSearchResult(searchResults, currentPage, totalPages);
@@ -141,10 +157,32 @@ public class AccountHandler {
                 display.invalidOption();
             }
         }
-        Login login = new Login(selected, "");
-        User selectedUser = new User(login);
-        rh.setUserReviews(selectedUser);
-        //p.setUserPlaylist(selectedUser)
-        return selectedUser;
+        
+        return selected;
+        
     }
+
+    public void setFollowing(User user) {
+        ArrayList<User> followingList = new ArrayList<User>(); 
+
+        ArrayList<String> followingInfo = dbh.getFriendsList(user.getLogin()); 
+        if (!followingInfo.isEmpty()) {
+            for (String username : followingInfo) {
+                Login friendLogin = new Login(username, null);
+                User friendUser = new User(friendLogin);
+                followingList.add(friendUser);
+            }
+        }
+
+        user.setFollowing(followingList);
+    }
+
+    private User getCompleteUser(User user){
+        rh.setUserReviews(user);
+        setFollowing(user);
+        return user;
+    }
+
 }
+
+

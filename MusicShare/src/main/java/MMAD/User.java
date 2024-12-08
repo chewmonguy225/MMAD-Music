@@ -59,5 +59,13 @@ public class User {
     public void addReview(Review review){
         reviews.add(review);
     }
+
+    public void setFollowing(ArrayList<User> followList){
+        this.followList = followList;
+    }
+
+    public ArrayList<User> getFollowingList(){
+        return followList;
+    }
 }
 

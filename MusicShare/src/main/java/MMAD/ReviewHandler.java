@@ -35,30 +35,30 @@ public class ReviewHandler {
     }
 
     public void setUserReviews(User user) {
-        ArrayList<Review> userReviews = new ArrayList<>(); 
+        ArrayList<Review> userReviews = new ArrayList<>();
 
         Login login = user.getLogin(); // Create a Login object
         ArrayList<String> reviewIDs = dbh.getUserReviews(login); // Fetch review IDs for the user
-        if(!reviewIDs.isEmpty()){
-        for (String reviewID : reviewIDs) {
-            // Extract letters and numbers from reviewID
-            String[] parts = separateLettersAndNumbers(reviewID);
-            String reviewType = parts[0]; // Letters (s, a, ar, etc.)
-            int itemID = Integer.parseInt(parts[1]); // Numeric part of the ID
+        if (!reviewIDs.isEmpty()) {
+            for (String reviewID : reviewIDs) {
+                // Extract letters and numbers from reviewID
+                String[] parts = separateLettersAndNumbers(reviewID);
+                String reviewType = parts[0]; // Letters (s, a, ar, etc.)
+                int itemID = Integer.parseInt(parts[1]); // Numeric part of the ID
 
-            Item item = null;
-            switch(reviewType){
-                case "s":
-                    item = ih.createSongFromID(itemID);
-                    break;
-                case "al":
-                    break;
-                case "ar":
-                    break;
+                Item item = null;
+                switch (reviewType) {
+                    case "s":
+                        item = ih.createSongFromID(itemID);
+                        break;
+                    case "al":
+                        break;
+                    case "ar":
+                        break;
+                }
+                userReviews.add(getReview(user, item));
+
             }
-            userReviews.add(getReview(user, item));
-            
-        }
         }
 
         user.setReviews(userReviews);
@@ -70,7 +70,18 @@ public class ReviewHandler {
         return review;
     }
 
-    public void displayReviews(ArrayList <Review> theReviews, UI ui, Display display){
+    public ArrayList<Review> getItemReviews(Item item) {
+        item.setID(dbh.getSongID((Song) item));
+        ArrayList<Review> theReviews = new ArrayList<Review>();
+        ArrayList<String> reviewInfo = dbh.getItemReviews(item);
+        for (String username : reviewInfo) {
+            User user = new User(new Login(username, null));
+            theReviews.add(getReview(user, item));
+        }
+        return theReviews;
+    }
+
+    public void displayReviews(ArrayList<Review> theReviews, UI ui, Display display) {
         int totalPages = (int) Math.ceil((double) theReviews.size() / itemsPerPage);
         int currentPage = 1;
 
@@ -85,11 +96,12 @@ public class ReviewHandler {
                 currentPage++;
                 display.displayReviewsResult(theReviews, currentPage, totalPages);
                 option = ui.getInt();
-            }else{
+            } else {
                 display.invalidOption();
             }
         }
     }
+
     // Helper method to separate letters and numbers in the reviewID
     private String[] separateLettersAndNumbers(String reviewID) {
         Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)$");
@@ -103,6 +115,5 @@ public class ReviewHandler {
 
         return new String[] { "", "" }; // Default values if no match is found
     }
-
 
 }

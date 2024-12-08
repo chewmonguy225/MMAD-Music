@@ -48,13 +48,7 @@ public class Driver {
     // //songOptionMenu(ih.getSelectedSong());
     // System.out.println(option);
 
-   Song song = new Song(26, null, null, null, null);
-   Login login = new Login("m", null);
-    ArrayList<String> b =  qe.getReview(login, song);
-  
-    for(String a: b ){
-      System.out.println(a);
-    }
+   qe.unfollow("m", "mickael");
   }
 
 
