@@ -9,6 +9,7 @@ public class ItemHandler {
     UI ui = UI.access();
     Display display = Display.access();
     private final int itemsPerPage = 5;
+    private final int intialLimit = 25;
 
 
     private ItemHandler() {
@@ -53,8 +54,8 @@ public class ItemHandler {
 
     public Song createSongFromID(int id) {
         ArrayList<String> songInfo = dbh.getSong(id);
-        Artist artist = new Artist(Integer.parseInt(songInfo.get(5)), songInfo.get(6), songInfo.get(3));
-        Album album = new Album(Integer.parseInt(songInfo.get(7)), songInfo.get(8), songInfo.get(4), artist);
+        Artist artist = createArtistFromID(Integer.parseInt(songInfo.get(3)));
+        Album album = createAlbumFromID(Integer.parseInt(songInfo.get(4)));
         Song song = new Song(id, songInfo.get(1), songInfo.get(2), artist, album);
         return song;
         // use song id to get all other song information.
@@ -62,42 +63,99 @@ public class ItemHandler {
         // and return a song object
     }
 
-    public Song searchSong(String songTitle) {
-        ArrayList<Song> results = api.searchSong(songTitle);
+    public Album createAlbumFromID(int id) {
+        System.out.println(id);
+        ArrayList<String> albumInfo = dbh.getAlbum(id);
+        System.out.println(albumInfo);
+        Artist artist = createArtistFromID(Integer.parseInt(albumInfo.get(3)));
+        Album album = new Album(Integer.parseInt(albumInfo.get(0)), albumInfo.get(1), albumInfo.get(2), artist);
+        return album;
+    }
 
-        int totalPages = (int) Math.ceil((double) results.size() / itemsPerPage);
+    public Artist createArtistFromID(int id) {
+        ArrayList<String> artistInfo = dbh.getArtist(id);
+        Artist artist = new Artist(Integer.parseInt(artistInfo.get(0)), artistInfo.get(1), artistInfo.get(2));
+        return artist;
+    }
+
+    public Song searchSong(String songTitle) {
+        ArrayList<Song> searchResults = api.searchSong(songTitle, intialLimit);
+
+        int totalPages = (int) Math.ceil((double) searchResults.size() / itemsPerPage);
         int currentPage = 1;
 
-        Song selected = selectSong(results, currentPage, totalPages);
+        display.displaySearchResult(searchResults, currentPage, totalPages);
+        int option = ui.getInt();
+        Song selected = null;
+
+        while (selected == null && !((option == 6 && (currentPage == 1 || searchResults.isEmpty())))) {
+            if (option >= 1 && option <= itemsPerPage) {
+                selected = searchResults.get(((currentPage - 1) * itemsPerPage) + (option - 1));
+            } else if (option == (itemsPerPage + 1) && currentPage != 1) {
+                currentPage--;
+                display.displaySearchResult(searchResults, currentPage, totalPages);
+                option = ui.getInt();
+            } else if (option == (itemsPerPage + 2) && currentPage != totalPages) {
+                currentPage++;
+                display.displaySearchResult(searchResults, currentPage, totalPages);
+                option = ui.getInt();
+            }else if(option == 7 && currentPage == totalPages){
+                searchResults = api.searchSong(songTitle, (searchResults.size() + 25));
+                totalPages = (int) Math.ceil((double) searchResults.size() / itemsPerPage);
+            }
+            else{
+                display.invalidOption();
+            }
+        }
+
         return selected;
     }
 
     public Album searchAlbum(String albumTitle) {
-        ArrayList<Album> results = api.searchAlbum(albumTitle);
+        ArrayList<Album> searchResults = api.searchAlbum(albumTitle);
 
-        int totalPages = (int) Math.ceil((double) results.size() / itemsPerPage);
+        int totalPages = (int) Math.ceil((double) searchResults.size() / itemsPerPage);
         int currentPage = 1;
 
-        Album selected = selectAlbum(results, currentPage, totalPages);
+        display.displaySearchResult(searchResults, currentPage, totalPages);
+        int option = ui.getInt();
+        Album selected = null;
+
+        while (selected == null && !((option == 6 && (currentPage == 1 || searchResults.isEmpty())))) {
+            if (option >= 1 && option <= itemsPerPage) {
+                selected = searchResults.get(((currentPage - 1) * itemsPerPage) + (option - 1));
+            } else if (option == (itemsPerPage + 1) && currentPage != 1) {
+                currentPage--;
+                display.displaySearchResult(searchResults, currentPage, totalPages);
+                option = ui.getInt();
+            } else if (option == (itemsPerPage + 2) && currentPage != totalPages) {
+                currentPage++;
+                display.displaySearchResult(searchResults, currentPage, totalPages);
+                option = ui.getInt();
+            }else if(option == 7 && currentPage == totalPages){
+                searchResults = api.searchAlbum(albumTitle, (searchResults.size() + 25));
+                totalPages = (int) Math.ceil((double) searchResults.size() / itemsPerPage);
+            }
+            else{
+                display.invalidOption();
+            }
+        }
+
         return selected;
     }
 
     public Artist searchArtist(String artistName) {
-        ArrayList<Artist> results = api.searchArtist(artistName);
+        ArrayList<Artist> searchResults = api.searchArtist(artistName);
 
-        int totalPages = (int) Math.ceil((double) results.size() / itemsPerPage);
+        int totalPages = (int) Math.ceil((double) searchResults.size() / itemsPerPage);
         int currentPage = 1;
 
-        Artist selected = (Artist) selectItem(results, currentPage, totalPages);
-        return selected;
-    }
-
-    private Song selectSong(ArrayList<Song> searchResults, int currentPage, int totalPages) {
         display.displaySearchResult(searchResults, currentPage, totalPages);
         int option = ui.getInt();
-        Song selected = null;
-        while (selected == null && !((option == 6 && currentPage == 1) || (option == 7 && currentPage == totalPages))) {
-            if (option >= 1 && option <= 5) {
+        Artist selected = null;
+
+        while (selected == null && !((option == 6 && (currentPage == 1 || searchResults.isEmpty())))) {
+            if (option >= 1 && option <= itemsPerPage) {
                 selected = searchResults.get(((currentPage - 1) * itemsPerPage) + (option - 1));
             } else if (option == (itemsPerPage + 1) && currentPage != 1) {
                 currentPage--;
@@ -107,7 +165,11 @@ public class ItemHandler {
                 currentPage++;
                 display.displaySearchResult(searchResults, currentPage, totalPages);
                 option = ui.getInt();
-            }else{
+            }else if(option == 7 && currentPage == totalPages){
+                searchResults = api.searchArtist(artistName, (searchResults.size() + 25));
+                totalPages = (int) Math.ceil((double) searchResults.size() / itemsPerPage);
+            }
+            else{
                 display.invalidOption();
             }
         }
@@ -115,50 +177,4 @@ public class ItemHandler {
         return selected;
     }
 
-    private Album selectAlbum(ArrayList<Album> searchResults, int currentPage, int totalPages) {
-        display.displaySearchResult(searchResults, currentPage, totalPages);
-        int option = ui.getInt();
-        Album selected = null;
-        while (selected == null && !((option == 6 && currentPage == 1) || (option == 7 && currentPage == totalPages))) {
-            if (option >= 1 && option <= 5) {
-                selected = searchResults.get(((currentPage - 1) * itemsPerPage) + (option - 1));
-            } else if (option == (itemsPerPage + 1) && currentPage != 1) {
-                currentPage--;
-                display.displaySearchResult(searchResults, currentPage, totalPages);
-                option = ui.getInt();
-            } else if (option == (itemsPerPage + 2) && currentPage != totalPages) {
-                currentPage++;
-                display.displaySearchResult(searchResults, currentPage, totalPages);
-                option = ui.getInt();
-            }else{
-                display.invalidOption();
-            }
-        }
-
-        return selected;
-    }
-
-    private Item selectItem(ArrayList<? extends Item> searchResults, int currentPage, int totalPages) {
-        display.displaySearchResult(searchResults, currentPage, totalPages); 
-        int option = ui.getInt();
-        Item selected = null;
-        
-        while (selected == null && !((option == 6 && currentPage == 1) || (option == 7 && currentPage == totalPages))) {
-            if (option >= 1 && option <= 5) { // Valid options for selection
-                selected = searchResults.get(((currentPage - 1) * itemsPerPage) + (option - 1)); 
-            } else if (option == (itemsPerPage + 1) && currentPage != 1) { // Option to go to the previous page
-                currentPage--;
-                display.displaySearchResult(searchResults, currentPage, totalPages);
-                option = ui.getInt();
-            } else if (option == (itemsPerPage + 2) && currentPage != totalPages) { // Option to go to the next page
-                currentPage++;
-                display.displaySearchResult(searchResults, currentPage, totalPages);
-                option = ui.getInt();
-            } else {
-                display.invalidOption();
-            }
-        }
-    
-        return selected;
-    }
 }

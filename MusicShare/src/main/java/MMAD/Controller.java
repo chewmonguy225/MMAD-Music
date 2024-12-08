@@ -174,8 +174,8 @@ public class Controller {
         return -1;
     }
 
-    private static int routePlaylist() {// routes all playlist requests 
-        int option = ph.displayPlaylist(ah.getCurrentUserObject().getPlaylist(), ui, d); 
+    private static int routePlaylist() {// routes all playlist requests
+        int option = ph.displayPlaylist(ah.getCurrentUserObject().getPlaylist(), ui, d);
         while (option == -2) {
             option = ph.displayPlaylist(ah.getCurrentUserObject().getPlaylist(), ui, d);
         }
@@ -414,37 +414,102 @@ public class Controller {
 
     private void routeReview() {
         d.reviewOptionMenu();
+        Review selectedReview = null;
         int option = ui.getInt();
         switch (option) {
             case 0:
                 exit();
                 break;
             case 1: // view Community Review
-                rh.displayReviews(rh.getRecentReviews(), ui, d);
+                selectedReview = rh.displayReviews(rh.getRecentReviews(), ui, d);
+                if (selectedReview == null) {
+                    RouteHome();
+                }else {
+                    othersReviewOptions(selectedReview, 1);
+                }
                 break;
             case 2: // view following Reviews
-                rh.displayReviews( rh.getFollowingReviews(ah.getCurrentUserObject()), ui, d);
+                selectedReview = rh.displayReviews(rh.getFollowingReviews(ah.getCurrentUserObject()), ui, d);
+                if (selectedReview == null) {
+                    RouteHome();
+                } else {
+                    othersReviewOptions(selectedReview, 2);
+                }
                 break;
             case 3: // view own reviews
-                rh.displayReviews(ah.getCurrentUserObject().getReviews(), ui, d);
+                selectedReview = rh.displayReviews(ah.getCurrentUserObject().getReviews(), ui, d);
+                if (selectedReview == null) {
+                    RouteHome();
+                } else {
+                    ownReviewOptions(selectedReview);
+                }
                 break;
             case 4: // write review
                 routeSearch();
                 option = -1;
                 break;
             case 5: // deleteReview
-                Review review = rh.displayReviews(ah.getCurrentUserObject().getReviews(), ui, d);
-                rh.deleteReview(review);
-                option = -1;
-                break;
-            case 6: //
-                routeSearch();
-                option = -1;
                 break;
             default:
                 d.invalidOption();
                 routeReview();
                 break;
         }
+
     }
+
+    private void ownReviewOptions(Review selectedReview) {
+        d.displayOwnReviewOptions();
+        int option = ui.getInt();
+        switch (option) {
+            case 1:// edit review
+                rh.deleteReview(selectedReview);
+                writeReview(selectedReview.getItem());
+            case 2:// delete review
+                if (rh.deleteReview(selectedReview)) {
+                    d.successfulDeleteReview(selectedReview);
+                }
+                ;
+            case 3: // go back
+                routeReview();
+            case 4:// go home
+                RouteHome();
+            default:
+                d.invalidOption();
+                routeReview();
+                break;
+        }
+    }
+
+    private void othersReviewOptions(Review selectedReview, int type) {
+        d.displayOthersReviewOptions(type);
+        int option = ui.getInt();
+        if(type == 1){
+            option++;
+        }
+        int update;
+        switch (option) {
+            case 0:
+                exit();
+                break;
+            case 1: // followUser
+                if(type == 1){
+                    exit();
+                }
+                update = ah.followUser(selectedReview.getAuthor());
+                d.followUpdate(selectedReview.getAuthor(), update);
+            case 2:// unfollow
+                update = ah.unfollowUser(selectedReview.getAuthor());
+                d.followUpdate(selectedReview.getAuthor(), update);
+            case 3: // go back
+                routeReview();
+            case 4:// go home
+                RouteHome();
+            default:
+                d.invalidOption();
+                othersReviewOptions(selectedReview, type);
+                break;
+        }
+    }
+
 }

@@ -177,9 +177,11 @@ public class Display {
 
     public void displaySearchResult(ArrayList<? extends Item> Items, int currentPage, int totalPages) {
         nextScreen();
-        int startIndex = ((currentPage - 1) * 5);
-
-        if (Items.get(0) instanceof Song) {
+        int startIndex = ((currentPage - 1) * itemsPerPage);
+        if(Items.isEmpty()){
+            System.out.println("[!] There are no items to display");
+            split();
+        }else if (Items.get(0) instanceof Song) {
             for (int i = 0; i < 5; i++) {
                 Song song = (Song) Items.get(startIndex + i);
                 System.out.println("[" + (i + 1) + "] " + song.getName() + " by "
@@ -202,11 +204,8 @@ public class Display {
         if (currentPage == 1 && totalPages == 1 || Items.isEmpty()) {
             System.out.println("[" + 6 + "] Search different item");
         }else if (currentPage == 1) {
-            System.out.println("[" + 6 + "] Go Home");
+            System.out.println("[" + 6 + "] Search different item");
             System.out.println("[" + 7 + "] Next page");
-        } else if (currentPage == totalPages) {
-            System.out.println("[" + 6 + "] Previous page");
-            System.out.println("[" + 7 + "] Search different item");
         } else {
             System.out.println("[" + 6 + "] Previous page");
             System.out.println("[" + 7 + "] Next page");
@@ -251,7 +250,7 @@ public class Display {
         int startIndex = ((currentPage - 1) * itemsPerPage);
 
         if (theReviews.isEmpty()) {
-            System.out.println("[!] There are reviews to display");
+            System.out.println("[!] There are no reviews to display");
             split();
 
         } else if((currentPage == totalPages) && (theReviews.size() % itemsPerPage != 0)){
@@ -282,7 +281,7 @@ public class Display {
     public void reviewOptionMenu() {
         nextScreen();
         System.out.println("Please enter a number 0-3:\n");
-         System.out.println("[2] View community reviews");
+         System.out.println("[1] View community reviews");
         System.out.println("[2] View reviews made by users you follow");
         System.out.println("[3] View own reviews");
         System.out.println("[4] Write Review");
@@ -310,5 +309,50 @@ public class Display {
         System.out.println("[6] Go Home");
     }
 
+    public void successfulDeleteReview(Review review){
+        split();
+        System.out.println("Review of " + review.getItem().getName() + " has been deleted");
+    }
 
+    public void displayOwnReviewOptions(){
+        nextScreen();
+        System.out.println("[" + 1 + "] Edit review");
+        System.out.println("[" + 2 + "] delete review");
+        System.out.println("[" + 3 + "] Go Back");
+        System.out.println("[" + 2 + "] Go Home");
+    }
+
+    public void displayOthersReviewOptions(int type){
+        nextScreen();
+        if(type == 1){
+            System.out.println("[1] Follow Author");
+            System.out.println("[2] Unfollow Author");
+            System.out.println("[3] Write your own review of the item");
+            System.out.println("[4] Go Back");
+            System.out.println("[5] Go Home");
+        }else{
+            System.out.println("[1] Unfollow Author");
+            System.out.println("[2] Write your own review of the item");
+            System.out.println("[3] Go Back");
+            System.out.println("[4] Go Home");
+        }
+
+    }
+
+    public void followUpdate(User user, int type){
+        split();
+        switch (type) {
+            case 1:
+                System.out.println("You are now folowing " + user.getUsername());
+                break;
+            case 2:
+                System.out.println("You are already folowing " + user.getUsername());
+                break;
+            case 3:
+                System.out.println("This user doesn't exist. oooohhh scary");
+                break;
+            default:
+                break;
+        }
+    }
 }

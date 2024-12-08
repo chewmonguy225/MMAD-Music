@@ -106,13 +106,21 @@ public class AccountHandler {
         return false;
     }
 
-    public void followUser(User friendUser){
-        currentUserObject.addToFollowlist(friendUser);
-        dbh.addFriend(ah.getCurrentUserObject().getLogin(), friendUser.getLogin());
+    // @return 1 if the friend is added succesfully. Return 2 if the friend has already been added. Return 3 if the 'friend' does not exist. Return -1 if there is an error.
+    public int followUser(User friendUser){
+        int response = dbh.addFriend(ah.getCurrentUserObject().getLogin(), friendUser.getLogin());
+        if(response == 1){
+            currentUserObject.addToFollowlist(friendUser);
+        }
+        return response;
     }
 
-    public void unfollowUser(User friendUser){
-        currentUserObject.removeFromFollowList(friendUser);
+    public int unfollowUser(User friendUser){
+        int response = dbh.unfollowFriend(ah.getCurrentUserObject().getLogin(), friendUser.getLogin());
+        if(response == 2){
+            currentUserObject.addToFollowlist(friendUser);
+        }
+        return response;
     }
 
     public User getUserPublicSharables(User user){

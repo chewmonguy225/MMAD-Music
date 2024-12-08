@@ -51,6 +51,32 @@ public class DBHandler {
         }
     }
 
+    /**
+    * Adds a new friend relationship into the database after confirming that the user exists.
+    *
+    * @param login1 The user's login object.
+    * @param login2 The friend's login object.
+    * @return 1 if the friend is unfollowed succesfully. Return 2 if the friend is not even followed. Return 3 if the 'friend' does not exist. Return -1 if there is an error.
+    */
+    public int unfollowFriend(Login login1, Login login2)
+    {
+        try {
+            if(! queryExecutor.checkUserExists(login2.getUsername())){
+                return 3;
+            }
+            else if (!queryExecutor.checkAlreadyAFriend(login1.getUsername(), login2.getUsername())) {
+                return 2;
+            }
+            else {
+                queryExecutor.unfollow(login1.getUsername(), login2.getUsername());
+                return 1;
+            }
+        } 
+        catch (Exception e) {
+            return -1;
+        }
+    }
+
 
     
 
@@ -89,6 +115,15 @@ public class DBHandler {
     public int getAlbumID(Album album){
         try{
             return queryExecutor.getAlbumID(album);
+        }
+        catch(Exception e){
+            return -1;
+        }
+    }
+
+    public int getArtistID(Artist artist){
+        try{
+            return queryExecutor.getArtistID(artist);
         }
         catch(Exception e){
             return -1;
@@ -144,8 +179,8 @@ public class DBHandler {
      * 
      * @param id The song's id in the database
      * @return A string array list containing the following info in each index:
-     *          0: songId 1: source_id 2: songName 3: artistName 4: albumName 5: artistId 6: artistSrcId 7: albumId 8: albumSrcId 
-     *          Returns empty array list if error occurs
+     *         0: songId 1: source_id 2: songName 3: artist_id 4: album_id
+     *         Returns empty array list if error occurs
      */
     public ArrayList<String> getSong(int id){
         return queryExecutor.getSong(id);
@@ -168,9 +203,7 @@ public class DBHandler {
      * Returns a string array list containing album information
      * 
      * @param id The album's id in the database
-     * @return A string array list containing the following info in each index:
-     *          0: albumId 1: source_id 2: albumName 3: artistName 4: artistId 5: artistSrcId
-     *          Returns empty array list if error occurs
+     * @return A string array list containing the following info in each index: 0: albumId 1: source_id 2: albumName 3: artistId Returns empty array list if error occurs
      */
     public ArrayList<String> getAlbum(int id){
         return queryExecutor.getAlbum(id);

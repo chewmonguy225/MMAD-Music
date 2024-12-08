@@ -91,5 +91,34 @@ public class User {
     public ArrayList<User> getFollowerList(){
         return followersList;
     }
+
+    public boolean removeReview(Review review) {
+        Item itemToRemove = review.getItem();
+        
+        String reviewID = "";
+        if(itemToRemove instanceof Song){
+            reviewID = "s" + itemToRemove.getID();
+        }else if(itemToRemove instanceof Album){
+            reviewID = "al" + itemToRemove.getID();
+        }else if(itemToRemove instanceof Album){
+            reviewID = "ar" + itemToRemove.getID();
+        }
+        for (Review reviewed : reviews) {
+            String reviewedID = "";
+            if(itemToRemove instanceof Song){
+                reviewedID = "s" + itemToRemove.getID();
+            }else if(itemToRemove instanceof Album){
+                reviewedID = "al" + itemToRemove.getID();
+            }else if(itemToRemove instanceof Album){
+                reviewedID = "ar" + itemToRemove.getID();
+            }
+
+            if (reviewID.equals(reviewedID)) {
+                reviews.remove(reviewed);
+                return true;
+            }
+        }
+        return false;
+    }
 }
 

@@ -210,9 +210,9 @@ public class QueryExecutor {
     public boolean checkAlbumInDB(Album album) {
         try {
             PreparedStatement statement = sqlConnection
-                    .prepareStatement("SELECT * FROM album WHERE name= ? AND artist= ?;");
+                    .prepareStatement("SELECT * FROM album WHERE name= ? AND artist_id= ?;");
             statement.setString(1, album.getName());
-            statement.setString(2, album.getArtist().getName());
+            statement.setInt(2, getArtistID(album.getArtist()));
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } catch (SQLException ex) {
@@ -250,11 +250,11 @@ public class QueryExecutor {
     public int addSongToDB(Song song) {
         try {
             PreparedStatement statement = sqlConnection
-                    .prepareStatement("INSERT INTO song (source_id, name, artist, album) VALUES (?, ?, ?, ?);");
+                    .prepareStatement("INSERT INTO song (source_id, name, artist_id, album_id) VALUES (?, ?, ?, ?);");
             statement.setString(1, song.getSourceID());
             statement.setString(2, song.getName());
-            statement.setString(3, song.getArtist().getName());
-            statement.setString(4, song.getAlbum().getName());
+            statement.setInt(3, getArtistID(song.getArtist()));
+            statement.setInt(4, getAlbumID(song.getAlbum()));
             int rowsAffected = statement.executeUpdate();
 
             PreparedStatement statement2 = sqlConnection.prepareStatement("SELECT id FROM song WHERE source_id= ?;");
@@ -287,10 +287,28 @@ public class QueryExecutor {
 
     }
 
-    public int getSongID(Song song) {
+    public int getAlbumID(Album album) {
         try {
-            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM song WHERE source_id=?;");
-            statement.setString(1, song.getSourceID());
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM album WHERE source_id=?;");
+            statement.setString(1, album.getSourceID());
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("id");
+            } else {
+                return -1;
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return -1;
+        }
+
+    }
+
+    public int getArtistID(Artist artist) {
+        try {
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM artist WHERE source_id=?;");
+            statement.setString(1, artist.getSourceID());
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 return resultSet.getInt("id");
@@ -315,10 +333,11 @@ public class QueryExecutor {
     public boolean addAlbumToDB(Album album) {
         try {
             PreparedStatement statement = sqlConnection
-                    .prepareStatement("INSERT INTO album (source_id, name, artist) VALUES (?, ?, ?);");
+                    .prepareStatement("INSERT INTO album (source_id, name, artist_id) VALUES (?, ?, ?);");
             statement.setString(1, album.getSourceID());
             statement.setString(2, album.getName());
-            statement.setString(3, album.getArtist().getName());
+            System.out.println(getArtistID(album.getArtist()));
+            statement.setInt(3, getArtistID(album.getArtist()));
             int rowsAffected = statement.executeUpdate();
             return rowsAffected == 1;
         } catch (SQLException ex) {
@@ -420,8 +439,7 @@ public class QueryExecutor {
      * 
      * @param id The song's id in the database
      * @return A string array list containing the following info in each index:
-     *         0: songId 1: source_id 2: songName 3: artistName 4: albumName 5:
-     *         artistId 6: artistSrcId 7: albumId 8: albumSrcId
+     *         0: songId 1: source_id 2: songName 3: artist_id 4: album_id
      *         Returns empty array list if error occurs
      */
     public ArrayList<String> getSong(int id) {
@@ -435,24 +453,9 @@ public class QueryExecutor {
                 songInfo.add(id + "");
                 songInfo.add(resultSet.getString("source_id"));
                 songInfo.add(resultSet.getString("name"));
-                songInfo.add(resultSet.getString("artist"));
-                songInfo.add(resultSet.getString("album"));
+                songInfo.add(resultSet.getString("artist_id"));
+                songInfo.add(resultSet.getString("album_id"));
             }
-            statement = sqlConnection.prepareStatement("SELECT * FROM artist WHERE name= ?;");
-            statement.setString(1, songInfo.get(3));
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                songInfo.add(resultSet.getInt("id") + "");
-                songInfo.add(resultSet.getString("source_id"));
-            }
-            statement = sqlConnection.prepareStatement("SELECT * FROM album WHERE name= ?;");
-            statement.setString(1, songInfo.get(4));
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                songInfo.add(resultSet.getInt("id") + "");
-                songInfo.add(resultSet.getString("source_id"));
-            }
-
             return songInfo;
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -492,8 +495,7 @@ public class QueryExecutor {
      * 
      * @param id The album's id in the database
      * @return A string array list containing the following info in each index:
-     *         0: albumId 1: source_id 2: albumName 3: artistName 4: artistId 5:
-     *         artistSrcId
+     *         0: albumId 1: source_id 2: albumName 3: artistId 
      *         Returns empty array list if error occurs
      */
     public ArrayList<String> getAlbum(int id) {
@@ -507,13 +509,7 @@ public class QueryExecutor {
                 albumInfo.add(id + "");
                 albumInfo.add(resultSet.getString("source_id"));
                 albumInfo.add(resultSet.getString("name"));
-            }
-            statement = sqlConnection.prepareStatement("SELECT * FROM artist WHERE name= ?;");
-            statement.setString(1, albumInfo.get(3));
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                albumInfo.add(resultSet.getString("id"));
-                albumInfo.add(resultSet.getString("source_id"));
+                albumInfo.add(resultSet.getString("artist_id"));
             }
             return albumInfo;
         } catch (SQLException ex) {
