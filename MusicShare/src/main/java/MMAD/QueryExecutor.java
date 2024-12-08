@@ -719,6 +719,18 @@ public class QueryExecutor {
             return new ArrayList<String>();
         }
     }
+
+    public boolean changePassword(Login login){
+        try{
+            PreparedStatement statement = sqlConnection.prepareStatement("UPDATE user SET password = ? WHERE username = ?");
+            statement.setString(1, login.getPassword());
+            statement.setString(2, login.getUsername());
+            statement.executeUpdate();// something wrong with this statement
+            return true;
+        } catch (SQLException ex){
+            return false;
+        }
+    }
     
     public ArrayList<String> searchUsers(String usernameToSearch) {
         try {

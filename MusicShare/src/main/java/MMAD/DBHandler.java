@@ -290,6 +290,14 @@ public class DBHandler {
         return queryExecutor.getPlaylist(login);
     }
 
+    public boolean changePassword(Login login){
+        try{
+            return queryExecutor.changePassword(login);
+        } catch (Exception e){
+            return false;
+        }
+    }
+
 
     /**
      * Creates a new review in the database

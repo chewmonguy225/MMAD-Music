@@ -32,7 +32,7 @@ public class User {
     }
 
     public ArrayList<Item> getReviewedItems(){
-        ArrayList<Item> reviewedItems = null;
+        ArrayList<Item> reviewedItems = new ArrayList<>();
 
         for(int i = 0; i < reviews.size(); i++){
             reviewedItems.add(reviews.get(i).getItem());

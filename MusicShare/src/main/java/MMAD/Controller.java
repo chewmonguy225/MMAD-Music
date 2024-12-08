@@ -127,10 +127,15 @@ public class Controller {
                     break;
                 case "account settings":
                     option = accountSettings();
-                    if (option == 2)
+                    if (option == 2){
                         currentMenu = "login or signup";
-                    c.routeLogin();
-                    currentMenu = "exit";
+                        c.routeLogin();
+                    }
+                    if (option == 1){
+                        currentMenu = "home";
+                    } else {
+                        currentMenu = "exit";
+                    }
                     break;
                 case "logout":
                     option = logout();
@@ -238,7 +243,7 @@ public class Controller {
             routeSearch();
         } else {
             ih.addAlbumToDB(selected);
-            c.albumOptionMenu(selected);
+            albumOptionMenu(selected);
         }
         return option;
     }

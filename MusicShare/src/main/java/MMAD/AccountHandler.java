@@ -84,7 +84,11 @@ public class AccountHandler {
     public int changePassword(UI ui, Display d){
         d.changePassword();
         String newPass = ui.getString();
-        currentUser = new Login(currentUser.getUsername(), newPass);
+        Login login = new Login(currentUser.getUsername(), newPass);
+        if(dbh.changePassword(login)){
+            currentUser = new Login(currentUser.getUsername(), newPass);
+            return 1;
+        }
         //query to change password - return 
         return -1;
     }

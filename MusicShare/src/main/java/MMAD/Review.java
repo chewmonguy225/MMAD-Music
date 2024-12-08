@@ -39,6 +39,10 @@ public class Review {
         this.rating = rating;
     }
 
+    public String getId(){
+        return id;
+    }
+
     /*
      * returns the reviewed item, does not matter if it was a song, abum, or artist
      */
