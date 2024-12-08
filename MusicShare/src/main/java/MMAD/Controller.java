@@ -127,11 +127,11 @@ public class Controller {
                     break;
                 case "account settings":
                     option = accountSettings();
-                    if (option == 2){
+                    if (option == 2) {
                         currentMenu = "login or signup";
                         c.routeLogin();
                     }
-                    if (option == 1){
+                    if (option == 1) {
                         currentMenu = "home";
                     } else {
                         currentMenu = "exit";
@@ -174,9 +174,11 @@ public class Controller {
         return -1;
     }
 
-    private static int routePlaylist() {// routes all playlist requests
-        int option = ph.displayPlaylist(ui, d);
-
+    private static int routePlaylist() {// routes all playlist requests 
+        int option = ph.displayPlaylist(ah.getCurrentUserObject().getPlaylist(), ui, d); 
+        while (option == -2) {
+            option = ph.displayPlaylist(ah.getCurrentUserObject().getPlaylist(), ui, d);
+        }
         return option;
 
     }
@@ -344,14 +346,15 @@ public class Controller {
                 routeSearch();
                 break;
             case 2:
-                // unfollow user
+                ah.unfollowUser(user);
                 break;
-            case 3:
+            case 3: // view review
                 ArrayList<Review> thReviews = user.getReviews();
                 rh.displayReviews(thReviews, ui, d);
                 break;
-            case 4:
-                // display playlist
+            case 4: // displayPlaylist
+                Playlist playlist = ph.getPlaylist(user);
+                ph.displayPlaylist(playlist, ui, d);
                 break;
             case 5:
                 routeUserSearch();
@@ -379,6 +382,7 @@ public class Controller {
 
     private void routeFriends() {
         d.friendOptionMenu();
+        User selected;
         int option = ui.getInt();
         switch (option) {
             case 0:
@@ -386,19 +390,24 @@ public class Controller {
                 break;
             case 1:
                 ArrayList<User> following = ah.currentUserObject.getFollowingList();
-                System.out.print(following);
-                User selected = ah.listUsers(following, ui, d);
+                selected = ah.listUsers(following, ui, d);
                 userOptionMenu(selected);
                 option = -1;
                 break;
             case 2:
-                routeAlbumSearch();
-                routeSearch();
+                // view followers
+                ArrayList<User> followers = ah.currentUserObject.getFollowerList();
+                selected = ah.listUsers(followers, ui, d);
+                userOptionMenu(selected);
                 option = -1;
                 break;
             case 3:
                 routeUserSearch();
                 option = -1;
+                break;
+            default:
+                d.invalidOption();
+                routeFriends();
                 break;
         }
     }
@@ -410,26 +419,32 @@ public class Controller {
             case 0:
                 exit();
                 break;
-            case 1:
-                rh.getRecentReviews();
+            case 1: // view Community Review
                 rh.displayReviews(rh.getRecentReviews(), ui, d);
                 break;
-            case 2:
+            case 2: // view following Reviews
+                rh.displayReviews( rh.getFollowingReviews(ah.getCurrentUserObject()), ui, d);
+                break;
+            case 3: // view own reviews
                 rh.displayReviews(ah.getCurrentUserObject().getReviews(), ui, d);
                 break;
-            case 3:
+            case 4: // write review
                 routeSearch();
                 option = -1;
                 break;
-            case 4:
-                rh.displayReviews(ah.getCurrentUserObject(), ui, d);
+            case 5: // deleteReview
+                Review review = rh.displayReviews(ah.getCurrentUserObject().getReviews(), ui, d);
+                rh.deleteReview(review);
                 option = -1;
                 break;
-            case 5:
+            case 6: //
                 routeSearch();
                 option = -1;
                 break;
-
+            default:
+                d.invalidOption();
+                routeReview();
+                break;
         }
     }
 }

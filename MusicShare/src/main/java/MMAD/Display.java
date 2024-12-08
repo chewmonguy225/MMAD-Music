@@ -91,7 +91,12 @@ public class Display {
             System.out.println(i - (page - 1) + ": " + musicList.get(i).getName() + "  by  "
                     + musicList.get(i).getArtist().getName());
         }
-        System.out.println("\n6: Previous\n7: Next");
+        if(musicList.size() - (page+5) > 0){
+            System.out.println("\n6: Previous\n7: Next");
+        } else {
+            System.out.println("\n6: Previous");
+        }
+        
 
     }
 
@@ -107,7 +112,7 @@ public class Display {
 
     public void songOptionMenu() {
         nextScreen();
-        System.out.println("Please enter a number 0-5:\n");
+        System.out.println("Please enter a number 0-7:\n");
         System.out.println("[1] Write Review");
         System.out.println("[2] Delete Review");
         System.out.println("[3] View user reviews of this song");
@@ -116,6 +121,19 @@ public class Display {
         System.out.println();
         System.out.println("[6] Search different item");
         System.out.println("[7] Go Home");
+    }
+
+    public void playlistOptionMenu() {
+        nextScreen();
+        System.out.println("Please enter a number 0-5:\n");
+        System.out.println("[1] Remove song from playlist");
+        System.out.println("[2] Back to playlist");
+        System.out.println("[3] Go Home");
+    }
+
+    public void songRemoved(String name){
+        split();
+        System.out.println(name+" Removed from playlist.\n");
     }
 
     public void itemOptionMenu() {
@@ -238,11 +256,11 @@ public class Display {
 
         } else if((currentPage == totalPages) && (theReviews.size() % itemsPerPage != 0)){
             for (int i = 0; i < (theReviews.size() % itemsPerPage); i++) {
-                System.out.println(theReviews.get(startIndex + i).displayFormat());
+                System.out.println("[" + (i+1) + "]\n" + theReviews.get(startIndex + i).displayFormat());
             }
         }else {
             for (int i = 0; i < itemsPerPage; i++) {
-                System.out.println(theReviews.get(startIndex + i).displayFormat());
+                System.out.println("[" + (i+1) + "]\n" + theReviews.get(startIndex + i).displayFormat());
             }
         }
 
@@ -264,12 +282,13 @@ public class Display {
     public void reviewOptionMenu() {
         nextScreen();
         System.out.println("Please enter a number 0-3:\n");
-        System.out.println("[1] View reviews");
-        System.out.println("[2] View own reviews");
-        System.out.println("[3] Write Review");
-        System.out.println("[4] Delete Review");
+         System.out.println("[2] View community reviews");
+        System.out.println("[2] View reviews made by users you follow");
+        System.out.println("[3] View own reviews");
+        System.out.println("[4] Write Review");
+        System.out.println("[5] Delete Review");
         System.out.println();
-        System.out.println("[5] Go Home");
+        System.out.println("[6] Go Home");
     }
 
     public void friendOptionMenu() {
