@@ -81,6 +81,10 @@ public class PlaylistHandler {
 
     public int displayPlaylist(Playlist playlist, UI ui, Display d){
         int option = -1;
+
+        if(playlist == null || playlist.getPlaylist().isEmpty()){
+            return -1;
+        }
         
         while(option <0 || option >7){//if 6 then prev, if 7 then next
             

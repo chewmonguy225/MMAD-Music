@@ -2,6 +2,7 @@ package com.example;
 import MMAD.Artist;
 import MMAD.PlaylistHandler;
 import MMAD.AccountHandler;
+import MMAD.ItemHandler;
 import MMAD.Login;
 import MMAD.Song;
 
@@ -14,6 +15,7 @@ import org.junit.Test;
 public class AddSongToPlaylistTest {
     PlaylistHandler ph;
     AccountHandler ah;
+    ItemHandler ih;
     Login invalidUser;
     Login validUser;
     Song invalidSong;
@@ -23,6 +25,7 @@ public class AddSongToPlaylistTest {
     public void createSongAndUserObjects(){
         ph = PlaylistHandler.access();
         ah = AccountHandler.access();
+        ih = ItemHandler.access();
 
         invalidUser = new Login("Not a user", "123");
 
@@ -35,6 +38,7 @@ public class AddSongToPlaylistTest {
         new Artist(99999,"testArtistID", "testArtistName"),
         new MMAD.Album(99999,"testAlbumID" , "testAlbumName",
         new Artist(99999,"testArtistID", "testArtistName")));
+        ih.addSongToDB(validSong);
 
     }
 
@@ -43,7 +47,7 @@ public class AddSongToPlaylistTest {
 
     }
 
-    @test
+    @Test
     public void validUserAddsValidSongToPlaylist(){
         boolean result = ph.addSongToPlaylist(validUser, validSong);
         assertTrue(result);

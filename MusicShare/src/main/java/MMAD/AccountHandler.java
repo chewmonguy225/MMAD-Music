@@ -42,14 +42,22 @@ public class AccountHandler {
         if(loginAttempt(username, password))
         {   
             d.successfulLogin(username);
-            currentUser = new Login(username, password);
-            currentUserObject = new User(currentUser);
-            currentUserObject = getCompleteUser(currentUserObject);
             return 1;
         } else {
             d.invalidLogin();
             return -1; //simulates username or password invalid
         }   
+    }
+
+    public boolean loginAttempt(String username, String password){
+        Login login = new Login(username, password);
+        boolean result = login.attemptLogin(dbh);
+        if(result){
+            currentUser = new Login(username, password);
+            currentUserObject = new User(currentUser);
+            currentUserObject = getCompleteUser(currentUserObject);
+        }
+        return result;
     }
 
     public int signup(UI ui, Display d){
@@ -78,10 +86,7 @@ public class AccountHandler {
         return dbh.createUser(login);
     }
 
-    public static boolean loginAttempt(String username, String password){
-        Login login = new Login(username, password);
-        return login.attemptLogin(dbh);
-    }
+    
 
     public int changePassword(UI ui, Display d){
         d.changePassword();
