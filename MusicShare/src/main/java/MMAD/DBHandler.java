@@ -222,7 +222,7 @@ public class DBHandler {
             if(queryExecutor.checkSongInPlaylist(login, song)) {
                 return queryExecutor.removeSongFromPlaylist(login, song);//returns true if successful, false if not
             }
-            return true;//returns true if the song is already removed
+            return false;//returns true if the song is already removed
         } 
         catch (Exception e) {
             System.out.println(e.getMessage());

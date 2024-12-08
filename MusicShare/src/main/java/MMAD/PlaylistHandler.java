@@ -35,11 +35,11 @@ public class PlaylistHandler {
         return ph;
     }
 
-    public void removeSongFromPlaylist(Login login, Song song){
+    public boolean removeSongFromPlaylist(Login login, Song song){
         //playlist.removeSong(song);//removes song from playlist object if it exists in the playlist.
         
         //queries the removal of the song in the DB
-        dbh.removeSongFromPlaylist(login, song);
+        return dbh.removeSongFromPlaylist(login, song);
     }
 
     public boolean addSongToPlaylist(Login login, Song song){
@@ -83,6 +83,7 @@ public class PlaylistHandler {
         int option = -1;
 
         if(playlist == null || playlist.getPlaylist().isEmpty()){
+            d.emptyPlaylist();
             return -1;
         }
         

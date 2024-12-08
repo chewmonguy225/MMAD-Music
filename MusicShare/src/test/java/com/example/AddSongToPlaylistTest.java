@@ -45,11 +45,15 @@ public class AddSongToPlaylistTest {
 
     @After
     public void resetSongAndUserInDB(){
-        
+        ph.removeSongFromPlaylist(validUser, validSong);
     }
 
+    /**
+     * testing if a valid user tries to add a valid song
+     * should result in true
+     */
     @Test
-    public void validUserAddsValidSongToPlaylist(){
+    public void testValidUserAddsValidSongToPlaylist(){
         boolean result = ph.addSongToPlaylist(validUser, validSong);
         assertTrue(result);
     }
@@ -66,6 +70,7 @@ public class AddSongToPlaylistTest {
 
     /**
      * testing if an invalid user tries to add a valid song to playlist
+     * should result in false
      */
     @Test
     public void testInvalidUserAddValidSongToPlaylist(){
@@ -75,6 +80,7 @@ public class AddSongToPlaylistTest {
 
     /**
      * testing if an invalid user tries to add an invalid song to playlist
+     * should result in a null pointer exception
      */
     @Test (expected = NullPointerException.class)
     public void testInvalidUserAddInvalidSongToPlaylist(){
