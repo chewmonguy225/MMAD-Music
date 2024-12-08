@@ -334,6 +334,10 @@ public class DBHandler {
         return queryExecutor.getItemReviews(item);
     }
 
+    public ArrayList<ArrayList<String>> getRecentReviews(){
+        return queryExecutor.getRecentReviews();
+    }
+
 
     /**
      * Returns an array list containing all the reviewID's of all a user's reviews
@@ -374,7 +378,9 @@ public class DBHandler {
 
 
     // DBHandler
-    // public bool deleteReview(getReviewID)
+    public boolean deleteReview(Review review){
+        return queryExecutor.deleteReview(review);
+    }
     // public ArrayList<String> getReviewInfo(reviewID) - return an ArrayList. Index 0: Description, Index 1: Rating, Index 2: Item ID  
 
     // QueryExecutor only

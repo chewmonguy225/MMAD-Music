@@ -164,7 +164,7 @@ public class QueryExecutor {
         }
     }
 
-    public boolean unfollow(String username, String friendUsername){
+    public boolean unfollow(String username, String friendUsername) {
         try {
             PreparedStatement statement = sqlConnection
                     .prepareStatement("DELETE FROM user_friend WHERE username = ? AND friend_username = ?;");
@@ -177,6 +177,7 @@ public class QueryExecutor {
             return false;
         }
     }
+
     /**
      * Checks if a song already exists in the database.
      *
@@ -622,7 +623,8 @@ public class QueryExecutor {
                 itemType = "al";
             }
             String reviewID = itemType + item.getID();
-            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM review WHERE id = ? AND username = ?;");
+            PreparedStatement statement = sqlConnection
+                    .prepareStatement("SELECT * FROM review WHERE id = ? AND username = ?;");
             statement.setString(1, reviewID);
             statement.setString(2, login.getUsername());
             ResultSet resultSet = statement.executeQuery();
@@ -655,7 +657,8 @@ public class QueryExecutor {
             }
             String reviewID = itemType + item.getID();
 
-            PreparedStatement statement = sqlConnection.prepareStatement("SELECT username FROM review WHERE id LIKE ?;");
+            PreparedStatement statement = sqlConnection
+                    .prepareStatement("SELECT username FROM review WHERE id LIKE ?;");
             statement.setString(1, reviewID);
             ResultSet resultSet = statement.executeQuery();
             ArrayList<String> usernames = new ArrayList<>();
@@ -667,6 +670,33 @@ public class QueryExecutor {
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             return new ArrayList<String>();
+        }
+    }
+
+    /**
+     * Returns a string array list containing review information
+     * 
+     * @return ArrayList of ArrayList of String.
+     *         0: reviewID(type + itemID) 1:username of author
+     */
+    public ArrayList<ArrayList<String>> getRecentReviews() {
+        try {
+            PreparedStatement statement = sqlConnection
+                    .prepareStatement("SELECT * FROM review ORDER BY created_at DESC LIMIT 50;");
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<ArrayList<String>> reviews = new ArrayList<>();
+
+            while (resultSet.next()) {
+                ArrayList<String> reviewInfo = new ArrayList<String>();
+                reviewInfo.add(resultSet.getString("id"));
+                reviewInfo.add(resultSet.getString("username"));
+
+                reviews.add(reviewInfo);
+            }
+            return reviews;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return new ArrayList<ArrayList<String>>();
         }
     }
 
@@ -736,14 +766,13 @@ public class QueryExecutor {
         try {
             // Use ? for dynamic parameter binding
             PreparedStatement statement = sqlConnection.prepareStatement(
-                "SELECT username FROM user WHERE username LIKE ? LIMIT 25;"
-            );
+                    "SELECT username FROM user WHERE username LIKE ? LIMIT 25;");
             // Add wildcards to the search term for partial matching
             statement.setString(1, usernameToSearch);
-            
+
             ResultSet resultSet = statement.executeQuery();
             ArrayList<String> usernames = new ArrayList<>();
-            for(String usern : usernames){
+            for (String usern : usernames) {
                 System.out.println(usern);
             }
             // Retrieve "username" instead of "friend_username"
@@ -756,6 +785,29 @@ public class QueryExecutor {
             return new ArrayList<>();
         }
     }
-    
+
+    public boolean deleteReview(Review review) {
+        try {
+            // get the item type
+            String itemType;
+            if (review.getItem() instanceof Song) {
+                itemType = "s";
+            } else if (review.getItem() instanceof Artist) {
+                itemType = "ar";
+            } else {
+                itemType = "al";
+            }
+            System.out.println(itemType + review.getItem().getID());
+            String reviewID = itemType + review.getItem().getID();
+            PreparedStatement statement = sqlConnection.prepareStatement("DELETE FROM review WHERE username= ? AND id = ?;");
+            statement.setString(1, review.getAuthor().getLogin().getUsername());
+            statement.setString(2, reviewID);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return false;
+        }
+    }
 
 }
