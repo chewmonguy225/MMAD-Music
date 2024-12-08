@@ -115,7 +115,7 @@ public class Controller {
                     // account
                     break;
                 case "review":
-                    // option = routeReview();
+                    c.routeReview();
                     option = -1;
                     currentMenu = "home";
                     break;
@@ -224,7 +224,7 @@ public class Controller {
             routeSearch();
         } else {
             ih.addSongToDB(selectedSong);
-            c.songOptionMenu(selectedSong);
+            itemOptionMenu(selectedSong);
         }
         return option;
     }
@@ -238,7 +238,7 @@ public class Controller {
             routeSearch();
         } else {
             ih.addAlbumToDB(selected);
-            c.albumOptionMenu(selected);
+            itemOptionMenu(selected);
         }
         return option;
     }
@@ -252,7 +252,7 @@ public class Controller {
             routeSearch();
         } else {
             ih.addArtistToDB(selected);
-            c.artistOptionMenu(selected);
+            itemOptionMenu(selected);
         }
         return option;
     }
@@ -264,90 +264,65 @@ public class Controller {
         userOptionMenu(selected);
     }
 
-    public void songOptionMenu(Song song) {
-        d.songOptionMenu();
-        switch (ui.getInt()) {
-            case 0:
-                exit();
-            case 1:// add song to playlist
-                ph.addSongToPlaylist(ah.getCurrentUser(), song);
-                RouteHome();
-                break;
-            case 2:// remove song from playlist
-                ph.removeSongFromPlaylist(ah.getCurrentUser(), song);
-                RouteHome();
-                break;
-            case 3:// write review
-                c.writeReview(song);
-                break;
-            case 4:// delete review
-                   // rh.deleteReview();
-                break;
-            case 5:// delete review
-                ArrayList<Review> theReviews = rh.getItemReviews(song);
-                rh.displayReviews(theReviews, ui, d);
-                break;
-            case 6:// previous page (routeSongMenu)
-                routeSongSearch();
-                break;
-            case 7:// previous page (routeSongMenu)
-                RouteHome();
-                break;
-            default:
-                d.invalidOption();
-                songOptionMenu(song);
-                break;
+    private static void itemOptionMenu(Item item) {
+        if (item instanceof Song) {
+            d.songOptionMenu(); // Display options specific to Song
+        } else {
+            d.itemOptionMenu(); // Display general options for other Item types
         }
-    }
 
-    private static void albumOptionMenu(Album album) {
-        d.albumOptionMenu();
-        switch (ui.getInt()) {
-            case 0:
+        int option = ui.getInt(); // Get the user's choice
+
+        switch (option) {
+            case 0: // Exit the menu
                 exit();
-            case 1:// write review
-                c.writeReview(album);
                 break;
-            case 2:// delete review
-                   // rh.deleteReview();
+
+            case 1: // Write a review
+                c.writeReview(item); // Unified handling for all Item types
                 break;
-            case 3:// previous page (routeSongMenu)
-                routeAlbumSearch();
+
+            case 2: // Delete a review
+                Review reviewToDelete = new Review(ah.getCurrentUserObject(), item, "", 0);
+                rh.deleteReview(reviewToDelete);
                 break;
-            case 4:
+
+            case 3: // View all user reviews for this item
+                ArrayList<Review> reviews = rh.getItemReviews(item);
+                rh.displayReviews(reviews, ui, d);
+                break;
+
+            case 4: // Song-specific: Add to playlist
+                if (item instanceof Song) {
+                    Song song = (Song) item;
+                    ph.addSongToPlaylist(ah.getCurrentUser(), song);
+                    RouteHome();
+                } else {
+                    d.invalidOption();
+                }
+                break;
+
+            case 5: // Song-specific: Remove from playlist
+                if (item instanceof Song) {
+                    Song song = (Song) item;
+                    ph.removeSongFromPlaylist(ah.getCurrentUser(), song);
+                    RouteHome();
+                } else {
+                    d.invalidOption();
+                }
+                break;
+
+            case 6:
+                routeSearch();
+                break;
+
+            case 7: // Go to the home page
                 RouteHome();
                 break;
-            default:
-                d.invalidOption();
-                albumOptionMenu(album);
-                break;
-        }
-    }
 
-    public void artistOptionMenu(Artist artist) {
-        d.itemOptionMenu();
-        switch (ui.getInt()) {
-            case 0:
-                exit();
-            case 1:// write review
-                d.reviewPrompt();
-                String description = ui.getString();
-                d.ratingPrompt();
-                int rating = ui.getInt();
-                rh.createReview(ah.getCurrentUser(), artist, description, rating);
-                break;
-            case 2:// delete review
-                   // rh.deleteReview();
-                break;
-            case 3:// previous page (routeSongMenu)
-                routeArtistSearch();
-                break;
-            case 4:
-                RouteHome();
-                break;
-            default:
+            default: // Handle invalid options
                 d.invalidOption();
-                artistOptionMenu(artist);
+                itemOptionMenu(item);
                 break;
         }
     }
@@ -388,12 +363,12 @@ public class Controller {
         return option;
     }
 
-    private void writeReview(Item item) {
+    private Review writeReview(Item item) {
         d.reviewPrompt();
         String description = ui.getString();
         d.ratingPrompt();
         int rating = ui.getInt();
-        rh.createReview(ah.getCurrentUserObject(), item, description, rating);
+        return (rh.createReview(ah.getCurrentUserObject(), item, description, rating));
 
     }
 
@@ -416,6 +391,40 @@ public class Controller {
                 routeSearch();
                 option = -1;
                 break;
+            case 3:
+                routeUserSearch();
+                option = -1;
+                break;
+        }
+    }
+
+    private void routeReview() {
+        d.reviewOptionMenu();
+        int option = ui.getInt();
+        switch (option) {
+            case 0:
+                exit();
+                break;
+            case 1:
+                rh.getRecentReviews();
+                rh.displayReviews(rh.getRecentReviews(), ui, d);
+                break;
+            case 2:
+                rh.displayReviews(ah.getCurrentUserObject().getReviews(), ui, d);
+                break;
+            case 3:
+                routeSearch();
+                option = -1;
+                break;
+            case 4:
+                rh.displayReviews(ah.getCurrentUserObject(), ui, d);
+                option = -1;
+                break;
+            case 5:
+                routeSearch();
+                option = -1;
+                break;
+
         }
     }
 }

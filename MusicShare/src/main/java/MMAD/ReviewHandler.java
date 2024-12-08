@@ -30,10 +30,6 @@ public class ReviewHandler {
         return r;
     }
 
-    public void deleteReview(Review review) {
-        // dbh,
-    }
-
     public void setUserReviews(User user) {
         ArrayList<Review> userReviews = new ArrayList<>();
 
@@ -81,6 +77,33 @@ public class ReviewHandler {
         return theReviews;
     }
 
+    public ArrayList<Review> getRecentReviews() {
+        ArrayList<Review> theReviews = new ArrayList<Review>();
+
+        ArrayList<ArrayList<String>> reviewInfoList = dbh.getRecentReviews();
+        System.out.println(reviewInfoList);
+        for (ArrayList<String> reviewInfo : reviewInfoList) {
+            User user = new User(new Login(reviewInfo.get(1), null));
+
+            String[] parts = separateLettersAndNumbers(reviewInfo.get(0));
+            String reviewType = parts[0]; // Letters (s, a, ar, etc.)
+            int itemID = Integer.parseInt(parts[1]); // Numeric part of the ID
+            Item item = null;
+            switch (reviewType) {
+                case "s":
+                    item = ih.createSongFromID(itemID);
+                    break;
+                case "al":
+                    break;
+                case "ar":
+                    break;
+            }
+            theReviews.add(getReview(user, item));
+        }
+
+        return theReviews;
+    }
+
     public void displayReviews(ArrayList<Review> theReviews, UI ui, Display display) {
         int totalPages = (int) Math.ceil((double) theReviews.size() / itemsPerPage);
         int currentPage = 1;
@@ -100,6 +123,10 @@ public class ReviewHandler {
                 display.invalidOption();
             }
         }
+    }
+
+    public void deleteReview(Review review){
+        dbh.deleteReview(review);
     }
 
     // Helper method to separate letters and numbers in the reviewID
