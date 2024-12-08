@@ -135,61 +135,6 @@ public class PlaylistHandler {
         }
     }
 
-    /*
-    public int displayPlaylist(UI ui, Display d){
-        /** Do at top of handler
-         * call database hander dbh.getPlaylist to retrieve an arraylist of song IDs
-         * call item handler ih.createSongFromID for each song id in arraylist
-         *
-
-        Login login = ah.getCurrentUser();
-        ArrayList<Integer> songIDs = dbh.getPlaylist(login);
-        musicList = new ArrayList<>();
-
-        for(int songID:songIDs){
-            musicList.add(ih.createSongFromID(songID));
-        }
-        if(musicList.size()>0)
-            playlist = new Playlist(musicList);
-
-        //d.displayPlaylist(playlist, 0);
-
-        int option = -1;
-        
-
-        while(option <0 || option >7){//if 6 then prev, if 7 then next
-            
-            //displays the next (5) songs in playlist as long as there is at least one more song to print
-            if(page >= 0 && playlist.getPlaylist().size() > page){
-                System.out.println("\n\nThis is page: "+page);
-                d.displayPlaylist(playlist, page);
-                option = ui.getInt();
-            } else {//if on the first page and user select previous, then will go home
-                return -1;
-            }
-
-            if(option == 7)
-                page = page + 5;
-            if (option == 6)
-                page = page - 5;
-
-            //user chose to exit the system
-            if (option == 0)
-                return option;
-            
-        }
-
-        if (option == 0 || option == -1){
-            return option;
-        }
-        else {
-            //this will call a display function asking if the user would like to remove the song from playlist.
-            d.songOptionMenu();
-            return option + page;
-        }
-    }
-    */
-
     public void clearPlaylist(Login login){
         //query to remove all songs from playlist
         dbh.clearPlaylist(login);
