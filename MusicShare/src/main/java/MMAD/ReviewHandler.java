@@ -96,7 +96,6 @@ public class ReviewHandler {
         ArrayList<Review> theReviews = new ArrayList<Review>();
 
         ArrayList<ArrayList<String>> reviewInfoList = dbh.getRecentReviews();
-        System.out.println(reviewInfoList);
         for (ArrayList<String> reviewInfo : reviewInfoList) {
             User user = new User(new Login(reviewInfo.get(1), null));
 
