@@ -89,6 +89,7 @@ public class AccountHandler {
         Login login = new Login(currentUser.getUsername(), newPass);
         if(dbh.changePassword(login)){
             currentUser = new Login(currentUser.getUsername(), newPass);
+            d.passwordChanged();
             return 1;
         }
         //query to change password - return 

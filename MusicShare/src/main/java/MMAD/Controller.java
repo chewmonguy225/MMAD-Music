@@ -131,10 +131,11 @@ public class Controller {
                         currentMenu = "login or signup";
                         c.routeLogin();
                     }
-                    if (option == 1) {
-                        currentMenu = "home";
-                    } else {
+                    if (option == 0) {
                         currentMenu = "exit";
+                    } else {
+                        currentMenu = "home";
+                        RouteHome();
                     }
                     break;
                 case "logout":
@@ -163,6 +164,9 @@ public class Controller {
             int result = -1;
             do {
                 result = ah.changePassword(ui, d);// need to change logic to allow reprompting of new password.
+                if(result == -1){
+                    d.invalidPassword();
+                }
             } while (result == -1);
             return result;
         }
