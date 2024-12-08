@@ -1,6 +1,7 @@
 package com.example;
 import MMAD.Artist;
 import MMAD.PlaylistHandler;
+import MMAD.AccountHandler;
 import MMAD.Login;
 import MMAD.Song;
 
@@ -12,17 +13,21 @@ import org.junit.Test;
 
 public class AddSongToPlaylistTest {
     PlaylistHandler ph;
+    AccountHandler ah;
     Login invalidUser;
+    Login validUser;
     Song invalidSong;
     Song validSong;
 
     @Before
     public void createSongAndUserObjects(){
         ph = PlaylistHandler.access();
+        ah = AccountHandler.access();
 
         invalidUser = new Login("Not a user", "123");
 
-        
+        validUser = new Login("TestUser123", "TestUser123");
+        ah.createAccount("TestUser123", "TestUser123");
 
         invalidSong = new Song(null, null, null, null);
 
@@ -38,9 +43,19 @@ public class AddSongToPlaylistTest {
 
     }
 
-    @Test
-    public void testValidUserAddInvalidSongToPlaylist(){
+    @test
+    public void validUserAddsValidSongToPlaylist(){
+        boolean result = ph.addSongToPlaylist(validUser, validSong);
+        assertTrue(result);
+    }
 
+    /**
+     * testing if a valid user tries to add an invalid song
+     * should result in a null Pointer exception
+     */
+    @Test (expected = NullPointerException.class)
+    public void testValidUserAddInvalidSongToPlaylist(){
+        ph.addSongToPlaylist(validUser, invalidSong);
     }
 
 

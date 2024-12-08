@@ -28,10 +28,8 @@ public class FriendTest {
         // User object with only friend username
         User userToFollow = new User(new Login("friend", null));
 
-        // Assuming the return value of followUser should be 1
+        // will return 1 if added successfully
         int result = ah.followUser(userToFollow);
-
-        // Assert that the result is 1
         assertEquals(1, result);
     }
 

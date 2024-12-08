@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class SearchTest {
 
     private SpotifyAPIQueryBuilder api;
+    
     @Before
     public void setUp() {
         api = SpotifyAPIQueryBuilder.access();
