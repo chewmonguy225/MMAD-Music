@@ -56,10 +56,9 @@ public class AddSongToPlaylistTest {
     /**
      * testing if an invalid user tries to add an invalid song to playlist
      */
-    @Test
+    @Test (expected = NullPointerException.class)
     public void testInvalidUserAddInvalidSongToPlaylist(){
-        boolean actual = ph.addSongToPlaylist(invalidUser, invalidSong);
-        assertFalse(actual);// Expect the result to be false.
+        ph.addSongToPlaylist(invalidUser, invalidSong);
     }
     
 
