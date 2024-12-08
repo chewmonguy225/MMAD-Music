@@ -64,9 +64,7 @@ public class ItemHandler {
     }
 
     public Album createAlbumFromID(int id) {
-        System.out.println(id);
         ArrayList<String> albumInfo = dbh.getAlbum(id);
-        System.out.println(albumInfo);
         Artist artist = createArtistFromID(Integer.parseInt(albumInfo.get(3)));
         Album album = new Album(Integer.parseInt(albumInfo.get(0)), albumInfo.get(1), albumInfo.get(2), artist);
         return album;
