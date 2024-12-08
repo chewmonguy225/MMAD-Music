@@ -83,15 +83,14 @@ public class PlaylistHandler {
     public int displayPlaylist(Playlist playlist, UI ui, Display d){
         int option = -1;
         
-        while(option <0 || option >8){//if 6 then prev, if 7 then next
+        while(option <0 || option >7){//if 6 then prev, if 7 then next
             
             //displays the next (5) songs in playlist as long as there is at least one more song to print
             if(page >= 0 && playlist.getPlaylist().size() > page){
                 d.displayPlaylist(playlist, page);
                 option = ui.getInt();
-            } else {//if on the first page and user select previous, then will go home
-                option = 8;
             }
+            
             if(option == 7 && playlist.getPlaylist().size() > page + 5)
                 page = page + 5;
             if (option == 6)
@@ -108,10 +107,7 @@ public class PlaylistHandler {
             return -2;
         }else if (option == 0 || option == -1){
             return option;
-        }else if(option == 8){
-            page = 0;
-            return -1;
-        } else if(option == 6 && page < 0){
+        }else if(option == 6 && page < 0){
             page = 0;
             return -1;
         }else if (option == 7 || option == 6){
