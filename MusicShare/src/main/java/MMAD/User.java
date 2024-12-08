@@ -3,6 +3,7 @@ import java.util.*;
 public class User {
     private Login loginCredentials;
     private ArrayList<User> followList;
+    private ArrayList<User> followersList;
     private ArrayList<Review> reviews;
     private Playlist playlist;
 
@@ -32,7 +33,7 @@ public class User {
     }
 
     public ArrayList<Item> getReviewedItems(){
-        ArrayList<Item> reviewedItems = null;
+        ArrayList<Item> reviewedItems = new ArrayList<>();
 
         for(int i = 0; i < reviews.size(); i++){
             reviewedItems.add(reviews.get(i).getItem());
@@ -44,10 +45,25 @@ public class User {
         return playlist;
     }
 
+    public void setPlaylist(Playlist playlist){
+        this.playlist = playlist;
+    }
+
     public void addToFollowlist(User userToAdd){
         followList.add(userToAdd);
     }
-
+    
+    public boolean removeFromFollowList(User userToRemove) {
+        String username = userToRemove.getLogin().getUsername();
+        for (User user : followList) {
+            if (user.getUsername().equals(username)) {
+                followList.remove(user);
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public void setReviews(ArrayList<Review> reviews){
         this.reviews = reviews;
     }
@@ -66,6 +82,14 @@ public class User {
 
     public ArrayList<User> getFollowingList(){
         return followList;
+    }
+
+    public void setFollowersList(ArrayList<User> followersList){
+        this.followersList = followersList;
+    }
+
+    public ArrayList<User> getFollowerList(){
+        return followersList;
     }
 }
 

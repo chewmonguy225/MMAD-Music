@@ -86,6 +86,15 @@ public class DBHandler {
         }
     }
 
+    public int getAlbumID(Album album){
+        try{
+            return queryExecutor.getAlbumID(album);
+        }
+        catch(Exception e){
+            return -1;
+        }
+    }
+
 
     /**
      * Creates a new user in the database
@@ -248,16 +257,20 @@ public class DBHandler {
      * @param songID The id of the song in the database
      * @return 1 if the song was added to the playlist succesfully. Return -1 if an error occured.
      */
-    public boolean addSongToPlaylist(Login login, Song song)
+    public int addSongToPlaylist(Login login, Song song)
     {
         try {
-            boolean f = queryExecutor.addSongToPlaylist(login, song);
-            if (f)
-                return true;
-            return false;
+            if(queryExecutor.checkSongInPlaylist(login, song)){
+                return 2;
+            } else {
+                boolean f = queryExecutor.addSongToPlaylist(login, song);
+                if (f)
+                return 1;
+            }
+            return -1;
         }
         catch (Exception e) {
-            return false;
+            return -1;
         }
     }
 
@@ -288,6 +301,14 @@ public class DBHandler {
     public ArrayList<Integer> getPlaylist(Login login)//this should return an integer arraylist of all the song IDs that are in a users playlist
     {
         return queryExecutor.getPlaylist(login);
+    }
+
+    public boolean changePassword(Login login){
+        try{
+            return queryExecutor.changePassword(login);
+        } catch (Exception e){
+            return false;
+        }
     }
 
 
@@ -330,6 +351,15 @@ public class DBHandler {
         return queryExecutor.getRecentReviews();
     }
 
+    public ArrayList<ArrayList<String>> getFollowingReviews(User user){
+        ArrayList<User> following = user.getFollowingList();
+        ArrayList<String> followingUsername = new ArrayList<String>();
+        for(User followedUser : following){
+            followingUsername.add(followedUser.getLogin().getUsername());
+        }
+        return queryExecutor.getFollowingReviews(followingUsername);
+     }
+
 
     /**
      * Returns an array list containing all the reviewID's of all a user's reviews
@@ -362,6 +392,10 @@ public class DBHandler {
      */
     public ArrayList<String> getFriendsList(Login login){
         return queryExecutor.getFriendsList(login);
+    }
+
+    public ArrayList<String> getFollowerList(Login login){
+        return queryExecutor.getFollowersList(login);
     }
 
     public ArrayList<String> searchUsers(String usernameToSearch){

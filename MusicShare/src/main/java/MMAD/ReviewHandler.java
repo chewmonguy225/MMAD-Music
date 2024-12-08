@@ -23,7 +23,13 @@ public class ReviewHandler {
     }
 
     public Review createReview(User user, Item item, String description, int rating) {
-        item.setID(dbh.getSongID((Song) item));
+        if(item instanceof Song){
+            item.setID(dbh.getSongID((Song) item));
+        }else if(item instanceof Album){
+            item.setID(dbh.getAlbumID((Album) item));
+        }else if(item instanceof Artist){
+            item.setID(dbh.getArtistID((Artist) item));
+        }
         Review r = new Review(user, item, description, rating); // Create review object
         dbh.createReview(user.getLogin(), r); // Add the review to the database
         ah.getCurrentUserObject().addReview(r);
@@ -104,14 +110,48 @@ public class ReviewHandler {
         return theReviews;
     }
 
-    public void displayReviews(ArrayList<Review> theReviews, UI ui, Display display) {
+    public ArrayList<Review> getFollowingReviews(User user){
+        ArrayList<Review> theReviews = new ArrayList<Review>();
+
+        ArrayList<ArrayList<String>> reviewInfoList = dbh.getFollowingReviews(user);
+        for (ArrayList<String> reviewInfo : reviewInfoList) {
+            User friendUser = new User(new Login(reviewInfo.get(1), null));
+
+            String[] parts = separateLettersAndNumbers(reviewInfo.get(0));
+            String reviewType = parts[0]; // Letters (s, a, ar, etc.)
+            int itemID = Integer.parseInt(parts[1]); // Numeric part of the ID
+            Item item = null;
+            switch (reviewType) {
+                case "s":
+                    item = ih.createSongFromID(itemID);
+                    break;
+                case "al":
+                    break;
+                case "ar":
+                    break;
+            }
+            theReviews.add(getReview(friendUser, item));
+        }
+
+        return theReviews;
+    }
+
+    public Review displayReviews(ArrayList<Review> theReviews, UI ui, Display d){
         int totalPages = (int) Math.ceil((double) theReviews.size() / itemsPerPage);
         int currentPage = 1;
+        
+        Review selected = selectReview(theReviews, currentPage, totalPages, ui, d);
+        return selected;
+    }
 
+    private Review selectReview(ArrayList<Review> theReviews, int currentPage, int totalPages, UI ui, Display display) {
         display.displayReviewsResult(theReviews, currentPage, totalPages);
         int option = ui.getInt();
-        while (!((option == 6 && currentPage == 1) || (option == 7 && currentPage == totalPages))) {
-            if (option == (itemsPerPage + 1) && currentPage != 1) {
+        Review selected = null;
+        while (selected == null && !((option == (itemsPerPage + 1) && currentPage == 1) || (option == (itemsPerPage + 2) && currentPage == totalPages))) {
+            if (option >= 1 && option <= itemsPerPage) {
+                selected = theReviews.get(((currentPage - 1) * itemsPerPage) + (option - 1));
+            } else if (option == (itemsPerPage + 1) && currentPage != 1) {
                 currentPage--;
                 display.displayReviewsResult(theReviews, currentPage, totalPages);
                 option = ui.getInt();
@@ -119,10 +159,13 @@ public class ReviewHandler {
                 currentPage++;
                 display.displayReviewsResult(theReviews, currentPage, totalPages);
                 option = ui.getInt();
-            } else {
+            }else{
                 display.invalidOption();
             }
         }
+        
+        return selected;
+        
     }
 
     public void deleteReview(Review review){
@@ -142,5 +185,4 @@ public class ReviewHandler {
 
         return new String[] { "", "" }; // Default values if no match is found
     }
-
 }

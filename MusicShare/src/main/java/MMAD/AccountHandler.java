@@ -6,6 +6,7 @@ public class AccountHandler {
     private static AccountHandler ah;
     private static DBHandler dbh = DBHandler.access();
     private static ReviewHandler rh = ReviewHandler.access();
+    private static PlaylistHandler ph = PlaylistHandler.access();
     private final int itemsPerPage = 5;
     Login currentUser;
     User currentUserObject;
@@ -64,6 +65,7 @@ public class AccountHandler {
         if(ah.createAccount(username, password)){
             d.successfulSignup();
             currentUser = new Login(username, password);
+            currentUserObject = new User(currentUser);
             return 1;
         } else {
             d.unsuccessfulSignup();
@@ -84,7 +86,11 @@ public class AccountHandler {
     public int changePassword(UI ui, Display d){
         d.changePassword();
         String newPass = ui.getString();
-        currentUser = new Login(currentUser.getUsername(), newPass);
+        Login login = new Login(currentUser.getUsername(), newPass);
+        if(dbh.changePassword(login)){
+            currentUser = new Login(currentUser.getUsername(), newPass);
+            return 1;
+        }
         //query to change password - return 
         return -1;
     }
@@ -103,6 +109,10 @@ public class AccountHandler {
     public void followUser(User friendUser){
         currentUserObject.addToFollowlist(friendUser);
         dbh.addFriend(ah.getCurrentUserObject().getLogin(), friendUser.getLogin());
+    }
+
+    public void unfollowUser(User friendUser){
+        currentUserObject.removeFromFollowList(friendUser);
     }
 
     public User getUserPublicSharables(User user){
@@ -177,9 +187,26 @@ public class AccountHandler {
         user.setFollowing(followingList);
     }
 
+    public void setFollower(User user) {
+        ArrayList<User> followingList = new ArrayList<User>(); 
+
+        ArrayList<String> followerInfo = dbh.getFollowerList(user.getLogin()); 
+        if (!followerInfo.isEmpty()) {
+            for (String username : followerInfo) {
+                Login friendLogin = new Login(username, null);
+                User friendUser = new User(friendLogin);
+                followingList.add(friendUser);
+            }
+        }
+
+        user.setFollowersList(followingList);
+    }
+
     private User getCompleteUser(User user){
+        user.setPlaylist(ph.getPlaylist(user));
         rh.setUserReviews(user);
         setFollowing(user);
+        setFollower(user);
         return user;
     }
 

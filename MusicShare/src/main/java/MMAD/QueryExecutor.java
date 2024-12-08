@@ -287,6 +287,24 @@ public class QueryExecutor {
 
     }
 
+    public int getSongID(Song song) {
+        try {
+            PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM song WHERE source_id=?;");
+            statement.setString(1, song.getSourceID());
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("id");
+            } else {
+                return -1;
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return -1;
+        }
+
+    }
+
     /**
      * Inserts a new album in the album table of the database.
      *
@@ -339,7 +357,7 @@ public class QueryExecutor {
     public boolean checkSongInPlaylist(Login login, Song song) {
         try {
             PreparedStatement statement = sqlConnection
-                    .prepareStatement("SELECT * FROM playlist_song WHERE username= ? AND songID= ?;");
+                    .prepareStatement("SELECT * FROM playlist_song WHERE username= ? AND song_id= ?;");
             statement.setString(1, login.getUsername());
             statement.setInt(2, song.getID());
             ResultSet resultSet = statement.executeQuery();
@@ -700,6 +718,41 @@ public class QueryExecutor {
         }
     }
 
+    public ArrayList<ArrayList<String>> getFollowingReviews(ArrayList<String> usernames) {
+    try {
+        // Construct the placeholder string for the IN clause
+        String placeholders = String.join(",", usernames.stream().map(u -> "?").toArray(String[]::new));
+
+        // Prepare the SQL query with the dynamically created placeholders
+        String query = "SELECT * FROM review WHERE username IN (" + placeholders + ") ORDER BY created_at DESC LIMIT 50;";
+        PreparedStatement statement = sqlConnection.prepareStatement(query);
+
+        // Set each username in the PreparedStatement
+        for (int i = 0; i < usernames.size(); i++) {
+            statement.setString(i + 1, usernames.get(i));
+        }
+
+        ResultSet resultSet = statement.executeQuery();
+        ArrayList<ArrayList<String>> reviews = new ArrayList<>();
+
+        // Process the result set and add to the reviews list
+        while (resultSet.next()) {
+            ArrayList<String> reviewInfo = new ArrayList<>();
+            reviewInfo.add(resultSet.getString("id")); // Add review ID
+            reviewInfo.add(resultSet.getString("username")); // Add username
+            
+            reviews.add(reviewInfo);
+        }
+
+        return reviews;
+    } catch (SQLException ex) {
+        System.out.println("SQL Error: " + ex.getMessage());
+        return new ArrayList<>(); // Return empty list in case of error
+    }
+}
+
+    
+
     /**
      * Returns an array list of all song ids in the shared playlist
      * 
@@ -750,6 +803,36 @@ public class QueryExecutor {
         }
     }
 
+    public ArrayList<String> getFollowersList(Login login) {
+        try {
+            PreparedStatement statement = sqlConnection
+                    .prepareStatement("SELECT * FROM user_friend WHERE friend_username= ?;");
+            statement.setString(1, login.getUsername());
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<String> followersUsernames = new ArrayList<>();
+
+            while (resultSet.next()) {
+                followersUsernames.add(resultSet.getString("friend_username"));
+            }
+            return followersUsernames;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return new ArrayList<String>();
+        }
+    }
+
+    public boolean changePassword(Login login){
+        try{
+            PreparedStatement statement = sqlConnection.prepareStatement("UPDATE user SET password = ? WHERE username = ?");
+            statement.setString(1, login.getPassword());
+            statement.setString(2, login.getUsername());
+            statement.executeUpdate();// something wrong with this statement
+            return true;
+        } catch (SQLException ex){
+            return false;
+        }
+    }
+    
     public ArrayList<String> searchUsers(String usernameToSearch) {
         try {
             // Use ? for dynamic parameter binding
