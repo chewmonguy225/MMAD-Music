@@ -40,6 +40,6 @@ You will also be prompted to create a default schema. Make the name of this “m
        Open your newly configured Local connection. In the SQL Editor, open the SQL file "MMAD.sql" which is located in the "Other resources" folder. Click the lightning bolt symbol to execute the statement. This should successfully create the tables in your music_share_db schema.
 
 
-Once the Database is up and running, you can navigate to the main.java and run the program.
+Once the Database is up and running, you can navigate to the main.java (MusicShare/src/main/java/MMAD) and run the program.
 
  
