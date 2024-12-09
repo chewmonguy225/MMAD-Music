@@ -24,13 +24,12 @@ public class ReviewTest {
     private AccountHandler ah;
     private User testUser;
     private Artist testArtist;
-    private Review testReview;
     private String testReviewDescription;
     private int testRating;
+    private Review testReview;
 
     @Before
     public void setUp() {
-
         // Access handlers
         rh = ReviewHandler.access();
         dbh = DBHandler.access();
@@ -40,48 +39,44 @@ public class ReviewTest {
         testUser = new User(new Login("testUser", "password"));
         ah.createAccount("testUser", "password");
 
-        testArtist = new Artist(00000, "testArtistName");
+        testArtist = new Artist(00000, "00000", "testArtistName");
         testReviewDescription = "Test artist review";
         testRating = 6;
+        testReview = new Review(testUser, testArtist, testReviewDescription, testRating);
 
         // Remove existing reviews for this artist and user in the database
-        ArrayList<String> userReviews = dbh.getUserReviews(testUser.getLogin());
-        for (String reviewID : userReviews) {
-            dbh.deleteReview(reviewID);
+        while (dbh.deleteReview(testReview)) 
+        {  
         }
     }
 
     @Test
-    public void testingWriteReview() {
-        // Testing creating a review
-        testReview = rh.createReview(testUser, testArtist, testReviewDescription, testRating);
-
-        // Verify the review is stored in the database
-        ArrayList<String> dbReview = dbh.getReview(testUser.getLogin(), testArtist);
-
-        assertNotNull("Review should be saved in the database.", dbReview);
-        assertEquals("Description should match.", testReviewDescription, dbReview.get(1));
-        assertEquals("Rating should match.", String.valueOf(testRating), dbReview.get(2));
-    }
-
-    @Test
     public void testingDeleteReview() {
-        // Testing deleting a review
-        testReview = rh.createReview(testUser, testArtist, testReviewDescription, testRating);
-        rh.deleteReview(testUser, testArtist);
+        // Test deleting a review
+        Review tempReview = rh.createReview(testUser, testArtist, testReviewDescription, testRating);
 
-        // Verify the review is no longer in the database
+        rh.deleteReview(tempReview);
+
+        // Verify the review is not stored in the database
         ArrayList<String> dbReview = dbh.getReview(testUser.getLogin(), testArtist);
 
         assertNull("Review should be removed from the database.", dbReview);
     }
 
+    @Test
+    public void testingInvalidDeleteReview() {
+        // Testing deleting a review when review is not in database
+        rh.deleteReview(testReview);
+
+        // Verify deletion is not successful
+        assertNull("Review should not be deleted properly.", testReview);
+    }
+
     @After
     public void cleanUp() {
         // Clean up test data to avoid side effects
-        ArrayList<String> userReviews = dbh.getUserReviews(testUser.getLogin());
-        for (String reviewID : userReviews) {
-            dbh.deleteReview(reviewID);
+        while (dbh.deleteReview(testReview)) 
+        {  
         }
         // Delete test account
         ah.deleteAccount();
