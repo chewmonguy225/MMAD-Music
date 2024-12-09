@@ -8,14 +8,18 @@ import MMAD.AccountHandler;
 public class LoginTest {
     
     AccountHandler accountHandler = null;
+    String testUsername = null;
+    String testPassword = null;
 
     @Before
     public void setUp(){
         accountHandler = AccountHandler.access();
+        testUsername = "spongebob";
+        testPassword = "password123";
     }
 
     @Test
     public void testSuccessfulLogin() {
-        assertTrue(accountHandler.loginAttempt("spongebob", "password123"));
+        assertTrue(accountHandler.loginAttempt(testUsername, testPassword));
     }
 }
