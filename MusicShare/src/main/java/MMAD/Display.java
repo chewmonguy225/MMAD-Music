@@ -131,6 +131,11 @@ public class Display {
         System.out.println("[7] Go Home");
     }
 
+    public void emptyPlaylist(){
+        split();
+        System.out.println("No songs to display");
+    }
+
     public void playlistOptionMenu() {
         nextScreen();
         System.out.println("Please enter a number 0-5:\n");
