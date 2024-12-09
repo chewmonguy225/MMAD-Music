@@ -222,7 +222,7 @@ public class DBHandler {
             if(queryExecutor.checkSongInPlaylist(login, song)) {
                 return queryExecutor.removeSongFromPlaylist(login, song);//returns true if successful, false if not
             }
-            return true;//returns true if the song is already removed
+            return false;//returns true if the song is already removed
         } 
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -293,12 +293,14 @@ public class DBHandler {
     public int addSongToPlaylist(Login login, Song song)
     {
         try {
-            if(queryExecutor.checkSongInPlaylist(login, song)){
-                return 2;
-            } else {
-                boolean f = queryExecutor.addSongToPlaylist(login, song);
-                if (f)
-                return 1;
+            if(queryExecutor.checkUserExists(login.getUsername())){
+                if(queryExecutor.checkSongInPlaylist(login, song)){
+                    return 2;
+                } else {
+                    boolean f = queryExecutor.addSongToPlaylist(login, song);
+                    if (f)
+                    return 1;
+                }
             }
             return -1;
         }
