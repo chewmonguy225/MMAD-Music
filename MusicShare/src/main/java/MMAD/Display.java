@@ -312,9 +312,8 @@ public class Display {
         System.out.println("[2] View reviews made by users you follow");
         System.out.println("[3] View own reviews");
         System.out.println("[4] Write Review");
-        System.out.println("[5] Delete Review");
         System.out.println();
-        System.out.println("[6] Go Home");
+        System.out.println("[5] Go Home");
     }
 
     public void friendOptionMenu() {

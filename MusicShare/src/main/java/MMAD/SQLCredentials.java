@@ -19,8 +19,6 @@ public class SQLCredentials {
                 url = reader.readLine();
                 username = reader.readLine();
                 password = reader.readLine();
-            } else {
-                System.out.println("File not found!");
             }
         } catch (IOException e) {
             e.printStackTrace();

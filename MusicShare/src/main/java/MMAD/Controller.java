@@ -466,7 +466,9 @@ public class Controller {
                 routeSearch();
                 option = -1;
                 break;
-            case 5: // deleteReview
+            case 5: // home
+                RouteHome();
+                option = -1;
                 break;
             default:
                 d.invalidOption();

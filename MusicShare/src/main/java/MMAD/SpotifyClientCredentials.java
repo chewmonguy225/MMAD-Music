@@ -15,8 +15,6 @@ public class SpotifyClientCredentials {
             if (reader != null) {
                 clientID = reader.readLine();
                 clientSecret = reader.readLine();
-            } else {
-                System.out.println("File not found!");
             }
         } catch (IOException e) {
             e.printStackTrace();
