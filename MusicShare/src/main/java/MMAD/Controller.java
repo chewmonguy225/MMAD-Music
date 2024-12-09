@@ -341,7 +341,7 @@ public class Controller {
         }
     }
 
-    public static int userOptionMenu(User user) {
+    private static int userOptionMenu(User user) {
         d.otherUserOptionMenu();
         int option = ui.getInt();
         switch (option) {
