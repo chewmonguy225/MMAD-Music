@@ -24,6 +24,9 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
   }
 
   public ArrayList<Album> searchAlbum(String albumTitle) {
+    if (albumTitle == null || albumTitle.isEmpty()) {
+      throw new IllegalArgumentException("Album title cannot be null or empty");
+    }
     ArrayList<Album> Albums = new ArrayList<>();
     SearchAlbumsRequest searchAlbumsRequest = theApiConnection.getConnection().searchAlbums(albumTitle)
         .limit(intialLimit)
@@ -43,6 +46,10 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
   }
 
   public ArrayList<Song> searchSong(String songTitle) {
+    if (songTitle == null || songTitle.isEmpty()) {
+      throw new IllegalArgumentException("Song title cannot be null or empty");
+    }
+
     ArrayList<Song> Songs = new ArrayList<>();
     SearchTracksRequest searchTracksRequest = theApiConnection.getConnection().searchTracks(songTitle)
         .limit(intialLimit)
@@ -61,6 +68,9 @@ public class SpotifyAPIQueryBuilder extends AbstractAPIQueryBuilder {
   }
 
   public ArrayList<Artist> searchArtist(String artistName) {
+    if (artistName == null || artistName.isEmpty()) {
+      throw new IllegalArgumentException("artistName cannot be null or empty");
+    }
     ArrayList<Artist> Artists = new ArrayList<>();
     SearchArtistsRequest searchArtistsRequest = theApiConnection.getConnection().searchArtists(artistName)
         .limit(intialLimit)
