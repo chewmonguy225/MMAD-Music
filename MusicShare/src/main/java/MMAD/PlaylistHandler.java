@@ -67,7 +67,6 @@ public class PlaylistHandler {
         Playlist playlist = new Playlist();
         ArrayList<Integer> songIDs = dbh.getPlaylist(user.getLogin());
         musicList = new ArrayList<>();
-
         for(int songID:songIDs){
             musicList.add(ih.createSongFromID(songID));
         }
@@ -139,6 +138,48 @@ public class PlaylistHandler {
         }
     }
 
+    public int displayOthersPlaylist(Playlist playlist, UI ui, Display d){
+        int option = -1;
+
+        if(playlist == null || playlist.getPlaylist().isEmpty()){
+            d.emptyPlaylist();
+            return -1;
+        }
+        
+        while(option <0 || option >7){//if 6 then prev, if 7 then next
+            
+            //displays the next (5) songs in playlist as long as there is at least one more song to print
+            if(page >= 0 && playlist.getPlaylist().size() > page){
+                d.displayOthersPlaylist(playlist, page);
+                option = ui.getInt();
+            }
+            
+            if(option == 7 && playlist.getPlaylist().size() > page + 5)
+                page = page + 5;
+            if (option == 6)
+                page = page - 5;
+
+            //user chose to exit the system
+            if (option == 0)
+                return option;
+            
+        }
+
+        if(option >= 7 && playlist.getPlaylist().size() < page){
+            page = 0;
+            return -2;
+        }else if (option == 0 || option == -1){
+            return option;
+        }else if(option == 6 && page < 0){
+            page = 0;
+            return -1;
+        }else if (option == 7 || option == 6){
+            return option;
+        }else {
+            return option;
+        }
+    }
+
     public void clearPlaylist(Login login){
         //query to remove all songs from playlist
         dbh.clearPlaylist(login);
@@ -147,7 +188,6 @@ public class PlaylistHandler {
 
     public Playlist mergePlaylist(User user, User friendUser){
         ArrayList<Integer> songIDs = dbh.getSharedPlaylist(user.getLogin(), friendUser.getLogin());
-        System.out.println(songIDs);
         ArrayList<Song> musicList = new ArrayList<Song>();
         for(Integer songID: songIDs){
             musicList.add(ih.createSongFromID(songID));

@@ -415,7 +415,6 @@ public class DBHandler {
      * @return An integer array list of all song ids in the shared playlist. An empty array list if there were no songs or an error occurred.
      */
     public ArrayList<Integer> getSharedPlaylist(Login login1, Login login2){
-        System.out.println("IN DBH WItH" + login1.getUsername() + " " + login2.getUsername());
         return queryExecutor.getSharedPlaylist(login1, login2);
     }
 

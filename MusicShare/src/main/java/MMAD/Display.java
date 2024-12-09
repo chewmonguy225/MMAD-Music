@@ -98,6 +98,21 @@ public class Display {
         }
     }
 
+    public void displayOthersPlaylist(Playlist playlist, int page) {
+        nextScreen();
+        ArrayList<Song> musicList = playlist.getPlaylist();
+        for (int i = page; i < musicList.size() && i < page + 5; i++) {
+            // prints out the name and artist of the next 5 songs in the playlist
+            System.out.println(i - (page - 1) + ": " + musicList.get(i).getName() + "  by  "
+                    + musicList.get(i).getArtist().getName());
+        }
+        if(musicList.size() - (page+5) > 0){
+            System.out.println("\n6: Previous\n7: Next");
+        } else {
+            System.out.println("\n6: Previous");
+        }
+    }
+
     public void passwordChanged(){
         split();
         System.out.println("Password changed successfully!");
@@ -142,6 +157,7 @@ public class Display {
         System.out.println("[1] Remove song from playlist");
         System.out.println("[2] Back to playlist");
     }
+
 
     public void songRemoved(String name){
         split();

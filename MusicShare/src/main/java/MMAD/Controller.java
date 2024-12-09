@@ -365,8 +365,8 @@ public class Controller {
                 break;
             case 5: // merge Playlists
                 Playlist mergedPlaylist = ph.mergePlaylist(ah.getCurrentUserObject(), user);
-                System.out.println(ph.mergePlaylist(ah.getCurrentUserObject(), user).getPlaylist());
-                ph.displayPlaylist(mergedPlaylist, ui, d);
+                ph.mergePlaylist(ah.getCurrentUserObject(), user).getPlaylist();
+                ph.displayOthersPlaylist(mergedPlaylist, ui, d);
                 break;
             case 6:
                 routeUserSearch();

@@ -770,18 +770,17 @@ public class QueryExecutor {
             statement.setString(1, login1.getUsername());
             statement.setString(2, login2.getUsername());
             ResultSet resultSet = statement.executeQuery();
-
+    
             ArrayList<Integer> songIDs = new ArrayList<>();
-            System.out.println("IN QE :" + songIDs);
             while (resultSet.next()) {
-                songIDs.add(resultSet.getInt("id"));
+                songIDs.add(resultSet.getInt("song_id"));
             }
             return songIDs;
         } catch (SQLException ex) {
-            System.out.println("ERROR");
             return new ArrayList<Integer>();
         }
     }
+    
 
     /**
      * Returns the usernames of all a user's friends
