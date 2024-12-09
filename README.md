@@ -37,6 +37,6 @@ You will also be prompted to create a default schema. Make the name of this “m
 
 3.	Execute SQL statement to setup data tables
    
-       Open your newly configured Local connection. In the SQL Editor, open the SQL file that is attached below. Click the lightning bolt symbol to execute the statement. This should successfully create the tables in your music_share_db schema. 
+       Open your newly configured Local connection. In the SQL Editor, open the SQL file "MMAD.sql" which is located in the "Other resources" folder. Click the lightning bolt symbol to execute the statement. This should successfully create the tables in your music_share_db schema. 
 
  
