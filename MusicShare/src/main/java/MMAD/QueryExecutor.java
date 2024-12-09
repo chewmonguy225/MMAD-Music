@@ -532,7 +532,9 @@ public class QueryExecutor {
             statement.setString(1, login.getUsername());
             statement.setInt(2, song.getID());
             int rowsAffected = statement.executeUpdate();
-            return rowsAffected == 1;
+            if(rowsAffected == 1)
+                return true;
+            return false;
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             return false;
