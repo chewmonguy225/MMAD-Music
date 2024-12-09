@@ -148,11 +148,30 @@ public class AccountHandler {
         return selected;
     }
 
-    public User listUsers(ArrayList<User> users, UI ui, Display d){
+    public User listUsers(ArrayList<User> users, UI ui, Display display){
         int totalPages = (int) Math.ceil((double) users.size() / itemsPerPage);
         int currentPage = 1;
         
-        User selected = selectUser(users, currentPage, totalPages, ui, d);
+        display.displayUserSearchResult(users, currentPage, totalPages);
+        int option = ui.getInt();
+        User selected = null;
+        while (selected == null && !((option == (itemsPerPage + 1) && currentPage == 1) || (option == (itemsPerPage + 2) && currentPage == totalPages))) {
+            if (option >= 1 && option <= itemsPerPage) {
+                selected = users.get(((currentPage - 1) * itemsPerPage) + (option - 1));
+                selected = getCompleteUser(selected);
+            } else if (option == (itemsPerPage + 1) && currentPage != 1) {
+                currentPage--;
+                display.displayUserSearchResult(users, currentPage, totalPages);
+                option = ui.getInt();
+            } else if (option == (itemsPerPage + 2) && currentPage != totalPages) {
+                currentPage++;
+                display.displayUserSearchResult(users, currentPage, totalPages);
+                option = ui.getInt();
+            }else{
+                display.invalidOption();
+            }
+        }
+
         return selected;
     }
 

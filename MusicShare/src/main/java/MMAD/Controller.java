@@ -164,7 +164,7 @@ public class Controller {
             int result = -1;
             do {
                 result = ah.changePassword(ui, d);// need to change logic to allow reprompting of new password.
-                if(result == -1){
+                if (result == -1) {
                     d.invalidPassword();
                 }
             } while (result == -1);
@@ -272,7 +272,10 @@ public class Controller {
         d.searchPrompt("User");
         String username = ui.getString();
         User selected = ah.searchUser(username, ui, d);
-        userOptionMenu(selected);
+        if (selected != null) {
+            userOptionMenu(selected);
+        }
+        RouteHome();
     }
 
     private static void itemOptionMenu(Item item) {
@@ -345,11 +348,11 @@ public class Controller {
             case 0:
                 exit();
                 break;
-            case 1:
+            case 1: // follow
                 ah.followUser(user);
                 routeSearch();
                 break;
-            case 2:
+            case 2: // unfollow
                 ah.unfollowUser(user);
                 break;
             case 3: // view review
@@ -360,10 +363,15 @@ public class Controller {
                 Playlist playlist = ph.getPlaylist(user);
                 ph.displayPlaylist(playlist, ui, d);
                 break;
-            case 5:
-                routeUserSearch();
+            case 5: // merge Playlists
+                Playlist mergedPlaylist = ph.mergePlaylist(ah.getCurrentUserObject(), user);
+                System.out.println(ph.mergePlaylist(ah.getCurrentUserObject(), user).getPlaylist());
+                ph.displayPlaylist(mergedPlaylist, ui, d);
                 break;
             case 6:
+                routeUserSearch();
+                break;
+            case 7:
                 RouteHome();
                 break;
             default:
@@ -392,20 +400,26 @@ public class Controller {
             case 0:
                 exit();
                 break;
-            case 1:
+            case 1: // view following
                 ArrayList<User> following = ah.currentUserObject.getFollowingList();
                 selected = ah.listUsers(following, ui, d);
-                userOptionMenu(selected);
+                if (selected != null) {
+                    userOptionMenu(selected);
+                }
+                routeFriends();
                 option = -1;
                 break;
-            case 2:
+            case 2: // view followers
                 // view followers
                 ArrayList<User> followers = ah.currentUserObject.getFollowerList();
                 selected = ah.listUsers(followers, ui, d);
-                userOptionMenu(selected);
+                if (selected != null) {
+                    userOptionMenu(selected);
+                }
+                routeFriends();
                 option = -1;
                 break;
-            case 3:
+            case 3: // find users
                 routeUserSearch();
                 option = -1;
                 break;
@@ -428,7 +442,7 @@ public class Controller {
                 selectedReview = rh.displayReviews(rh.getRecentReviews(), ui, d);
                 if (selectedReview == null) {
                     RouteHome();
-                }else {
+                } else {
                     othersReviewOptions(selectedReview, 1);
                 }
                 break;
@@ -467,8 +481,9 @@ public class Controller {
         int option = ui.getInt();
         switch (option) {
             case 1:// edit review
+                Item item = selectedReview.getItem();
                 rh.deleteReview(selectedReview);
-                writeReview(selectedReview.getItem());
+                writeReview(item);
             case 2:// delete review
                 if (rh.deleteReview(selectedReview)) {
                     d.successfulDeleteReview(selectedReview);
@@ -488,7 +503,7 @@ public class Controller {
     private void othersReviewOptions(Review selectedReview, int type) {
         d.displayOthersReviewOptions(type);
         int option = ui.getInt();
-        if(type == 1){
+        if (type == 1) {
             option++;
         }
         int update;
@@ -497,7 +512,7 @@ public class Controller {
                 exit();
                 break;
             case 1: // followUser
-                if(type == 1){
+                if (type == 1) {
                     exit();
                 }
                 update = ah.followUser(selectedReview.getAuthor());

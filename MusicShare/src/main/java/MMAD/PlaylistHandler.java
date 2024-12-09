@@ -78,7 +78,6 @@ public class PlaylistHandler {
     }
 
     
-
     public int displayPlaylist(Playlist playlist, UI ui, Display d){
         int option = -1;
         
@@ -194,6 +193,17 @@ public class PlaylistHandler {
         //query to remove all songs from playlist
         dbh.clearPlaylist(login);
         //playlist = new Playlist();//create empty playlist object
+    }
+
+    public Playlist mergePlaylist(User user, User friendUser){
+        ArrayList<Integer> songIDs = dbh.getSharedPlaylist(user.getLogin(), friendUser.getLogin());
+        System.out.println(songIDs);
+        ArrayList<Song> musicList = new ArrayList<Song>();
+        for(Integer songID: songIDs){
+            musicList.add(ih.createSongFromID(songID));
+        }
+        Playlist playlist = new Playlist(musicList);
+        return playlist;
     }
     
 }

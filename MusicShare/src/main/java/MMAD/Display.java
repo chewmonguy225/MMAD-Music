@@ -126,7 +126,7 @@ public class Display {
         System.out.println("[3] View user reviews of this song");
         System.out.println("[4] Add song to playlist");
         System.out.println("[5] Remove song from playlist");
-        System.out.println();
+        System.out.println("[5] Make MMAD Playlist");
         System.out.println("[6] Search different item");
         System.out.println("[7] Go Home");
     }
@@ -223,8 +223,7 @@ public class Display {
         nextScreen();
         int startIndex = ((currentPage - 1) * itemsPerPage);
         if (users.isEmpty()) {
-            System.out.println("[!] There are reviews to display");
-            split();
+            System.out.println("[!] There are users to display");
 
         } else if((currentPage == totalPages) && (users.size() % itemsPerPage != 0)){
             for (int i = 0; i < (users.size() % itemsPerPage); i++) {
@@ -238,13 +237,13 @@ public class Display {
 
         split();
         if (currentPage == 1 && totalPages == 1 || users.isEmpty()) {
-            System.out.println("[" + 6 + "] Search different item");
+            System.out.println("[" + 6 + "] Go Back to Previous Menu");
         } else if (currentPage == 1) {
-            System.out.println("[" + 6 + "] Search different item");
+            System.out.println("[" + 6 + "] Go Back");
             System.out.println("[" + 7 + "] Next page");
         }else if (currentPage == totalPages) {
             System.out.println("[" + 6 + "] Previous page");
-            System.out.println("[" + 7 + "] Search different item");
+            System.out.println("[" + 7 + "] Go Back to Previous Menu");
         } else {
             System.out.println("[" + 6 + "] Previous page");
             System.out.println("[" + 7 + "] Next page");
@@ -311,9 +310,10 @@ public class Display {
         System.out.println("[1] Follow User");
         System.out.println("[2] Unfollow User");
         System.out.println("[3] View User's Reviews");
-        System.out.println("[4] View User's Playlist"); //--> merge playlist
-        System.out.println("[5] Search other users");
-        System.out.println("[6] Go Home");
+        System.out.println("[4] View User's Playlist");
+        System.out.println("[5] MMAD Playlist");
+        System.out.println("[6] Search other users");
+        System.out.println("[7] Go Home");
     }
 
     public void successfulDeleteReview(Review review){

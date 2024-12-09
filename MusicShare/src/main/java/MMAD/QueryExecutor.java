@@ -495,7 +495,7 @@ public class QueryExecutor {
      * 
      * @param id The album's id in the database
      * @return A string array list containing the following info in each index:
-     *         0: albumId 1: source_id 2: albumName 3: artistId 
+     *         0: albumId 1: source_id 2: albumName 3: artistId
      *         Returns empty array list if error occurs
      */
     public ArrayList<String> getAlbum(int id) {
@@ -715,39 +715,43 @@ public class QueryExecutor {
     }
 
     public ArrayList<ArrayList<String>> getFollowingReviews(ArrayList<String> usernames) {
-    try {
-        // Construct the placeholder string for the IN clause
-        String placeholders = String.join(",", usernames.stream().map(u -> "?").toArray(String[]::new));
+        try {
+            if (usernames.isEmpty()) {
+                // Return an empty list or handle the empty case differently
+                return new ArrayList<>();
+            }
 
-        // Prepare the SQL query with the dynamically created placeholders
-        String query = "SELECT * FROM review WHERE username IN (" + placeholders + ") ORDER BY created_at DESC LIMIT 50;";
-        PreparedStatement statement = sqlConnection.prepareStatement(query);
+            // Construct the placeholder string for the IN clause
+            String placeholders = String.join(",", usernames.stream().map(u -> "?").toArray(String[]::new));
 
-        // Set each username in the PreparedStatement
-        for (int i = 0; i < usernames.size(); i++) {
-            statement.setString(i + 1, usernames.get(i));
+            // Prepare the SQL query with the dynamically created placeholders
+            String query = "SELECT * FROM review WHERE username IN (" + placeholders
+                    + ") ORDER BY created_at DESC LIMIT 50;";
+            PreparedStatement statement = sqlConnection.prepareStatement(query);
+
+            // Set each username in the PreparedStatement
+            for (int i = 0; i < usernames.size(); i++) {
+                statement.setString(i + 1, usernames.get(i));
+            }
+
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<ArrayList<String>> reviews = new ArrayList<>();
+
+            // Process the result set and add to the reviews list
+            while (resultSet.next()) {
+                ArrayList<String> reviewInfo = new ArrayList<>();
+                reviewInfo.add(resultSet.getString("id")); // Add review ID
+                reviewInfo.add(resultSet.getString("username")); // Add username
+
+                reviews.add(reviewInfo);
+            }
+
+            return reviews;
+        } catch (SQLException ex) {
+            System.out.println("SQL Error: " + ex.getMessage());
+            return new ArrayList<>(); // Return empty list in case of error
         }
-
-        ResultSet resultSet = statement.executeQuery();
-        ArrayList<ArrayList<String>> reviews = new ArrayList<>();
-
-        // Process the result set and add to the reviews list
-        while (resultSet.next()) {
-            ArrayList<String> reviewInfo = new ArrayList<>();
-            reviewInfo.add(resultSet.getString("id")); // Add review ID
-            reviewInfo.add(resultSet.getString("username")); // Add username
-            
-            reviews.add(reviewInfo);
-        }
-
-        return reviews;
-    } catch (SQLException ex) {
-        System.out.println("SQL Error: " + ex.getMessage());
-        return new ArrayList<>(); // Return empty list in case of error
     }
-}
-
-    
 
     /**
      * Returns an array list of all song ids in the shared playlist
@@ -762,15 +766,17 @@ public class QueryExecutor {
             PreparedStatement statement = sqlConnection.prepareStatement(
                     "SELECT ps1.song_id FROM playlist_song ps1 INNER JOIN playlist_song ps2 ON ps1.song_id = ps2.song_id WHERE ps1.username= ? AND ps2.username= ?;");
             statement.setString(1, login1.getUsername());
-            statement.setString(1, login2.getPassword());
+            statement.setString(2, login2.getUsername());
             ResultSet resultSet = statement.executeQuery();
-            ArrayList<Integer> songIDs = new ArrayList<>();
 
+            ArrayList<Integer> songIDs = new ArrayList<>();
+            System.out.println("IN QE :" + songIDs);
             while (resultSet.next()) {
                 songIDs.add(resultSet.getInt("id"));
             }
             return songIDs;
         } catch (SQLException ex) {
+            System.out.println("ERROR");
             return new ArrayList<Integer>();
         }
     }
@@ -817,18 +823,19 @@ public class QueryExecutor {
         }
     }
 
-    public boolean changePassword(Login login){
-        try{
-            PreparedStatement statement = sqlConnection.prepareStatement("UPDATE user SET password = ? WHERE username = ?");
+    public boolean changePassword(Login login) {
+        try {
+            PreparedStatement statement = sqlConnection
+                    .prepareStatement("UPDATE user SET password = ? WHERE username = ?");
             statement.setString(1, login.getPassword());
             statement.setString(2, login.getUsername());
             statement.executeUpdate();// something wrong with this statement
             return true;
-        } catch (SQLException ex){
+        } catch (SQLException ex) {
             return false;
         }
     }
-    
+
     public ArrayList<String> searchUsers(String usernameToSearch) {
         try {
             // Use ? for dynamic parameter binding
@@ -866,7 +873,8 @@ public class QueryExecutor {
             }
             System.out.println(itemType + review.getItem().getID());
             String reviewID = itemType + review.getItem().getID();
-            PreparedStatement statement = sqlConnection.prepareStatement("DELETE FROM review WHERE username= ? AND id = ?;");
+            PreparedStatement statement = sqlConnection
+                    .prepareStatement("DELETE FROM review WHERE username= ? AND id = ?;");
             statement.setString(1, review.getAuthor().getLogin().getUsername());
             statement.setString(2, reviewID);
             statement.executeUpdate();

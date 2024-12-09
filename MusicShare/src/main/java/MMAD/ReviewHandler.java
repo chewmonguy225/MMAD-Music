@@ -175,8 +175,9 @@ public class ReviewHandler {
     }
 
     public boolean deleteReview(Review review){
+        boolean response =  dbh.deleteReview(review);
         ah.getCurrentUserObject().removeReview(review);
-        return dbh.deleteReview(review);
+        return response;
     }
 
     // Helper method to separate letters and numbers in the reviewID
