@@ -73,8 +73,7 @@ public class QueryExecutor {
      */
     public boolean createAccount(Login login) {
         try {
-            PreparedStatement statement = sqlConnection
-                    .prepareStatement("INSERT INTO user (username, password) VALUES (?, ?);");
+            PreparedStatement statement = sqlConnection.prepareStatement("INSERT INTO user (username, password) VALUES (?, ?);");
             statement.setString(1, login.getUsername());
             statement.setString(2, login.getPassword());
             int rowsAffected = statement.executeUpdate();
