@@ -141,7 +141,6 @@ public class Display {
         System.out.println("[3] View user reviews of this song");
         System.out.println("[4] Add song to playlist");
         System.out.println("[5] Remove song from playlist");
-        System.out.println("[5] Make MMAD Playlist");
         System.out.println("[6] Search different item");
         System.out.println("[7] Go Home");
     }
@@ -312,7 +311,6 @@ public class Display {
         System.out.println("[2] View reviews made by users you follow");
         System.out.println("[3] View own reviews");
         System.out.println("[4] Write Review");
-        System.out.println();
         System.out.println("[5] Go Home");
     }
 
@@ -322,6 +320,7 @@ public class Display {
         System.out.println("[1] View following");
         System.out.println("[2] View followers");
         System.out.println("[3] Search Users");
+        System.out.println("[4] Go home");
     }
 
     public void otherUserOptionMenu() {

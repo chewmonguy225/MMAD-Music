@@ -4,7 +4,4 @@ public class Main {
         Controller c = Controller.access();
         c.routeLogin();
     }
-
-    
-    
 }

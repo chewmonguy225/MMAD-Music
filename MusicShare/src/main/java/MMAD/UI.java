@@ -16,7 +16,11 @@ public class UI {
     }
 
     public int getInt(){
-        int in = input.nextInt();
+        int in = -1;
+        if(input.hasNextInt()){
+            in = input.nextInt();
+        }
+        
         // Consume the leftover newline character
         input.nextLine();
         return in;

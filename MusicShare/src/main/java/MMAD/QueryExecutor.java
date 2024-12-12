@@ -24,7 +24,7 @@ public class QueryExecutor {
             connectionManager.establishConnection();
             sqlConnection = connectionManager.getConnectionObject();
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
         }
     }
 
@@ -38,7 +38,7 @@ public class QueryExecutor {
             connectionManager.closeConnection();
             return true;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -59,7 +59,7 @@ public class QueryExecutor {
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -79,7 +79,7 @@ public class QueryExecutor {
             int rowsAffected = statement.executeUpdate();
             return rowsAffected == 1;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -97,7 +97,7 @@ public class QueryExecutor {
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -116,7 +116,7 @@ public class QueryExecutor {
             statement.executeUpdate();
             return true;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -137,7 +137,7 @@ public class QueryExecutor {
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -158,7 +158,7 @@ public class QueryExecutor {
             int rowsAffected = statement.executeUpdate();
             return rowsAffected == 1;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -172,7 +172,7 @@ public class QueryExecutor {
             int rowsAffected = statement.executeUpdate();
             return rowsAffected == 1;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -194,7 +194,7 @@ public class QueryExecutor {
                 return false;
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -215,7 +215,7 @@ public class QueryExecutor {
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -233,7 +233,7 @@ public class QueryExecutor {
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -263,7 +263,7 @@ public class QueryExecutor {
             int id = resultSet.getInt("id");
             return id;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return -1;
         }
     }
@@ -280,7 +280,7 @@ public class QueryExecutor {
             }
 
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return -1;
         }
 
@@ -298,7 +298,7 @@ public class QueryExecutor {
             }
 
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return -1;
         }
 
@@ -316,7 +316,7 @@ public class QueryExecutor {
             }
 
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return -1;
         }
 
@@ -340,7 +340,7 @@ public class QueryExecutor {
             int rowsAffected = statement.executeUpdate();
             return rowsAffected == 1;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -360,7 +360,7 @@ public class QueryExecutor {
             int rowsAffected = statement.executeUpdate();
             return rowsAffected == 1;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -381,7 +381,7 @@ public class QueryExecutor {
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -403,7 +403,7 @@ public class QueryExecutor {
             int rowsAffected = statement.executeUpdate();
             return rowsAffected == 1;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -428,7 +428,7 @@ public class QueryExecutor {
             }
             return songIDs;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return new ArrayList<Integer>();
         }
     }
@@ -457,7 +457,7 @@ public class QueryExecutor {
             }
             return songInfo;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return new ArrayList<String>();
         }
     }
@@ -484,7 +484,7 @@ public class QueryExecutor {
             }
             return artistInfo;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return new ArrayList<String>();
         }
     }
@@ -512,7 +512,7 @@ public class QueryExecutor {
             }
             return albumInfo;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return new ArrayList<String>();
         }
     }
@@ -535,7 +535,7 @@ public class QueryExecutor {
                 return true;
             return false;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -555,7 +555,7 @@ public class QueryExecutor {
             statement.executeUpdate();// something wrong with this statement
             return true;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -590,7 +590,7 @@ public class QueryExecutor {
             statement.executeUpdate();
             return true;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }
@@ -613,7 +613,7 @@ public class QueryExecutor {
             }
             return reviewIDs;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return new ArrayList<String>();
         }
     }
@@ -655,7 +655,7 @@ public class QueryExecutor {
             }
             return reviewInfo;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return new ArrayList<String>();
         }
     }
@@ -683,7 +683,7 @@ public class QueryExecutor {
             }
             return usernames;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return new ArrayList<String>();
         }
     }
@@ -710,7 +710,7 @@ public class QueryExecutor {
             }
             return reviews;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return new ArrayList<ArrayList<String>>();
         }
     }
@@ -800,7 +800,7 @@ public class QueryExecutor {
             }
             return friendUsernames;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return new ArrayList<String>();
         }
     }
@@ -818,7 +818,7 @@ public class QueryExecutor {
             }
             return followersUsernames;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return new ArrayList<String>();
         }
     }
@@ -880,7 +880,7 @@ public class QueryExecutor {
             statement.executeUpdate();
             return true;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            //System.out.println(ex.getMessage());
             return false;
         }
     }

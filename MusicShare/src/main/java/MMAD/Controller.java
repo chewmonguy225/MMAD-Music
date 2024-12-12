@@ -361,7 +361,10 @@ public class Controller {
                 break;
             case 4: // displayPlaylist
                 Playlist playlist = ph.getPlaylist(user);
-                ph.displayPlaylist(playlist, ui, d);
+                int in = ph.displayPlaylist(playlist, ui, d);
+                while(in == 7 || in == 6){
+                    in = ph.displayPlaylist(playlist, ui, d);
+                }
                 break;
             case 5: // merge Playlists
                 Playlist mergedPlaylist = ph.mergePlaylist(ah.getCurrentUserObject(), user);
@@ -423,6 +426,9 @@ public class Controller {
                 routeUserSearch();
                 option = -1;
                 break;
+            case 4:
+                currentMenu = "home";
+                RouteHome();
             default:
                 d.invalidOption();
                 routeFriends();

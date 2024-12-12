@@ -124,6 +124,7 @@ public class PlaylistHandler {
                     ph.removeSongFromPlaylist(ah.getCurrentUserObject().getLogin(), playlist.getPlaylist().get(option+page-1));
                     d.songRemoved(playlist.getPlaylist().get(option+page-1).getName());
                     ah.getCurrentUserObject().setPlaylist(getPlaylist(ah.getCurrentUserObject()));
+                    page = 0;
                     return -2;
                 case 2:
                     return -2;
