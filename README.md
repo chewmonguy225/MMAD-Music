@@ -1,3 +1,7 @@
+MMAD-MUSIC 2.0 IS IN PROGRESS:
+CURRENTLY WORKING ON DEVELOPING THE APPLICATION AS A WEB SERVICE
+
+
 Local Database Setup & Configuration
 
 In order to store user data in MMAD Music you will need to configure a local MySQL instance. The following steps will show you how to get it up and running.
